@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <meta name="google-site-verification" content="nMB3IKgjahJHMbF_t6raK7s-HcOJmxbRgOHiQde53ns" />
+    
+    <meta name="description" content="FiyatAvcısı: En güvenilir teknoloji, moda, kozmetik ve kitap fiyat arama motoru.">
+    <meta name="theme-color" content="#2563eb">
+    <title>FiyatAvcısı | Güvenli Alışveriş & Fiyat Arama Motoru</title>
+    
+    <link rel="icon" href="logo.png" type="image/png" sizes="96x96">
+    <link rel="shortcut icon" href="logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="logo.png">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17749261970"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-17749261970');</script>
+
+    <link href="./style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root{--bg-primary:#f8fafc;--bg-secondary:#ffffff;--bg-tertiary:#f1f5f9;--text-primary:#1e293b;--text-secondary:#64748b;--text-muted:#94a3b8;--border-color:#e2e8f0;--shadow-color:rgba(0,0,0,0.04);--card-bg:#ffffff;--footer-bg:#ffffff}
+        .dark{--bg-primary:#0f172a;--bg-secondary:#1e293b;--bg-tertiary:#334155;--text-primary:#f1f5f9;--text-secondary:#94a3b8;--text-muted:#64748b;--border-color:#334155;--shadow-color:rgba(0,0,0,0.3);--card-bg:#1e293b;--footer-bg:#1e293b}
+        body{background-color:var(--bg-primary);color:var(--text-primary);display:flex;flex-direction:column;min-height:100dvh;-webkit-tap-highlight-color:transparent;overflow-x:hidden;transition:background-color 0.3s,color 0.3s}
+        .search-container{background:var(--bg-secondary);border:1px solid var(--border-color);box-shadow:0 10px 30px -10px var(--shadow-color);transition:all 0.3s cubic-bezier(0.25,0.8,0.25,1)}
+        .search-container:focus-within{border-color:#3b82f6;box-shadow:0 25px 50px -12px rgba(59,130,246,0.15);transform:translateY(-2px)}
+        #clearBtn{opacity:0;pointer-events:none;transition:all 0.2s ease;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center}
+        #clearBtn.visible{opacity:1;pointer-events:all}
+        #clearBtn:hover{color:var(--text-secondary)}
+        .base-card{border-radius:1.25rem;min-height:120px;display:flex;flex-direction:column;justify-content:center;padding:1.618rem;position:relative;transition:all 0.25s cubic-bezier(0.25,0.8,0.25,1);cursor:pointer;text-decoration:none;-webkit-user-select:none;user-select:none}
+        .link-card{background:var(--card-bg);border:1px solid var(--border-color)}
+        .link-card:hover{border-color:var(--theme-color);box-shadow:0 16px 32px -8px var(--theme-shadow);transform:translateY(-3px)}
+        .recommended-card{background:#f0fdf4;border:2px solid #16a34a;box-shadow:0 10px 20px -5px rgba(22,163,74,0.08)}
+        .dark .recommended-card{background:#14532d;border-color:#22c55e}
+        .recommended-card:hover{transform:translateY(-3px);box-shadow:0 20px 40px -10px rgba(22,163,74,0.2)}
+        .official-card{background:#0f172a;color:white;border:none;display:flex;flex-direction:row;align-items:center}
+        .official-card:hover{transform:translateY(-3px);box-shadow:0 25px 50px -12px rgba(15,23,42,0.4)}
+        .badge{position:absolute;top:-1px;right:-1px;font-size:0.65rem;font-weight:800;padding:6px 14px;border-bottom-left-radius:1rem;border-top-right-radius:1rem;color:white;background:#16a34a;z-index:10;letter-spacing:0.05em}
+        .logo-wrapper{height:2.5rem;width:100%;display:flex;align-items:center;overflow:hidden}
+        .logo-img{height:100%;width:auto;max-width:150px;object-fit:contain;object-position:left;opacity:0.9;transition:0.3s;mix-blend-mode:multiply}
+        .dark .logo-img{mix-blend-mode:normal;filter:brightness(1.1)}
+        .dark .logo-img.dark-invert{filter:brightness(0) invert(1)}
+        .link-card:hover .logo-img,.recommended-card:hover .logo-img{opacity:1;transform:scale(1.05)}
+        .fallback-text{display:none;font-weight:800;font-size:1.25rem;text-transform:uppercase;letter-spacing:-0.02em;line-height:1.1}
+        .link-card .fallback-text{color:var(--text-secondary)}
+        .link-card:hover .fallback-text{color:var(--theme-color)}
+        .history-chip{font-size:0.75rem;font-weight:600;padding:6px 14px;border-radius:999px;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-secondary);cursor:pointer;transition:all 0.2s ease;display:inline-flex;align-items:center;gap:6px}
+        .history-chip:hover{background:var(--bg-tertiary);color:var(--text-primary);border-color:var(--text-muted);transform:translateY(-1px)}
+        .history-clear-btn{font-size:0.7rem;padding:6px 10px;border-radius:999px;background:transparent;border:1px solid var(--border-color);color:var(--text-muted);cursor:pointer;transition:all 0.2s ease;display:inline-flex;align-items:center;justify-content:center;margin-left:4px}
+        .history-clear-btn:hover{background:#fee2e2;border-color:#fca5a5;color:#dc2626}
+        .dark .history-clear-btn:hover{background:#7f1d1d;border-color:#991b1b;color:#fca5a5}
+        .typo-box{font-size:0.9rem;color:#dc2626;margin-top:0.5rem;display:flex;align-items:center;gap:0.5rem;animation:fadeIn 0.3s ease;flex-wrap:wrap}
+        .dark .typo-box{color:#f87171}
+        .typo-link{font-weight:800;color:#2563eb;cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:4px}
+        .typo-link:hover{color:#1e40af}
+        .dark .typo-link{color:#60a5fa}
+        .dark .typo-link:hover{color:#93c5fd}
+        .cat-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:1rem;padding:1.5rem;cursor:pointer;transition:all 0.2s;height:100%;text-align:center}
+        .cat-btn:hover{border-color:#3b82f6;transform:translateY(-3px);box-shadow:0 10px 20px -5px rgba(59,130,246,0.15)}
+        .cat-icon{font-size:1.5rem;color:#3b82f6;margin-bottom:0.5rem}
+        .cat-name{font-weight:700;color:var(--text-primary);font-size:0.9rem}
+        .theme-toggle{position:fixed;top:1rem;right:1rem;z-index:50;width:44px;height:44px;border-radius:50%;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.2rem;transition:all 0.3s;box-shadow:0 4px 12px var(--shadow-color)}
+        .theme-toggle:hover{transform:scale(1.1);box-shadow:0 8px 24px var(--shadow-color)}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+        .btn-loading{pointer-events:none;opacity:0.8}
+        .btn-loading i{display:none}
+        .btn-loading::after{content:"";display:inline-block;width:16px;height:16px;border:2px solid #fff;border-radius:50%;border-top-color:transparent;animation:spin 0.8s linear infinite;margin-left:8px}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .dark .text-slate-900,.dark .text-slate-800,.dark .text-slate-700{color:var(--text-primary)!important}
+        .dark .text-green-700{color:#4ade80!important}
+        .dark .text-green-600{color:#22c55e!important}
+        .dark .bg-red-50{background:#450a0a!important}
+        .dark .border-red-100{border-color:#7f1d1d!important}
+        .dark .text-red-700{color:#fca5a5!important}
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <button class="theme-toggle" onclick="toggleTheme()" title="Tema Değiştir">
+        <i class="fa-solid fa-moon" id="themeIcon"></i>
+    </button>
+    <div class="w-full max-w-6xl flex-grow mx-auto flex flex-col">
+        
+        <div class="text-center mb-8 mt-8 md:mt-16 animate-fade-in">
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 mb-5">
+                <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-[1.5rem] flex items-center justify-center shadow-2xl transform hover:scale-105 hover:rotate-3 transition-all duration-300 shrink-0" style="background:linear-gradient(135deg,#3b82f6 0%,#2563eb 50%,#4f46e5 100%);box-shadow:0 20px 40px -10px rgba(59,130,246,0.5)">
+                    <i class="fa-solid fa-crosshairs text-3xl md:text-4xl" style="color:#ffffff;text-shadow:0 2px 8px rgba(0,0,0,0.3)"></i>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-black tracking-tighter leading-none select-none">
+                    <span class="text-slate-800 dark:text-white">Fiyat</span><span class="text-blue-600 dark:text-blue-400">Avcısı</span>
+                </h1>
+            </div>
+            <p class="text-slate-500 dark:text-slate-400 font-bold text-[10px] md:text-xs uppercase tracking-[0.3em] md:tracking-[0.4em] opacity-80 pl-1">Güvenli Alışveriş & Fiyat Motoru</p>
+        </div>
+
+        <div class="w-full max-w-4xl mx-auto mb-8 relative z-30 animate-fade-in" style="animation-delay:0.1s">
+            <div class="search-container rounded-3xl p-2 md:p-3 flex items-center w-full">
+                <div style="color:var(--text-muted)" class="text-xl md:text-2xl ml-3 md:ml-4 mr-2 md:mr-4 shrink-0"><i class="fa-solid fa-magnifying-glass"></i></div>
+                <input type="text" id="queryInput" class="flex-grow bg-transparent border-none outline-none text-slate-900 dark:text-white text-lg md:text-2xl py-3 md:py-4 font-bold placeholder-gray-300 dark:placeholder-slate-500 min-w-0" placeholder="Ürün, Marka veya Model ara..." autocomplete="off" oninput="toggleClearBtn()">
+                <div id="clearBtn" onclick="clearSearch()" class="px-2 md:px-4 text-lg md:text-xl shrink-0 h-full" title="Temizle"><i class="fa-solid fa-circle-xmark"></i></div>
+                <button id="searchBtn" onclick="runEngine()" style="color:#ffffff;background:#2563eb" class="hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 px-6 md:px-10 py-3 md:py-5 rounded-2xl font-bold transition-all shadow-lg flex items-center gap-2 md:gap-3 text-base md:text-lg shrink-0 justify-center active:scale-95 hover:shadow-xl ml-2">ARA</button>
+            </div>
+            <div id="typoContainer" class="hidden pl-4"></div>
+            <div id="historyArea" class="mt-3 px-2 flex flex-wrap gap-2 justify-center md:justify-start hidden"></div>
+        </div>
+
+        <div id="errorPanel" class="hidden mb-10 mx-auto max-w-lg animate-fade-in w-full">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-4 flex items-center gap-4 justify-center text-red-700 font-bold text-sm shadow-sm">
+                <i class="fa-solid fa-circle-exclamation text-lg shrink-0"></i> <span id="errorText"></span>
+            </div>
+        </div>
+
+        <div id="resultInfo" class="hidden mb-4 text-center animate-fade-in">
+            <span class="text-sm font-bold" style="color:var(--text-secondary)"><i class="fa-solid fa-store mr-2"></i><span id="resultCount">0</span> mağaza bulundu</span>
+        </div>
+        <div id="gridContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 pb-8 w-full"></div>
+
+        <div id="initialContent" class="animate-fade-in" style="animation-delay:0.2s">
+            <div class="mb-12">
+                <h3 class="text-center font-bold text-xs tracking-widest uppercase mb-6" style="color:var(--text-muted)">Popüler Kategoriler</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                    <div class="cat-btn" onclick="quickSearch('iPhone 16 Pro')"><i class="fa-solid fa-mobile-screen-button cat-icon"></i><span class="cat-name">Telefon</span></div>
+                    <div class="cat-btn" onclick="quickSearch('Nike Air Max')"><i class="fa-solid fa-shoe-prints cat-icon"></i><span class="cat-name">Giyim</span></div>
+                    <div class="cat-btn" onclick="quickSearch('RTX 4070')"><i class="fa-solid fa-microchip cat-icon"></i><span class="cat-name">Donanım</span></div>
+                    <div class="cat-btn" onclick="quickSearch('Dyson V15')"><i class="fa-solid fa-broom cat-icon"></i><span class="cat-name">Ev</span></div>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mt-4">
+                    <div class="cat-btn" onclick="quickSearch('Macbook Air M3')"><i class="fa-solid fa-laptop cat-icon"></i><span class="cat-name">Laptop</span></div>
+                    <div class="cat-btn" onclick="quickSearch('Samsung Galaxy S24')"><i class="fa-brands fa-android cat-icon"></i><span class="cat-name">Android Telefon</span></div>
+                    <div class="cat-btn" onclick="quickSearch('PlayStation 5')"><i class="fa-solid fa-gamepad cat-icon"></i><span class="cat-name">Oyun Konsolu</span></div>
+                    <div class="cat-btn" onclick="quickSearch('Airfryer')"><i class="fa-solid fa-blender cat-icon"></i><span class="cat-name">Mutfak</span></div>
+                </div>
+            </div>
+            <div class="mb-8">
+                <h3 class="text-center font-bold text-xs tracking-widest uppercase mb-4" style="color:var(--text-muted)">Trend Ürünler</h3>
+                <div class="flex flex-wrap justify-center gap-2 max-w-3xl mx-auto">
+                    <span class="history-chip" onclick="quickSearch('Apple Watch')"><i class="fa-solid fa-fire text-orange-500"></i> Apple Watch</span>
+                    <span class="history-chip" onclick="quickSearch('AirPods Pro')"><i class="fa-solid fa-fire text-orange-500"></i> AirPods Pro</span>
+                    <span class="history-chip" onclick="quickSearch('Adidas Samba')"><i class="fa-solid fa-fire text-orange-500"></i> Adidas Samba</span>
+                    <span class="history-chip" onclick="quickSearch('Lego Technic')"><i class="fa-solid fa-fire text-orange-500"></i> Lego Technic</span>
+                    <span class="history-chip" onclick="quickSearch('Robot Süpürge')"><i class="fa-solid fa-fire text-orange-500"></i> Robot Süpürge</span>
+                    <span class="history-chip" onclick="quickSearch('Parfüm Erkek')"><i class="fa-solid fa-fire text-orange-500"></i> Parfüm</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="w-full border-t py-12 md:py-16 mt-auto relative z-10 -mx-4 md:-mx-8 px-4 md:px-8 w-[calc(100%+2rem)] md:w-[calc(100%+4rem)] transition-colors" style="background:var(--bg-secondary);border-color:var(--border-color)">
+        <div class="max-w-5xl mx-auto text-center">
+            <div class="mb-10">
+                <a href="mailto:support@fiyatavcisi.com.tr" class="inline-flex items-center gap-2 font-bold transition-all px-6 py-3 rounded-full text-xs md:text-sm shadow-sm hover:shadow-lg hover:-translate-y-0.5" style="background:var(--bg-tertiary);color:var(--text-primary);border:1px solid var(--border-color)">
+                    <i class="fa-solid fa-envelope text-blue-500"></i>
+                    <span>support@fiyatavcisi.com.tr</span>
+                </a>
+            </div>
+            <div class="flex justify-center gap-6 mb-8 text-xs font-bold" style="color:var(--text-secondary)">
+                <a href="gizlilik.html" class="hover:text-blue-500 transition-colors">Gizlilik Politikası</a>
+                <a href="kullanim.html" class="hover:text-blue-500 transition-colors">Kullanım Koşulları</a>
+                <a href="cerez.html" class="hover:text-blue-500 transition-colors">Çerez Politikası</a>
+            </div>
+            <div class="text-[10px] md:text-[11px] leading-relaxed space-y-3 border-t pt-8 max-w-3xl mx-auto opacity-80" style="color:var(--text-muted);border-color:var(--border-color)">
+                <p><strong>YASAL UYARI:</strong> FiyatAvcısı, bir e-ticaret sitesi değildir. Kullanıcıları güvenilir satıcıların resmi sitelerine yönlendirir.</p>
+                <p class="pt-6 opacity-60 font-mono font-medium text-[9px] uppercase tracking-widest">&copy; 2025 FiyatAvcısı Inc. Tüm hakları saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ==================== VERİTABANI - ARALIK 2025 ====================
+        
+        // PC Donanım & Gaming (2 Aralık 2025 Güncel)
+        const D_HARDWARE=[
+            // Ekran Kartları - NVIDIA (RTX 50 Serisi - Blackwell - Ocak 2025)
+            "rtx","nvidia rtx","geforce rtx","rtx 5090","rtx 5080","rtx 5070","rtx 5070 ti","rtx 5060","rtx 5060 ti",
+            "5090","5080","5070","5070 ti","5060","5060 ti","blackwell","gb202","gb203",
+            "rtx 4090","rtx 4080","rtx 4080 super","rtx 4070","rtx 4070 ti","rtx 4070 ti super","rtx 4070 super","rtx 4060","rtx 4060 ti",
+            "4090","4080","4080 super","4070","4070 ti","4070 ti super","4070 super","4060","4060 ti",
+            "rtx 3090","rtx 3080","rtx 3070","rtx 3060","3090","3080","3070","3060",
+            "gtx","gtx 1660","gtx 1650","gtx 1660 super","geforce","nvidia","cuda","dlss 4","dlss","frame generation",
+            // Ekran Kartları - AMD (RX 9000 Serisi - RDNA 4 - 2025)
+            "radeon","amd radeon","rx 9070","rx 9070 xt","rx 9080","rx 9060",
+            "9070 xt","9070","9080","rdna 4","fsr 4",
+            "rx 7900","rx 7900 xtx","rx 7900 gre","rx 7800","rx 7700","rx 7600",
+            "7900 xtx","7900 xt","7900 gre","7800 xt","7700 xt","7600 xt","7600","rdna 3",
+            // Ekran Kartları - Intel
+            "intel arc","arc b580","arc b570","arc a770","arc a750","arc a580","battlemage","b580","b570","xe2",
+            // İşlemciler - Intel (Arrow Lake & Raptor Lake Refresh - 2025)
+            "intel","intel core","core ultra","core ultra 200","core ultra 9 285k","core ultra 7 265k","core ultra 5 245k",
+            "ultra 9 285k","ultra 7 265k","ultra 5 245k","285k","265k","245k",
+            "core ultra 9","core ultra 7","core ultra 5","core ultra 200v","lunar lake",
+            "i9","intel i9","i7","intel i7","i5","intel i5","i3","intel i3",
+            "i9-14900ks","i9-14900k","i7-14700k","i5-14600k","14900ks","14900k","14700k","14600k",
+            "i9-13900k","i7-13700k","i5-13600k","13900k","13700k","13600k",
+            "raptor lake","arrow lake","lunar lake","lga1851",
+            // İşlemciler - AMD (Ryzen 9000 - Zen 5 - 2025)
+            "amd","amd ryzen","ryzen","ryzen 9","ryzen 7","ryzen 5","ryzen 3",
+            "ryzen 9 9950x","ryzen 9 9900x","ryzen 7 9700x","ryzen 5 9600x","ryzen 9 9950x3d","ryzen 7 9800x3d",
+            "9950x","9900x","9700x","9600x","9950x3d","9800x3d","zen 5","zen 5 3d",
+            "ryzen 7950x","ryzen 7900x","ryzen 7800x3d","ryzen 7600x","ryzen 5800x3d",
+            "7950x","7900x","7800x3d","7600x","5800x3d","5600x","zen 4","zen 4 3d",
+            "threadripper 7000","threadripper pro","epyc","storm peak","am5",
+            // İşlemciler - Apple & Qualcomm
+            "apple m4","m4 chip","m4 pro","m4 max","m4 ultra","apple m3","m3 chip",
+            "snapdragon x elite","snapdragon x plus","snapdragon x","qualcomm","copilot+ pc","arm pc",
+            // Anakartlar (Z890, X870 - 2025)
+            "anakart","motherboard","z890","x870e","x870","b850","z790","b650e","b650","x670e","x670","b550","x570",
+            "am5 anakart","lga1851 anakart","lga1700","ddr5 anakart",
+            "asus anakart","msi anakart","gigabyte anakart","asrock anakart",
+            "rog maximus","meg godlike","aorus master","taichi",
+            // RAM (DDR5-8000+ 2025)
+            "ram","ddr5","ddr5 ram","ddr4","ddr4 ram",
+            "8000mhz","7200mhz","6400mhz","6000mhz","5600mhz","4800mhz",
+            "16gb ram","32gb ram","48gb ram","64gb ram","96gb ram","128gb ram",
+            "16gb","32gb","48gb","64gb","96gb","128gb",
+            "corsair dominator","corsair vengeance","gskill trident z5","kingston fury","teamgroup","crucial pro",
+            "cudimm","ddr5 cudimm",
+            // Depolama (PCIe 5.0 SSD 2025)
+            "ssd","nvme","nvme ssd","m.2","m.2 ssd","hdd","harddisk","pcie 5.0","pcie 5.0 ssd","pcie 4.0",
+            "samsung 990 pro","samsung 990 evo","samsung 980 pro","crucial t700","wd sn850x","corsair mp700",
+            "1tb ssd","2tb ssd","4tb ssd","500gb ssd","8tb","4tb",
+            "12000mb/s","10000mb/s","7000mb/s","gen5 ssd",
+            // Güç Kaynağı (ATX 3.1 - 2025)
+            "psu","güç kaynağı","power supply","1600w","1200w","1000w","850w","750w","650w",
+            "atx 3.1","atx 3.0","12vhpwr","12v-2x6","modüler psu","80 plus","titanium","platinum","gold",
+            "corsair psu","seasonic","be quiet","cooler master psu","asus rog thor","msi meg",
+            // Soğutma (AIO 420mm & Termal 2025)
+            "soğutucu","cpu soğutucu","aio","sıvı soğutma","hava soğutma","fan","kasa fanı",
+            "aio 420mm","aio 360mm","aio 280mm","aio 240mm",
+            "termal macun","thermal grizzly","noctua","arctic","cooler master","be quiet","deepcool",
+            "kraken","h170i","lc720","fuma 3","ak620","nhd15",
+            // Kasa (Airflow & Mesh 2025)
+            "kasa","bilgisayar kasası","tower","mid tower","full tower","mini itx","matx","tempered glass",
+            "lian li o11","lian li lancool","nzxt h9","corsair 5000d","phanteks evolv","fractal north",
+            "airflow kasa","mesh kasa","çift odalı kasa",
+            // Monitör (OLED & 500Hz 2025)
+            "monitör","monitor","gaming monitör","4k monitör","qhd","1440p","2k monitör","8k",
+            "144hz","165hz","240hz","360hz","480hz","500hz","540hz",
+            "oled monitör","qd-oled","woled","ips","va","27 inç","32 inç","34 inç","42 inç","45 inç",
+            "lg oled","samsung odyssey","alienware aw3225qf","asus pg42","msi mpg",
+            "1ms","0.03ms gtg","hdr 1000","hdr 1400","displayport 2.1",
+            // Periferiler (2025)
+            "klavye","mekanik klavye","gaming klavye","75%","tkl","60%","custom keyboard",
+            "mouse","gaming mouse","lightweight mouse","40g mouse","8khz polling",
+            "mousepad","xl mousepad","desk mat",
+            "webcam","4k webcam","mikrofon","usb mikrofon","xlr mikrofon",
+            "streamdeck","stream deck+","capture card","elgato 4k60","elgato hd60",
+            "razer huntsman","logitech g pro x","wooting 60he","wooting 80he",
+            "logitech g pro x superlight 2","razer viper v3","pulsar x2",
+            // Markalar - Notebook (2025)
+            "monster","monster notebook","tulpar","abra","casper excalibur","excalibur","semruk","huma",
+            "lenovo","lenovo legion","legion pro 7","legion 9i","legion go s",
+            "msi","msi laptop","msi raider","msi stealth","msi vector",
+            "asus","asus laptop","rog","rog laptop","rog strix","rog zephyrus","rog flow",
+            "acer","acer nitro","acer predator","hp","hp omen","omen transcend","dell","alienware","alienware m18",
+            "razer blade","razer blade 18","gigabyte aorus",
+            // Markalar - Parça (2025)
+            "gigabyte","corsair","logitech","razer","steelseries","hyperx","asus tuf","tuf gaming",
+            "zotac","pny","palit","gainward","sapphire","powercolor","xfx","asrock",
+            // Genel
+            "bilgisayar","pc","gaming pc","gaming","oyuncu","ekran kartı","gpu","cpu","işlemci",
+            "masaüstü","workstation","overclock","toplama pc","sistem","build",
+            // Ağ (WiFi 7 2025)
+            "router","modem","mesh","wifi 7","wifi 7 router","wifi 6e","wifi 6","access point","switch",
+            "nas","synology","qnap","asustor",
+            "tp-link","asus router","netgear","rog rapture","gt-be98",
+            // Diğer (AI PC 2025)
+            "ups","projeksiyon","3d yazıcı","ai pc","npu","copilot+ pc","copilot pc",
+            "mini pc","nuc","intel nuc","geekom","beelink","minisforum"
+        ];
+        
+        // VR & Gaming Cihazları (2 Aralık 2025 Güncel)
+        const D_VR_GAMING=[
+            // Meta Quest (2025)
+            "meta quest","meta quest 3s","quest 3s","quest 3","quest3","quest 2","quest2","quest pro",
+            "meta","oculus","oculus quest","meta horizon",
+            // Apple Vision
+            "apple vision pro","vision pro","visionos","spatial computing",
+            // VR Genel
+            "vr","vr gözlük","sanal gerçeklik","virtual reality","mr","mixed reality","xr",
+            "psvr","psvr 2","psvr2","playstation vr","pico 4","pico 4 ultra","htc vive","vive xr",
+            // Handheld Gaming (2025)
+            "steam deck","steam deck oled","steam deck lcd","steamdeck","valve",
+            "rog ally","rog ally x","ally x","asus ally",
+            "legion go","legion go s","lenovo legion go",
+            "msi claw","msi claw 8","claw a1m",
+            "ayaneo","ayaneo 2s","ayaneo kun","ayaneo pocket",
+            "gpd win","gpd win 4","gpd win mini",
+            "onexplayer","onexfly",
+            "handheld","taşınabilir konsol","handheld pc","portable gaming"
+        ];
+        
+        // Oyun Konsolları (2 Aralık 2025 Güncel)
+        const D_CONSOLE=[
+            // PlayStation (PS5 Pro 2024)
+            "playstation","playstation 5","ps5","ps5 pro","ps5 slim","ps5 digital","ps4","ps4 pro","ps4 slim",
+            "dualsense","dualsense edge","dualshock","ps5 kol","playstation kol",
+            "ps portal","playstation portal","remote play",
+            "psvr 2","psvr2","playstation vr2",
+            "psn","playstation plus","ps plus","ps plus premium",
+            // Xbox (2025)
+            "xbox","xbox series x","xbox series s","series x","series s","xbox one","xbox one x","xbox one s",
+            "xbox controller","xbox kol","elite controller","elite series 2",
+            "game pass","xbox game pass","gamepass","game pass ultimate",
+            "xbox cloud","xcloud",
+            // Nintendo (Switch 2 bekleniyor 2025)
+            "nintendo","nintendo switch","switch","switch 2","switch oled","switch lite",
+            "joy-con","joycon","pro controller","nintendo controller","joy con drift",
+            "nintendo online","switch online",
+            // Retro & Mini Konsollar
+            "retro konsol","mini konsol","analogue pocket","miyoo","anbernic","retroid",
+            "playdate","panic playdate",
+            // Genel
+            "konsol","oyun konsolu","gamepad","joystick","oyun kolu","controller","gaming controller"
+        ];
+        
+        // Telefon & Tablet (2 Aralık 2025 Güncel)
+        const D_PHONE=[
+            // Apple iPhone (iPhone 16 Serisi - Eylül 2024)
+            "iphone","iphone 16","iphone 16 pro","iphone 16 pro max","iphone 16 plus","iphone 16e",
+            "iphone 15","iphone 15 pro","iphone 15 pro max","iphone 15 plus","iphone 14","iphone se",
+            "apple intelligence","a18 pro","a18","a17 pro","dynamic island",
+            // Samsung Galaxy (S25 bekleniyor Ocak 2025, S24 güncel)
+            "galaxy","samsung galaxy","galaxy s25","galaxy s25 ultra","galaxy s25+",
+            "s25","s25 ultra","s25+",
+            "galaxy s24","galaxy s24 ultra","galaxy s24+","galaxy s24 fe",
+            "s24","s24 ultra","s24+","s24 fe","s23","s23 ultra","s23+","s23 fe",
+            "galaxy z fold","z fold 6","z fold 5","galaxy z flip","z flip 6","z flip 5",
+            "fold 6","flip 6","katlanabilir telefon","foldable",
+            "galaxy a","galaxy a55","galaxy a35","galaxy a25","galaxy a15","a55","a35","a25","a15","a54","a34","a14",
+            "galaxy m","m55","m35","m15",
+            "galaxy ai","circle to search","one ui 7","one ui 6",
+            // Google Pixel (Pixel 9 - Ağustos 2024)
+            "pixel","google pixel","pixel 9","pixel 9 pro","pixel 9 pro xl","pixel 9 pro fold",
+            "pixel 8","pixel 8 pro","pixel 8a","pixel fold",
+            "tensor g4","tensor g3","gemini nano","magic eraser","best take",
+            // Xiaomi (Xiaomi 15 - Kasım 2024)
+            "xiaomi","xiaomi 15","xiaomi 15 pro","xiaomi 14","xiaomi 14 ultra","xiaomi 14 pro","xiaomi 13",
+            "redmi","redmi note 14","redmi note 14 pro","redmi note 13","redmi 14","redmi 13",
+            "poco","poco f6","poco f6 pro","poco f5","poco x6","poco x6 pro","poco x5","poco m6",
+            "hyperos","miui","xiaomi pad",
+            // Huawei (Mate 70 - Kasım 2024)
+            "huawei","huawei mate","mate 70","mate 70 pro","mate 60","mate 60 pro","mate x5",
+            "huawei pura","pura 70","pura 70 ultra","pura 70 pro",
+            "huawei nova","nova 12","p60","p60 pro",
+            "harmonyos","kirin","huawei satellite",
+            // OPPO (Find X8 - Kasım 2024)
+            "oppo","oppo find","find x8","find x8 pro","find x7","find n3",
+            "oppo reno","reno 12","reno 12 pro","reno 11","oppo a","oppo a79","oppo a58",
+            "coloros","hasselblad oppo",
+            // Vivo (X200 - Kasım 2024)
+            "vivo","vivo x200","vivo x200 pro","vivo x100","vivo x100 ultra",
+            "vivo v","vivo v40","vivo v30","vivo y","vivo y100",
+            "funtouch","zeiss vivo",
+            // OnePlus (OnePlus 13 - Ocak 2025)
+            "oneplus","oneplus 13","oneplus 12","oneplus 12r","oneplus open","oneplus nord",
+            "oneplus nord 4","oneplus nord ce","oxygenos","hasselblad oneplus",
+            // Realme
+            "realme","realme gt","realme gt 6","realme gt 5 pro","realme 13","realme 12","realme c",
+            // Honor (Magic 7 - Kasım 2024)
+            "honor","honor magic","magic 7","magic 7 pro","magic v3","magic vs3",
+            "honor 200","honor 200 pro","honor 90","magicos",
+            // Nothing
+            "nothing phone","nothing phone 2a","nothing phone 2","nothing os","nothing ear","glyph",
+            // Sony & Diğer
+            "sony xperia","xperia 1 vi","xperia 5 v","xperia 10 vi",
+            "asus rog phone","rog phone 8","rog phone 8 pro",
+            "nubia","red magic","gaming phone",
+            // Genel
+            "telefon","cep telefonu","akıllı telefon","smartphone","android","ios",
+            "5g telefon","satellite sos","esim","dual sim"
+        ];
+        
+        // Bilgisayar & Tablet (2 Aralık 2025 Güncel)
+        const D_COMPUTER=[
+            // Apple Mac (M4 Serisi - Kasım 2024)
+            "macbook","macbook air","macbook air 15","macbook pro","macbook pro 14","macbook pro 16",
+            "mac mini","mac mini m4","mac studio","imac","imac 24","mac pro",
+            "apple m4","m4 chip","m4 pro","m4 max","apple m3","m3 chip","m3 pro","m3 max","m3 ultra",
+            "apple silicon","macos sequoia","macos sonoma","apple intelligence mac",
+            // Apple iPad (M4 iPad Pro - Mayıs 2024)
+            "ipad","ipad pro","ipad pro m4","ipad air","ipad air m2","ipad mini","ipad mini 7","ipad 10",
+            "apple pencil","apple pencil pro","apple pencil usb-c","magic keyboard ipad",
+            "ipados 18","stage manager","sidecar",
+            // Microsoft Surface (2024-2025)
+            "surface","surface pro","surface pro 11","surface laptop","surface laptop 7","surface go",
+            "microsoft surface","surface studio","copilot+ surface",
+            // Samsung Galaxy Tab (Tab S10 - Ekim 2024)
+            "tablet","android tablet","samsung tab","galaxy tab",
+            "tab s10","tab s10 ultra","tab s10+","tab s9","tab s9 ultra","tab s9+","tab s9 fe",
+            "tab s8","samsung tablet","samsung dex","s pen tablet",
+            // Diğer Tabletler
+            "xiaomi pad","xiaomi pad 6","pad 6 pro","redmi pad","lenovo tab","lenovo yoga tab",
+            "huawei matepad","matepad pro","amazon fire","kindle fire",
+            // Laptop Kategorileri
+            "laptop","notebook","dizüstü","ultrabook","2 in 1","convertible","chromebook",
+            "gaming laptop","iş laptopu","öğrenci laptopu","ince laptop",
+            // Copilot+ PC (2024-2025)
+            "copilot+ pc","ai laptop","npu laptop","snapdragon laptop","arm laptop"
+        ];
+        
+        // Kulaklık & Ses (2 Aralık 2025 Güncel)
+        const D_AUDIO=[
+            // Apple (AirPods 4 - Eylül 2024)
+            "airpods","airpods pro","airpods pro 2","airpods 4","airpods max","airpods max usb-c",
+            "h2 chip","adaptive audio","conversation awareness","personalized spatial audio",
+            // Samsung (Galaxy Buds 3 - Temmuz 2024)
+            "galaxy buds","galaxy buds 3","galaxy buds 3 pro","buds 3","buds 3 pro",
+            "buds fe","buds live","buds2","buds2 pro","blade lights","galaxy ai buds",
+            // Sony (WH/WF-1000XM5 - 2024)
+            "sony wh","sony wf","wh-1000xm5","wf-1000xm5","xm5","wh-1000xm4","wf-1000xm4","xm4",
+            "sony linkbuds","linkbuds s","linkbuds open","ult wear","sony ult",
+            "360 reality audio","dsee extreme","speak to chat",
+            // Bose (QuietComfort Ultra - 2024)
+            "bose","bose quietcomfort","quietcomfort","quietcomfort ultra","qc ultra","bose qc",
+            "bose 700","qc45","qc35","bose soundlink","immersive audio",
+            // Sennheiser
+            "sennheiser","momentum 4","momentum true wireless","mtw4","ie 600","ie 900","hd 660s",
+            // Bang & Olufsen
+            "bang olufsen","b&o","beoplay","beoplay h95","beoplay ex","beosound",
+            // Genel Kulaklık
+            "kulaklık","tws","earbuds","bluetooth kulaklık","kablosuz kulaklık",
+            "anc","noise cancelling","active noise cancelling","transparency mode",
+            "ldac","aptx","lossless audio","hi-res audio","multipoint",
+            // Gaming Kulaklık (2024)
+            "gaming kulaklık","headset","gaming headset",
+            "hyperx cloud","cloud alpha","cloud iii","steelseries arctis","arctis nova",
+            "razer kraken","razer blackshark","logitech g pro x","g pro x 2",
+            "astro a50","astro a40","corsair virtuoso","audeze maxwell",
+            // Hoparlör & Ses Sistemi
+            "hoparlör","speaker","bluetooth speaker","taşınabilir hoparlör",
+            "soundbar","dolby atmos soundbar","subwoofer","ses sistemi","ev sinema",
+            "dolby atmos","dts:x","surround sound","5.1","7.1",
+            // Marshall
+            "marshall","marshall speaker","marshall acton","marshall stanmore","marshall emberton","marshall motif",
+            // JBL (2024)
+            "jbl","jbl flip","jbl flip 6","jbl charge","jbl charge 5","jbl xtreme","jbl xtreme 4",
+            "jbl partybox","jbl boombox","jbl tour","jbl tune","jbl live",
+            // Sonos
+            "sonos","sonos era","era 100","era 300","sonos arc","sonos beam","sonos sub",
+            "sonos move","sonos roam","sonos ace","trueplay",
+            // Harman Kardon
+            "harman kardon","harman","aura studio","onyx","citation",
+            // Diğer
+            "denon","marantz","yamaha","bowers wilkins","kef","devialet","focal"
+        ];
+        
+        // Akıllı Saat & Giyilebilir (2 Aralık 2025 Güncel)
+        const D_SMARTWATCH=[
+            // Apple Watch (Series 10 & Ultra 2 - Eylül 2024)
+            "apple watch","apple watch ultra","apple watch ultra 2","apple watch series","watch series 10",
+            "watch series 9","watch se","watch se 2","ultra 2",
+            "s10 chip","double tap","precision finding","watchos 11",
+            // Samsung Galaxy Watch (Galaxy Watch 7 & Ultra - Temmuz 2024)
+            "galaxy watch","galaxy watch 7","galaxy watch ultra","galaxy watch 6","galaxy watch 6 classic",
+            "watch 7","watch ultra","watch 6","watch 6 classic",
+            "galaxy fit","galaxy fit 3","galaxy ring","samsung ring",
+            "bioactive sensor","body composition","sleep coaching","samsung health","wear os 5",
+            // Google Pixel Watch (Pixel Watch 3 - Ağustos 2024)
+            "pixel watch","pixel watch 3","pixel watch 2","fitbit sense","fitbit versa","fitbit charge",
+            // Garmin (Fenix 8 & Enduro 3 - 2024)
+            "garmin","garmin fenix","fenix 8","fenix 7","fenix 7x","enduro","enduro 3",
+            "forerunner","forerunner 965","forerunner 265","forerunner 955","forerunner 255",
+            "venu","venu 3","venu 2","instinct","instinct 2","instinct crossover",
+            "epix","epix pro","tactix","descent","quatix",
+            "garmin connect","training status","body battery","pulse ox",
+            // Xiaomi & Amazfit
+            "mi band","mi band 8","mi band 8 pro","xiaomi band","xiaomi smart band",
+            "xiaomi watch","xiaomi watch s3","xiaomi watch 2","xiaomi watch 2 pro",
+            "amazfit","amazfit gtx 4","amazfit gtr 4","amazfit gts 4","amazfit balance","amazfit t-rex",
+            "zepp os","zepp health",
+            // Huawei (Watch GT 5 - Eylül 2024)
+            "huawei watch","huawei watch gt","watch gt 5","watch gt 5 pro","gt5","gt 5","watch gt 4","gt4","gt 4",
+            "watch fit","watch fit 3","watch fit 2","huawei band","band 9",
+            "huawei ultimate","watch ultimate","trusense",
+            // Diğer Markalar
+            "withings","withings scanwatch","scanwatch 2","suunto","suunto race","suunto 9",
+            "polar","polar vantage","polar grit","polar pacer",
+            "coros","coros pace","coros apex","coros vertix",
+            // Genel
+            "akıllı saat","smartwatch","fitness tracker","spor saati","gps saati","outdoor saat",
+            "kalp ritmi","nabız ölçer","uyku takibi","stres takibi","spo2"
+        ];
+        
+        // Kamera & Fotoğraf (2 Aralık 2025 Güncel)
+        const D_CAMERA=[
+            // GoPro (Hero 13 - Eylül 2024)
+            "gopro","gopro hero","hero 13","hero 13 black","hero 12","hero 11","hero13","hero12","hero11",
+            "gopro max","max lens mod","gopro quik","hypersmooth","gp-log",
+            // DJI (Mavic 3 Pro & Osmo Pocket 3 - 2024)
+            "dji","dji mavic","mavic 3","mavic 3 pro","mavic 3 classic","air 3","air 3s",
+            "dji mini","mini 4 pro","mini 4k","mini 3","mini 3 pro",
+            "dji neo","neo drone","dji avata","avata 2","dji fpv",
+            "dji osmo","osmo pocket","pocket 3","osmo action","action 5 pro","action 4",
+            "dji rs","rs 4 pro","rs 4","ronin",
+            "dji mic","mic 2","wireless mic",
+            // Insta360 (X4 & Ace Pro 2 - 2024)
+            "insta360","insta360 x4","x4","one rs","one x3","go 3s","go 3",
+            "insta360 ace","ace pro 2","ace pro","flow pro","flow 2",
+            "360 kamera","invisible selfie stick",
+            // Drone Genel
+            "drone","quadcopter","fpv","fpv drone","racing drone","cinewhoop",
+            "obstacle avoidance","return to home","follow me",
+            // DSLR & Aynasız - Canon
+            "canon","canon eos","eos r","eos r5","eos r5 ii","eos r6","eos r6 ii","eos r8","eos r7","eos r50",
+            "canon rf","rf lens","rf mount",
+            // DSLR & Aynasız - Sony
+            "sony alpha","sony a7","a7 iv","a7c ii","a7r v","a9 iii","a6700","a6400",
+            "sony zv","zv-e10","zv-e1","zv-1 ii","vlog kamera",
+            "sony g master","gm lens","e-mount",
+            // DSLR & Aynasız - Nikon
+            "nikon","nikon z","z8","z9","z6 iii","z5","zf","nikon z lens",
+            // DSLR & Aynasız - Fujifilm
+            "fujifilm","fuji x","x-t5","x-t50","x-s20","x-h2","x-h2s","x100vi","x100v",
+            "gfx","gfx 100","medium format","film simulation",
+            // DSLR & Aynasız - Diğer
+            "panasonic lumix","lumix s5","lumix gh7","lumix g9","micro four thirds",
+            "leica","leica q3","leica m","hasselblad","x2d",
+            "om system","olympus","om-1","om-5",
+            // Genel Kamera
+            "kamera","fotoğraf makinesi","dslr","aynasız","mirrorless","dijital kamera","full frame",
+            "aps-c","sensor","megapiksel","4k video","8k video",
+            // Aksesuarlar
+            "lens","objektif","tripod","gimbal","stabilizer","nd filtre","cpl filtre",
+            "kamera çantası","hafıza kartı","sd card","cfexpress",
+            // Kategoriler
+            "action kamera","aksiyon kamerası","vlog kamera","profesyonel kamera","başlangıç kamerası"
+        ];
+        
+        // Ev Elektroniği (2 Aralık 2025 Güncel)
+        const D_HOME_ELECTRONICS=[
+            // Dyson (V16 & Airstrait 2024)
+            "dyson","dyson v16","dyson v15","dyson v15s","dyson v12","dyson v11","dyson gen5","dyson gen5detect",
+            "dyson purifier","dyson big+quiet","dyson airwrap","dyson airstrait","dyson supersonic","dyson corrale",
+            "dyson pure","dyson humidify","dyson zone","cyclone","hepa h13",
+            // Robot Süpürge - Roborock (S8 MaxV Ultra - 2024)
+            "roborock","roborock s8","s8 maxv ultra","s8 pro ultra","roborock q revo","q revo maxv",
+            "roborock flexi","flexi pro","roborock dyad","qho max",
+            // Robot Süpürge - Dreame (X40 Ultra - 2024)
+            "dreame","dreame x40","x40 ultra","dreame l40","l40 ultra","dreame l20","dreame l10",
+            "dreame h14","dreame h13","dreame h12","dreame mop","dreambot",
+            // Robot Süpürge - Ecovacs (X5 Pro - 2024)
+            "ecovacs","deebot","deebot x5","x5 omni","x2 omni","t30 omni","deebot n20","ozmo",
+            // Robot Süpürge - Diğer
+            "xiaomi robot","xiaomi vacuum","mi robot","roborock xiaomi",
+            "irobot","roomba","roomba j9","braava","roidmi","narwal",
+            "robot süpürge","akıllı süpürge","mop","otomatik boşaltma","self-empty","lidar",
+            // Hava Temizleyici
+            "hava temizleyici","air purifier","hepa","pm2.5","co2 sensör",
+            "xiaomi purifier","mi air purifier","philips purifier","levoit","blueair",
+            // Airfryer (2024)
+            "airfryer","philips airfryer","tefal airfryer","xiaomi airfryer","mi smart airfryer",
+            "cosori","ninja airfryer","ninja foodi","fritöz","sıcak hava fritözü","dual zone",
+            // Kahve Makinesi (2024)
+            "kahve makinesi","espresso","espresso makinesi","nespresso","vertuo","dolce gusto",
+            "delonghi","delonghi magnifica","magnifica s","dinamica","primadonna",
+            "philips ep","ep3246","ep5447","saeco","tam otomatik kahve",
+            "jura","jura e8","jura j8","sage","sage barista",
+            "french press","moka pot","v60","chemex","aeropress","filtre kahve",
+            // Mutfak Robotları
+            "blender","mikser","mutfak robotu","food processor",
+            "thermomix","thermomix tm6","kitchenaid","kenwood","bosch mutfak",
+            "nutribullet","vitamix","ninja blender",
+            // Küçük Ev Aletleri
+            "tost makinesi","waffle","sandwich maker","elektrikli ızgara",
+            "su ısıtıcı","kettle","çay makinesi","dem otomatı",
+            "ütü","buharlı ütü","buhar istasyonu","buharlı temizleyici",
+            "ekmek yapma","ekmek makinesi",
+            // İklimlendirme (2024)
+            "klima","split klima","inverter klima","taşınabilir klima","mobil klima",
+            "samsung klima","lg klima","daikin","mitsubishi klima",
+            "vantilatör","tower fan","kule vantilatör","ısıtıcı","konvektör","radyatör","infrared ısıtıcı",
+            // Beyaz Eşya
+            "buzdolabı","french door","side by side","no frost",
+            "çamaşır makinesi","kurutmalı çamaşır","kurutma makinesi","bulaşık makinesi",
+            "fırın","ankastre fırın","ocak","indüksiyon","davlumbaz","mikrodalga",
+            // Akıllı Ev (Matter & Thread 2024)
+            "akıllı ev","smart home","homekit","google home","alexa","amazon echo","echo dot","echo show",
+            "matter","thread","zigbee","z-wave","tuya","smart things",
+            "akıllı priz","akıllı ampul","akıllı anahtar","akıllı sensör",
+            "philips hue","hue bridge","nanoleaf","govee","lifx",
+            "akıllı kilit","yale","nuki","smart lock",
+            "güvenlik kamerası","ip kamera","ring","arlo","eufy","blink",
+            // Şarj İstasyonu
+            "şarj istasyonu","ev şarjı","wallbox","ev tipi şarj"
+        ];
+        
+        // Kozmetik & Kişisel Bakım (2 Aralık 2025 Güncel)
+        const D_COSMETIC=[
+            // Parfüm - Erkek (2024 Yeni Çıkanlar)
+            "parfüm","erkek parfüm","edt","edp","parfum","extrait",
+            "sauvage","sauvage elixir","bleu de chanel","chanel bleu","eros","eros elixir",
+            "acqua di gio","acqua di gio profondo","stronger with you","emporio armani",
+            "bad boy","bad boy extreme","code","armani code","one million","one million elixir",
+            "invictus","invictus victory","la nuit","la nuit de l'homme","y ysl","y edp",
+            "aventus","creed aventus","green irish tweed","viking","cool water",
+            "dior homme","dior homme intense","fahrenheit","miss dior homme",
+            "valentino","valentino uomo","born in roma","tom ford","oud wood","tobacco vanille",
+            "jean paul gaultier","le male","le male elixir","scandal","scandal pour homme",
+            "versace","dylan blue","eros parfum","pour homme",
+            "paco rabanne","phantom","1 million","invictus",
+            // Parfüm - Kadın (2024 Yeni Çıkanlar)
+            "kadın parfüm","women perfume",
+            "jadore","j'adore","j'adore parfum d'eau","miss dior","miss dior blooming",
+            "black opium","black opium extreme","libre","libre intense","mon paris",
+            "la vie est belle","la vie est belle rose","idole","tresor",
+            "good girl","good girl supreme","212 vip","carolina herrera",
+            "coco mademoiselle","coco noir","chance","chanel no 5","gabrielle",
+            "si","si passione","my way","my way parfum","hypnotic poison",
+            "alien","alien goddess","angel","mugler angel","aura",
+            "light blue","dolce gabbana","the one","devotion",
+            "flora gucci","bloom gucci","guilty",
+            "olympea","olympea blossom","fame",
+            // Niş Parfüm Markaları
+            "jo malone","wood sage","lime basil","english pear",
+            "hermes","terre d'hermes","un jardin","twilly",
+            "byredo","gypsy water","bal d'afrique","mojave ghost",
+            "le labo","santal 33","rose 31","another 13",
+            "maison francis kurkdjian","baccarat rouge 540","br540","oud satin mood","gentle fluidity",
+            "parfums de marly","layton","delina","pegasus","herod",
+            "initio","side effect","oud for greatness","musk therapy",
+            "xerjoff","nishane","amouage",
+            // Türk Markaları
+            "eda taşpınar","narkotik","hunca","farmasi parfüm","avon parfüm",
+            // Makyaj (2024)
+            "makyaj","makeup","ruj","lipstick","lip gloss","lip tint","likit ruj",
+            "rimel","maskara","waterproof maskara","lash lift",
+            "fondöten","foundation","bb cream","cc cream","cushion","serum fondöten",
+            "kapatıcı","concealer","color corrector",
+            "far","eyeshadow","far paleti","palet","naked palette","glitter","shimmer","matte",
+            "allık","blush","cream blush","pudra","powder","setting powder","aydinlatici",
+            "highlighter","bronzer","kontür","contour",
+            "oje","nail polish","jel oje","kalıcı oje","nail art",
+            "eyeliner","kaş kalemi","kaş jeli","brow gel","mascara",
+            "primer","makyaj bazı","setting spray","fix spray",
+            // Makyaj Markaları (2024)
+            "mac","mac lipstick","nars","urban decay","too faced","benefit","charlotte tilbury",
+            "huda beauty","rare beauty","fenty beauty","fenty","pat mcgrath",
+            "nyx","maybelline","loreal paris","essence","catrice","flormar","golden rose",
+            "bobbi brown","estee lauder makeup","clinique","shiseido makeup","sephora collection",
+            // Cilt Bakım (2024 Trendler)
+            "cilt bakım","skincare","krem","nemlendirici","moisturizer","gece kremi","gündüz kremi",
+            "serum","yüz serumu","vitamin c serum","retinol","retinal","bakuchiol",
+            "niacinamide","hyaluronik","hyaluronic acid","salisilik asit","aha bha",
+            "peptit","peptide","collagen","kolajen","ceramide","seramid",
+            "güneş kremi","spf","spf 50","spf 30","sunscreen","uv koruma","mineral güneş",
+            "temizleyici","yüz temizleyici","cleansing","çift aşamalı temizlik","micellar",
+            "tonik","toner","essence","ampoule","sheet mask","kağıt maske",
+            "peeling","eksfoliant","scrub","enzim peeling","cilt yenileme",
+            "göz kremi","göz serumu","göz altı","dark circle",
+            // Cilt Bakım Markaları (2024)
+            "la roche posay","vichy","bioderma","avene","eucerin","cerave","cetaphil",
+            "the ordinary","the inkey list","paula's choice","cosrx","some by mi",
+            "innisfree","laneige","sulwhasoo","tatcha","drunk elephant","glow recipe",
+            "skinceuticals","obagi","murad","dr jart","dermalogica","clinique",
+            "kiehl's","origins","fresh","caudalie","nuxe","clarins",
+            // Türk Cilt Bakım
+            "procsin","biotanicals","rosense","bebak","dalan",
+            // Saç Bakım (2024)
+            "şampuan","saç kremi","saç bakım","saç maskesi","conditioner","hair mask",
+            "argan","keratin","olaplex","olaplex 3","k18","k18 mask","moroccanoil","moroccan oil",
+            "saç serumu","saç yağı","heat protectant","ısı koruyucu",
+            "saç kurutma","saç kurutma makinesi","föhn","düzleştirici","saç maşası","bukle maşası",
+            "dyson airwrap","dyson supersonic","ghd","ghd platinum","babyliss","remington",
+            "saç boyası","hair color","ombre","balayaj","tonlama",
+            "saç spreyi","hair spray","wax","jöle","saç köpüğü",
+            // Kişisel Bakım
+            "deodorant","antiperspirant","duş jeli","shower gel","body wash",
+            "vücut losyonu","body lotion","vücut kremi","body butter",
+            "epilasyon","ipl","lazer epilasyon","philips lumea","braun silk expert",
+            "tıraş","tıraş makinesi","shaver","razor","jilet","after shave","tıraş köpüğü",
+            "kolonya","eau de cologne","limon kolonyası",
+            "diş macunu","diş fırçası","elektrikli diş fırçası","oral-b","philips sonicare","waterpik"
+        ];
+        
+        // Kitap & Kırtasiye
+        const D_BOOK=[
+            "kitap","roman","edebiyat","kurgu","best seller","çok satan",
+            "manga","çizgi roman","grafik roman",
+            "kırtasiye","kalem","defter","ajanda","planlayıcı",
+            "test kitabı","sınav","tyt","ayt","kpss","lgs","dgs","ales","yks","ydt",
+            "yaprak test","soru bankası","deneme seti",
+            "hikaye","şiir","biyografi","tarih","felsefe","psikoloji","kişisel gelişim",
+            "bilim kurgu","fantastik","polisiye","gerilim","korku","romantik","çocuk kitabı",
+            "e-kitap","kindle","e-kitap okuyucu","kobo"
+        ];
+        
+        // Ev & Yapı Market
+        const D_HOME=[
+            // Mobilya
+            "mobilya","koltuk","kanepe","masa","sandalye","yatak","dolap","gardrop","komodin","tv ünitesi","kitaplık","raf",
+            // Dekorasyon
+            "lamba","avize","aydınlatma","halı","perde","ayna","saat","vazo","çerçeve","tablo","dekorasyon",
+            // Tekstil
+            "nevresim","pike","battaniye","yorgan","yastık","havlu","bornoz","örtü",
+            // Banyo
+            "banyo","musluk","duşakabin","lavabo","klozet","batarya","aksesuar",
+            // Yapı Market
+            "matkap","bosch","makita","dewalt","black decker","stanley",
+            "vida","boya","fayans","parke","laminat","seramik",
+            "tornavida","pense","çekiç","testere","el aleti",
+            // Bahçe
+            "bahçe","saksı","mangal","barbekü","hortum","çim biçme"
+        ];
+        
+        // Moda & Ayakkabı (2 Aralık 2025 Güncel)
+        const D_FASHION=[
+            // Ayakkabı Türleri
+            "ayakkabı","sneaker","spor ayakkabı","koşu ayakkabısı","günlük ayakkabı",
+            "bot","çizme","topuklu","sandalet","terlik","loafer","oxford","derby",
+            "krampon","halı saha","futbol ayakkabısı","basketbol ayakkabısı",
+            // Nike Modeller (2024-2025)
+            "nike","nike air","air force 1","air force","af1","air max","air max 90","air max 95","air max 97","air max plus","tn",
+            "air max dn","air max 1","air max scorpion","vapormax",
+            "jordan","air jordan","jordan 1","jordan 1 low","jordan 4","jordan 11","jordan retro","aj1","aj4",
+            "jordan 3","jordan 5","jordan 6","jordan low","travis scott jordan",
+            "dunk","nike dunk","dunk low","dunk high","sb dunk","dunk panda",
+            "blazer","nike blazer","blazer mid","blazer low","cortez","nike cortez",
+            "pegasus","nike pegasus","pegasus 41","vomero","invincible","alphafly","zoomx",
+            "nike acg","air max terrascape",
+            // Adidas Modeller (2024-2025 - Terrace Trend)
+            "adidas","adidas originals","superstar","adidas superstar","stan smith","adidas stan smith",
+            "gazelle","adidas gazelle","gazelle bold","gazelle indoor",
+            "samba","adidas samba","samba og","samba adv","sambae",
+            "campus","campus 00s","handball spezial","spezial","sl72","sl 72",
+            "ultraboost","ultraboost light","ultra boost","yeezy","yeezy 350","yeezy slide",
+            "nmd","adidas nmd","nmd r1","nmd s1","forum","adidas forum","forum low",
+            "adidas adizero","adizero adios","boston",
+            // New Balance (550 & 1906 Trend 2024)
+            "new balance","nb","nb 530","530","nb 574","574","nb 9060","9060","nb 2002r","2002r","nb 550","550",
+            "nb 1906r","1906r","nb 327","327","nb 990","990v6","nb 1000","1000",
+            "nb 860","860","nb 608","608","new balance fresh foam",
+            // Puma (Speedcat Revival 2024)
+            "puma","puma suede","suede","suede xl","rs-x","rsx","rs-xk",
+            "speedcat","puma speedcat","speedcat og","mostro",
+            "puma palermo","palermo","puma future","future rider",
+            // Converse & Vans
+            "converse","chuck taylor","all star","chuck 70","converse chuck","run star","run star hike",
+            "vans","old skool","vans old skool","sk8 hi","sk8-hi","authentic","vans authentic","era","knu skool",
+            // Reebok & Asics
+            "reebok","classic leather","reebok classic","club c","club c 85","reebok nano",
+            "asics","gel kayano","gel kayano 14","gel 1130","asics gel","gt 2000","gel nimbus","gel nyc",
+            // On Running & Hoka (Koşu Trendi 2024)
+            "on cloud","on running","cloudmonster","cloudmonster 2","cloud 5","cloudnova","cloudstratus","cloudsurfer",
+            "hoka","hoka bondi","bondi 8","bondi 9","clifton","clifton 9","hoka clifton","speedgoat","mach 6",
+            "hoka skyline","transport",
+            // Salomon (Gorpcore Trend 2024)
+            "salomon","xt-6","xt6","xt-6 gtx","speedcross","salomon xt","xt-4","s/lab",
+            "salomon rx","rx moc","rx slide",
+            // Diğer Sneaker Markalar
+            "saucony","saucony shadow","jazz","grid","progrid",
+            "karhu","karhu fusion","diadora","diadora n9000",
+            "mizuno","mizuno wave",
+            // Outdoor & Bot (2024)
+            "timberland","timberland premium","6 inch boot","ugg","ugg boot","ugg tasman","ugg ultra mini",
+            "birkenstock","boston clog","arizona","crocs","crocs classic","echo clog",
+            "ecco","dr martens","doc martens","1460","jadon",
+            "the north face boots","sorel","columbia","keen",
+            // Lüks Sneaker & Designer (2024)
+            "gucci","prada","balenciaga","balenciaga track","balenciaga runner",
+            "louis vuitton","lv trainer","louis vuitton sneaker",
+            "golden goose","superstar ggdb","axel arigato","common projects",
+            "maison margiela","replica sneaker","fear of god","essentials","rick owens",
+            "off-white","off white","virgil abloh",
+            // Türk Ayakkabı Markaları
+            "hotiç","derimod","flo","polaris","greyder","inci","kemal tanca","kinetix",
+            // Giyim Kategorileri
+            "giyim","tişört","t-shirt","gömlek","pantolon","mont","ceket","kaban","kazak","sweatshirt","hoodie",
+            "elbise","etek","bluz","tayt","şort","eşofman","forma","trençkot","blazer ceket",
+            "crop top","oversize","basic","slim fit","regular fit",
+            // Fast Fashion (2024)
+            "zara","h&m","mango","bershka","pull&bear","stradivarius",
+            "lcw","defacto","koton","mavi","colins","beymen","vakko","ipekyol","twist",
+            "massimo dutti","cos","arket","other stories",
+            // Streetwear & Urban (2024)
+            "supreme","stussy","palace","carhartt wip","dickies","obey","anti social",
+            "fear of god","essentials","fog essentials","yeezy gap",
+            "nike acg","nike tech fleece","tech fleece",
+            // Lüks Moda
+            "gucci","prada","balenciaga","louis vuitton","versace","burberry","fendi","dior","givenchy",
+            "saint laurent","ysl","bottega veneta","valentino","moncler","canada goose",
+            "stone island","cp company","arcteryx","arc'teryx",
+            // Spor Giyim
+            "nike sportswear","adidas sportswear","under armour","gymshark","lululemon",
+            "lacoste","tommy hilfiger","ralph lauren","polo","calvin klein","hugo boss",
+            // Aksesuar (2024)
+            "çanta","cüzdan","kemer","şapka","beyzbol şapka","bucket hat","bere","atkı","eldiven",
+            "gözlük","güneş gözlüğü","ray ban","rayban","wayfarer","aviator","oakley","gentle monster",
+            "sırt çantası","backpack","tote bag","crossbody",
+            // Takı & Saat
+            "takı","kolye","zincir kolye","bileklik","yüzük","küpe","piercing",
+            "saat","kol saati","rolex","omega","tag heuer","seiko","casio","g-shock","fossil","daniel wellington"
+        ];
+        
+        // Oyuncak (2 Aralık 2025 Güncel)
+        const D_TOY=[
+            // LEGO (2024-2025 Yeni Setler)
+            "lego","lego set","lego technic","technic","lego star wars","lego icons","lego city","lego creator",
+            "lego speed champions","lego ideas","lego architecture","lego art",
+            "duplo","lego duplo","lego friends","lego harry potter","lego marvel","lego ninjago",
+            "lego botanical","lego titanic","lego eiffel","lego disney","lego super mario","lego minecraft",
+            "lego 18+","lego adult","ucs","ultimate collector","minifigure",
+            // Barbie & Hot Wheels (Mattel 2024)
+            "barbie","barbie bebek","barbie dreamhouse","barbie fashionista","barbie movie",
+            "hot wheels","hotwheels","hot wheels pist","hot wheels city","hot wheels id","hot wheels unleashed",
+            "matchbox","mega bloks","mega construx",
+            // Hasbro (Nerf, Transformers, My Little Pony)
+            "nerf","nerf silah","nerf elite","nerf ultra","nerf rival","nerf pro",
+            "hasbro","transformers","optimus prime","bumblebee","my little pony",
+            "play-doh","playdoh","baby alive","furreal","furby",
+            // Playmobil
+            "playmobil","playmobil city","playmobil family","playmobil pirates",
+            // Puzzle (2024)
+            "puzzle","yapboz","ravensburger","clementoni","educa","trefl","schmidt",
+            "1000 parça","2000 parça","3000 parça","5000 parça","500 parça","3d puzzle",
+            // Kutu Oyunları (Board Games 2024)
+            "board game","kutu oyunu","masa oyunu","strateji oyunu","aile oyunu",
+            "monopoly","uno","scrabble","risk","catan","ticket to ride","carcassonne",
+            "dixit","codenames","azul","pandemic","7 wonders","terraforming mars",
+            "wingspan","gloomhaven","exploding kittens","cards against humanity",
+            "dungeons dragons","d&d","magic the gathering","mtg","pokemon tcg",
+            // RC & Drone (Oyuncak)
+            "rc araba","uzaktan kumandalı","drone oyuncak","rc helikopter","rc tekne",
+            // Diecast & Model
+            "diecast","model araba","maisto","bburago","welly","siku",
+            "model kit","model uçak","model gemi","revell","tamiya",
+            // Aksiyon Figür & Koleksiyon
+            "aksiyon figür","action figure","funko pop","funko","pop figure",
+            "marvel legends","star wars figure","neca","mcfarlane","sh figuarts",
+            "anime figure","manga figure","bandai","figma","nendoroid",
+            // Peluş & Bebek
+            "peluş","peluş oyuncak","teddy bear","jellycat","squishmallows",
+            "bebek","oyuncak bebek","baby born","reborn bebek","bebek evi",
+            // Çocuk Oyuncakları
+            "oyuncak","çocuk oyuncağı","çocuk","oyun","eğitici oyuncak","stem oyuncak",
+            "kum havuzu","top havuzu","oyun çadırı","salıncak","kaydırak",
+            // Koleksiyon
+            "koleksiyon","collectible","trading card","kart oyunu","sticker","albüm"
+        ];
+        
+        // Pet & Bebek (2 Aralık 2025 Güncel)
+        const D_PET_BABY=[
+            // Pet - Mama
+            "mama","kedi maması","köpek maması","petshop","pet shop",
+            "kedi","köpek","kuş","akvaryum","balık","hamster","tavşan","pet","evcil hayvan",
+            "royal canin","pro plan","proplan","hills","acana","orijen","advance",
+            "whiskas","felix","gourmet","friskies","purina","pedigree","chappi",
+            "premium mama","tahılsız mama","yaş mama","kuru mama",
+            // Pet - Aksesuar
+            "kedi kumu","cat litter","kedi tuvaleti","kedi yatağı","kedi tırmalama","kedi evi",
+            "köpek yatağı","köpek tasma","köpek gezdirme","köpek oyuncak",
+            "akvaryum filtre","akvaryum bitki","balık yemi","kuş kafesi","kuş yemi",
+            // Bebek - Bezi & Bakım
+            "bebek","bebek bezi","pampers","prima","huggies","molfix","sleepy","evy baby",
+            "islak mendil","bebek şampuanı","bebek kremi","bebek yağı","sudocrem","bepanthen",
+            "bebek maması","aptamil","bebelac","milupa","hero baby","hipp",
+            // Bebek - Araç Gereç
+            "bebek arabası","puset","travel sistem","ana kucağı","oto koltuğu","isofix",
+            "mama sandalyesi","park yatak","beşik","bebek yatağı","yatak bariyeri",
+            "bebek taşıyıcı","kanguru","bebek salıncağı",
+            "biberon","emzik","göğüs pompası","süt saklama","sterilizatör",
+            // Bebek Markaları
+            "chicco","joie","maxi cosi","cybex","bugaboo","stokke","babyzen","doona",
+            "philips avent","tommee tippee","medela","nuk","mam"
+        ];
+        
+        // Spor & Outdoor (2 Aralık 2025 Güncel)
+        const D_SPORTS=[
+            // Fitness & Gym
+            "fitness","spor","antrenman","gym","spor salonu","egzersiz","workout",
+            "dambıl","dumbbell","ağırlık","halter","kettlebell","barfiks","barbell","weight plate","bumper plate",
+            "koşu bandı","koşu bandı","treadmill","kondisyon bisikleti","spin bike","indoor cycling","eliptik","cross trainer",
+            "kürek makinesi","rowing","air bike","assault bike",
+            "pilates","yoga matı","yoga","pilates topu","direnç bandı","resistance band","foam roller","lacrosse ball",
+            "fitness mat","egzersiz matı","pull up bar","ab wheel","trx","suspension trainer",
+            "ev spor","home gym","power rack","squat rack","smith machine","cable machine",
+            // Supplement & Beslenme
+            "protein","protein tozu","whey","whey protein","isolate","casein","vegan protein",
+            "creatine","kreatin","monohydrat","bcaa","eaa","amino asit",
+            "pre workout","pre-workout","caffeine","enerji","pump",
+            "mass gainer","kilo aldırıcı","gainer","weight gainer",
+            "supplement","ek gıda","sporcu gıdası","sporcu beslenmesi",
+            "optimum nutrition","myprotein","biotech usa","dymatize","muscletech","bsn",
+            "vitamin","multivitamin","omega 3","balık yağı","d vitamini","c vitamini","zma",
+            // Bisiklet (2024)
+            "bisiklet","dağ bisikleti","mtb","yol bisikleti","road bike","şehir bisikleti","gravel bike",
+            "elektrikli bisiklet","e-bike","ebike","elektrikli mtb","e-mtb",
+            "bisiklet kasası","bisiklet gözlüğü","bisiklet eldiveni","bisiklet şort",
+            "garmin edge","wahoo","shimano","sram","trek","specialized","giant","cannondale","scott bike",
+            // Scooter & Kaykay (2024)
+            "scooter","elektrikli scooter","e-scooter","kick scooter","xiaomi scooter","ninebot","segway",
+            "paten","paten takımı","inline skate","quad paten","buz pateni",
+            "kaykay","skateboard","longboard","cruiser","penny board",
+            "hoverboard","onewheel","electric skateboard",
+            // Kamp & Outdoor (2024)
+            "kamp","kamp çadırı","çadır","4 mevsim çadır","2 kişilik çadır","aile çadırı",
+            "uyku tulumu","sleeping bag","şişme yatak","kamp yatağı","air mattress",
+            "kamp sandalyesi","kamp masası","kamp seti","kamp ocağı","kamp tüpü",
+            "termos","matara","su şişesi","hydro flask","nalgene","camelbak",
+            "outdoor","trekking","hiking","dağcılık","doğa yürüyüşü","trail",
+            "kamp lambası","kafa lambası","headlamp","fenner","fener",
+            "pusula","gps","outdoor saat","trekking ayakkabısı","hiking ayakkabısı",
+            "çakı","bıçak","multitool","leatherman","victorinox",
+            "the north face","columbia","salewa","mammut","marmot","patagonia","arc'teryx",
+            // Kış Sporları (2024-2025 Sezon)
+            "kayak","ski","kayak takımı","kayak botu","kayak gözlüğü","kayak montu","kayak pantolonu",
+            "snowboard","snowboard botu","snowboard bağlama","snowboard ceket",
+            "kask","kayak kaskı","snowboard kaskı","poc","smith","giro",
+            "kış sporları","kar","après ski","ski resort",
+            // Su Sporları
+            "yüzme","yüzme gözlüğü","mayo","bikini","wetsuit","dalış","şnorkel",
+            "sörf","surfboard","sup","stand up paddle","paddleboard","kano","kayak boat",
+            "speedo","arena","tyr",
+            // Takım Sporları
+            "futbol","futbol topu","futbol kaleci eldiveni","futbol forma","uefa","fifa",
+            "basketbol","basketbol topu","basketbol potası","nba",
+            "voleybol","voleybol topu","voleybol filesi",
+            "tenis","tenis raketi","tenis topu","tenis ayakkabısı","wilson","babolat","head",
+            "badminton","badminton raketi","badminton topu",
+            "masa tenisi","masa tenisi raketi","pinpon","joola","butterfly",
+            // Golf & Diğer
+            "golf","golf sopası","golf topu","golf eldiveni","titleist","callaway","taylormade",
+            "boks","boks eldiveni","kum torbası","everlast","venum",
+            "jimnastik","dans","bale",
+            // Mağazalar
+            "decathlon","intersport","sportive","nike store","adidas store","under armour","lescon"
+        ];
+
+        // Tüm Kelimeler - Typo Kontrolü İçin
+        const ALL_WORDS=[
+            ...D_HARDWARE,...D_VR_GAMING,...D_CONSOLE,...D_PHONE,...D_COMPUTER,
+            ...D_AUDIO,...D_SMARTWATCH,...D_CAMERA,...D_HOME_ELECTRONICS,
+            ...D_COSMETIC,...D_BOOK,...D_HOME,...D_FASHION,...D_TOY,...D_PET_BABY,...D_SPORTS
+        ];
+
+        // ==================== MARKA MAĞAZALARI ====================
+        const BRANDS={
+            // Teknoloji
+            "apple":{name:"Apple Store",k:["apple","macbook","ipad","iphone","airpods","watch","m4","m3","vision pro"],i:"fa-apple",u:q=>{
+                const ql=q.toLowerCase();
+                if(ql.includes("macbook")||ql.includes("mac mini")||ql.includes("mac studio")||ql.includes("imac")) return "https://www.apple.com/tr/shop/buy-mac";
+                if(ql.includes("ipad")) return "https://www.apple.com/tr/shop/buy-ipad";
+                if(ql.includes("watch")) return "https://www.apple.com/tr/shop/buy-watch";
+                if(ql.includes("airpods")) return "https://www.apple.com/tr/shop/buy-airpods";
+                if(ql.includes("vision")) return "https://www.apple.com/tr/shop/buy-vision";
+                return "https://www.apple.com/tr/shop/buy-iphone";
+            },cat:"tech"},
+            "samsung":{name:"Samsung Shop",k:["samsung","galaxy","z flip","z fold","s25","s24","buds 3","neo qled","odyssey","watch 7","ring"],i:"fa-mobile-screen",u:q=>`https://www.samsung.com/tr/search/?searchvalue=${encodeURIComponent(q)}`,cat:"tech"},
+            "xiaomi":{name:"Xiaomi Store",k:["xiaomi","xiaomi 15","redmi note 14","poco","mi band 8","xiaomi robot","hyperos"],i:"fa-bolt",u:q=>`https://www.mi.com/tr/product/`,cat:"tech"},
+            "huawei":{name:"Huawei Store",k:["huawei","mate 70","matebook","watch gt 5","freebuds","pura 70","matepad"],i:"fa-mobile",u:q=>`https://consumer.huawei.com/tr/offer/`,cat:"tech"},
+            "logitech":{name:"Logitech",k:["logitech","g pro x superlight","gpx","mx master","streamcam","g502"],i:"fa-computer-mouse",u:q=>`https://www.logitech.com/tr-tr/search?text=${encodeURIComponent(q)}`,cat:"pc"},
+            
+            // Ev Elektroniği
+            "dyson":{name:"Dyson TR",k:["dyson","v16","v15","v12","airwrap","gen5","airstrait","supersonic","purifier","zone"],i:"fa-wind",u:q=>`https://www.dyson.com.tr/catalogsearch/result/?q=${encodeURIComponent(q)}`,cat:"home"},
+            "philips":{name:"Philips",k:["philips airfryer","philips ep","sonicare","hue","philips lumea"],i:"fa-blender",u:q=>`https://www.philips.com.tr/c-m`,cat:"home"},
+            
+            // Moda
+            "nike":{name:"Nike Store",k:["nike","jordan","air max","dunk","air force","blazer","pegasus 41","vapormax"],i:"fa-person-running",u:q=>`https://www.nike.com/tr/w?q=${encodeURIComponent(q)}`,cat:"fashion"},
+            "adidas":{name:"Adidas",k:["adidas","superstar","stan smith","ultraboost","samba","gazelle","campus","spezial"],i:"fa-shoe-prints",u:q=>`https://www.adidas.com.tr/`,cat:"fashion"},
+            "puma":{name:"Puma TR",k:["puma","suede","rs-x","speedcat","palermo","future"],i:"fa-cat",u:q=>`https://tr.puma.com/tr/`,cat:"fashion"},
+            "newbalance":{name:"New Balance",k:["new balance","nb 530","nb 574","nb 9060","2002r","1906r","nb 550"],i:"fa-n",u:q=>`https://www.newbalance.com.tr/arama?q=${encodeURIComponent(q)}`,cat:"fashion"},
+            "converse":{name:"Converse",k:["converse","chuck taylor","all star","chuck 70","run star"],i:"fa-star",u:q=>`https://www.converse.com.tr/tum-ayakkabilar/?q=${encodeURIComponent(q)}`,cat:"fashion"},
+            "vans":{name:"Vans",k:["vans","old skool","sk8 hi","authentic","era","knu skool"],i:"fa-v",u:q=>`https://www.vans.com.tr/tum-urunler?search=${encodeURIComponent(q)}`,cat:"fashion"},
+            
+            // Oyuncak
+            "lego":{name:"LEGO Store",k:["lego","duplo","technic","city","star wars lego","icons","ideas","botanical"],i:"fa-cubes",u:q=>`https://www.lego.tr/search?q=${encodeURIComponent(q)}`,cat:"toy"},
+            
+            // Bilgisayar
+            "monster":{name:"Monster Notebook",k:["monster","abra","tulpar","semruk","huma"],i:"fa-laptop",u:q=>`https://www.monsternotebook.com.tr/arama/?s=${encodeURIComponent(q)}`,cat:"pc"},
+            "msi":{name:"MSI Store",k:["msi","msi laptop","msi raider","msi stealth","msi claw"],i:"fa-dragon",u:q=>`https://tr.msi.com/`,cat:"pc"}
+        };
+
+        // ==================== MAĞAZALAR ====================
+        const MARKETS=[
+            // Genel Pazar Yerleri
+            {name:"AMAZON",logo:"https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",logoDark:"https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",url:"https://www.amazon.com.tr/s?k=",c:"#FF9900",s:"rgba(255,153,0,0.3)",t:["tech","home","fashion","book","cosmetic","toy","market","pc","vr","console","phone","audio","watch","camera"],darkInvert:true},
+            {name:"HEPSIBURADA",logo:"https://upload.wikimedia.org/wikipedia/commons/2/20/Hepsiburada_logo_official.svg",url:"https://www.hepsiburada.com/ara?q=",c:"#FF6000",s:"rgba(255,96,0,0.3)",t:["tech","home","fashion","book","cosmetic","toy","market","pc","vr","console","phone","audio","watch","camera"]},
+            {name:"TRENDYOL",logo:"https://cdn.dsmcdn.com/web/logo/ty-web.svg",logoDark:"https://cdn.dsmcdn.com/web/logo/ty-web.svg",url:"https://www.trendyol.com/sr?q=",c:"#F27A1A",s:"rgba(242,122,26,0.3)",t:["fashion","cosmetic","home","toy","market","tech","phone","audio"],darkInvert:true},
+            {name:"N11",logo:"https://upload.wikimedia.org/wikipedia/commons/2/23/N11.com.png",url:"https://www.n11.com/arama?q=",c:"#E30613",s:"rgba(227,6,19,0.3)",t:["tech","home","fashion","book","cosmetic","toy","market","pc","vr","console","phone","audio","watch","camera"]},
+            
+            // Teknoloji Mağazaları
+            {name:"MEDIAMARKT",logo:"https://upload.wikimedia.org/wikipedia/commons/1/1a/Media_Markt_logo.svg",url:"https://www.mediamarkt.com.tr/tr/search.html?query=",c:"#DF0000",s:"rgba(223,0,0,0.3)",t:["tech","pc","vr","console","phone","audio","watch","camera","home_electronics"]},
+            {name:"TEKNOSA",logo:"https://upload.wikimedia.org/wikipedia/commons/2/2f/Teknosa_logo.svg",url:"https://www.teknosa.com/arama/?s=",c:"#F68B1F",s:"rgba(246,139,31,0.3)",t:["tech","pc","phone","audio","watch","home_electronics"]},
+            {name:"VATAN",logo:"https://upload.wikimedia.org/wikipedia/commons/8/83/Vatan_Computer_logo.svg",url:"https://www.vatanbilgisayar.com/arama/",c:"#003F86",s:"rgba(0,63,134,0.3)",t:["tech","pc","vr","console","phone","audio","camera"]},
+            
+            // PC & Gaming Mağazaları
+            {name:"ITOPYA",logo:"https://www.itopya.com/Data/EditorFiles/itopya-logo.svg",url:"https://www.itopya.com/ara?bul=",c:"#E45E25",s:"rgba(228,94,37,0.3)",t:["pc","vr","console"]},
+            {name:"INCEHESAP",logo:"https://upload.wikimedia.org/wikipedia/commons/5/52/Incehesap_logo.svg",url:"https://www.incehesap.com/ara?q=",c:"#2C3E50",s:"rgba(44,62,80,0.3)",t:["pc","tech","vr","console"],darkInvert:true},
+            {name:"SINERJI",logo:"https://www.sinerji.gen.tr/image/catalog/logo.png",url:"https://www.sinerji.gen.tr/all-s?searchQuery=",c:"#E74C3C",s:"rgba(231,76,60,0.3)",t:["pc"]},
+            {name:"TROY",logo:"https://www.troyestore.com/assets/images/logo.png",url:"https://www.troyestore.com/ara?k=",c:"#000000",s:"rgba(0,0,0,0.3)",t:["apple"],darkInvert:true},
+            
+            // Moda & Ayakkabı
+            {name:"SUPERSTEP",logo:"https://www.superstep.com.tr/static/images/superstep-logo.svg",url:"https://www.superstep.com.tr/arama?text=",c:"#D90000",s:"rgba(217,0,0,0.3)",t:["fashion","sneaker"]},
+            {name:"SNEAKS UP",logo:"https://www.sneaksup.com/static/images/sneaksup-logo.svg",url:"https://www.sneaksup.com/arama?q=",c:"#000000",s:"rgba(0,0,0,0.3)",t:["fashion","sneaker"],darkInvert:true},
+            {name:"SPORTIVE",logo:"https://www.sportive.com.tr/static/images/sportive-logo.svg",url:"https://www.sportive.com.tr/arama?text=",c:"#1E88E5",s:"rgba(30,136,229,0.3)",t:["fashion","sneaker","sports"]},
+            {name:"INTERSPORT",logo:"https://www.intersport.com.tr/static/images/intersport-logo.svg",url:"https://www.intersport.com.tr/list/?search_text=",c:"#E30613",s:"rgba(227,6,19,0.3)",t:["fashion","sports"]},
+            {name:"DECATHLON",logo:"https://upload.wikimedia.org/wikipedia/commons/0/08/Decathlon_Logo.png",url:"https://www.decathlon.com.tr/search?Ntt=",c:"#0082C3",s:"rgba(0,130,195,0.3)",t:["fashion","sports","outdoor"]},
+            {name:"BOYNER",logo:"https://upload.wikimedia.org/wikipedia/commons/c/c2/Boyner_logo.svg",url:"https://www.boyner.com.tr/search?q=",c:"#E9AC25",s:"rgba(233,172,37,0.3)",t:["fashion","cosmetic"]},
+            
+            // Kitap & Kırtasiye
+            {name:"D&R",logo:"https://upload.wikimedia.org/wikipedia/commons/7/7d/D%26R_Logo.svg",url:"https://www.dr.com.tr/search?q=",c:"#E30613",s:"rgba(227,6,19,0.3)",t:["book","toy"]},
+            {name:"KITAPYURDU",logo:"https://www.kitapyurdu.com/static/images/logo.svg",url:"https://www.kitapyurdu.com/index.php?route=product/search&filter_name=",c:"#FF6600",s:"rgba(255,102,0,0.3)",t:["book"]},
+            {name:"BKM KİTAP",logo:"https://www.bkmkitap.com/static/images/bkm-logo.svg",url:"https://www.bkmkitap.com/arama?q=",c:"#e01b22",s:"rgba(224,27,34,0.3)",t:["book"]},
+            {name:"İDEFİX",logo:"https://www.idefix.com/static/images/idefix-logo.svg",url:"https://www.idefix.com/search?q=",c:"#009FE3",s:"rgba(0,159,227,0.3)",t:["book","toy"]},
+            
+            // Kozmetik
+            {name:"WATSONS",logo:"https://upload.wikimedia.org/wikipedia/commons/1/1d/Watsons_Logotype.svg",url:"https://www.watsons.com.tr/arama?text=",c:"#009DA6",s:"rgba(0,157,166,0.3)",t:["cosmetic"]},
+            {name:"GRATIS",logo:"https://www.gratis.com/static/images/gratis-logo.svg",url:"https://www.gratis.com/arama?q=",c:"#662483",s:"rgba(102,36,131,0.3)",t:["cosmetic"]},
+            {name:"ROSSMANN",logo:"https://upload.wikimedia.org/wikipedia/commons/5/52/Rossmann_Logo.svg",url:"https://www.rossmann.com.tr/catalogsearch/result/?q=",c:"#E3000F",s:"rgba(227,0,15,0.3)",t:["cosmetic"]},
+            {name:"SEPHORA",logo:"https://upload.wikimedia.org/wikipedia/commons/3/3d/Sephora_logo.svg",url:"https://www.sephora.com.tr/search?q=",c:"#000000",s:"rgba(0,0,0,0.3)",t:["cosmetic"],darkInvert:true},
+            
+            // Ev & Yapı Market
+            {name:"KOÇTAŞ",logo:"https://www.koctas.com.tr/static/images/koctas-logo.svg",url:"https://www.koctas.com.tr/search/?text=",c:"#FF671F",s:"rgba(255,103,31,0.3)",t:["home","home_decor"]},
+            {name:"BAUHAUS",logo:"https://upload.wikimedia.org/wikipedia/commons/2/23/Bauhaus_Logo.svg",url:"https://www.bauhaus.com.tr/catalogsearch/result/?q=",c:"#E30613",s:"rgba(227,6,19,0.3)",t:["home"]},
+            {name:"IKEA",logo:"https://upload.wikimedia.org/wikipedia/commons/c/c5/Ikea_logo.svg",url:"https://www.ikea.com.tr/search/products/?q=",c:"#0051BA",s:"rgba(0,81,186,0.3)",t:["home","home_decor"]},
+            
+            // Oyuncak
+            {name:"TOYZZ SHOP",logo:"https://www.toyzzshop.com/static/images/toyzz-logo.svg",url:"https://www.toyzzshop.com/arama?q=",c:"#E30613",s:"rgba(227,6,19,0.3)",t:["toy"]},
+            
+            // Pet
+            {name:"PETİ",logo:"https://www.peti.com.tr/static/images/peti-logo.svg",url:"https://www.peti.com.tr/arama/?text=",c:"#00BCD4",s:"rgba(0,188,212,0.3)",t:["pet"]}
+        ];
+
+        // ==================== YARDIMCI FONKSİYONLAR ====================
+        
+        function getEditDistance(a,b){if(a.length===0)return b.length;if(b.length===0)return a.length;const m=[];for(let i=0;i<=b.length;i++)m[i]=[i];for(let j=0;j<=a.length;j++)m[0][j]=j;for(let i=1;i<=b.length;i++){for(let j=1;j<=a.length;j++){if(b.charAt(i-1)==a.charAt(j-1))m[i][j]=m[i-1][j-1];else m[i][j]=Math.min(m[i-1][j-1]+1,Math.min(m[i][j-1]+1,m[i-1][j]+1))}}return m[b.length][a.length]}
+        
+        const TURKISH_CHAR_MAP={'ı':'i','i':'ı','ö':'o','o':'ö','ü':'u','u':'ü','ş':'s','s':'ş','ç':'c','c':'ç','ğ':'g','g':'ğ'};
+        
+        function normalizeForSearch(str){return str.toLowerCase().replace(/[ıİ]/g,'i').replace(/[öÖ]/g,'o').replace(/[üÜ]/g,'u').replace(/[şŞ]/g,'s').replace(/[çÇ]/g,'c').replace(/[ğĞ]/g,'g')}
+        
+        function checkTypos(q){
+            const w=q.toLowerCase().split(' ');
+            let suggestions=[],hasTypo=false,corrections=[];
+            w.forEach(x=>{
+                if(x.length<3||!isNaN(x)){suggestions.push(x);return}
+                const normalizedX=normalizeForSearch(x);
+                if(ALL_WORDS.some(aw=>normalizeForSearch(aw)===normalizedX)){suggestions.push(x);return}
+                if(ALL_WORDS.includes(x)){suggestions.push(x);return}
+                let bestMatch=x,minDist=2,bestWord=null;
+                ALL_WORDS.forEach(d=>{
+                    const normalizedD=normalizeForSearch(d);
+                    const dist1=getEditDistance(x,d);
+                    const dist2=getEditDistance(normalizedX,normalizedD);
+                    const dist=Math.min(dist1,dist2);
+                    const lenDiff=Math.abs(d.length-x.length);
+                    if(dist<minDist&&lenDiff<=2){minDist=dist;bestMatch=d;bestWord=d;hasTypo=true}
+                    else if(dist===minDist&&d.startsWith(x.substring(0,2))){bestMatch=d;bestWord=d;hasTypo=true}
+                });
+                if(bestWord)corrections.push({from:x,to:bestWord});
+                suggestions.push(bestMatch)
+            });
+            const sg=suggestions.join(' ');
+            const c=document.getElementById('typoContainer');
+            if(hasTypo&&sg!==q.toLowerCase()&&corrections.length>0){
+                const correctionText=corrections.map(c=>`<strong>${c.from}</strong> → <strong class="text-green-600">${c.to}</strong>`).join(', ');
+                c.innerHTML=`<div class="typo-box"><i class="fa-solid fa-wand-magic-sparkles text-blue-500"></i><span class="text-slate-500 font-medium">Şunu mu aramak istediniz:</span><span class="typo-link" onclick="applyCorrection('${sg}')">${sg}</span><span class="text-slate-300 text-xs ml-2">(${correctionText})</span></div>`;
+                c.classList.remove('hidden')
+            }else{c.classList.add('hidden')}
+        }
+        
+        function applyCorrection(n){document.getElementById('queryInput').value=n;document.getElementById('typoContainer').classList.add('hidden');runEngine()}
+        function quickSearch(n){document.getElementById('queryInput').value=n;runEngine()}
+        function validateQuery(q){if(!q||q.trim().length===0)return{valid:false,silent:true};if(q.trim().length<2)return{valid:false,msg:"Lütfen geçerli bir ürün adı girin."};return{valid:true}}
+        
+        // ==================== KATEGORİ ALGILAMA ====================
+        
+        function detectCategory(q){
+            const l=q.toLowerCase();
+            
+            // 1. VR & Gaming Cihazları (En spesifik - öncelikli)
+            for(let w of D_VR_GAMING) if(l.includes(w)) return "VR_GAMING";
+            
+            // 2. Oyun Konsolları
+            for(let w of D_CONSOLE) if(l.includes(w)) return "CONSOLE";
+            
+            // 3. PC Donanım
+            for(let w of D_HARDWARE) if(l.includes(w)) return "HARDWARE";
+            
+            // 4. Telefon
+            for(let w of D_PHONE) if(l.includes(w)) return "PHONE";
+            
+            // 5. Bilgisayar/Tablet
+            for(let w of D_COMPUTER) if(l.includes(w)) return "COMPUTER";
+            
+            // 6. Kulaklık/Ses
+            for(let w of D_AUDIO) if(l.includes(w)) return "AUDIO";
+            
+            // 7. Akıllı Saat
+            for(let w of D_SMARTWATCH) if(l.includes(w)) return "SMARTWATCH";
+            
+            // 8. Kamera/Fotoğraf
+            for(let w of D_CAMERA) if(l.includes(w)) return "CAMERA";
+            
+            // 9. Ev Elektroniği
+            for(let w of D_HOME_ELECTRONICS) if(l.includes(w)) return "HOME_ELECTRONICS";
+            
+            // 10. Kozmetik
+            for(let w of D_COSMETIC) if(l.includes(w)) return "COSMETIC";
+            
+            // 11. Kitap
+            for(let w of D_BOOK) if(l.includes(w)) return "BOOK";
+            
+            // 12. Moda/Giyim
+            for(let w of D_FASHION) if(l.includes(w)) return "FASHION";
+            
+            // 13. Oyuncak
+            for(let w of D_TOY) if(l.includes(w)) return "TOY";
+            
+            // 14. Pet/Bebek
+            for(let w of D_PET_BABY) if(l.includes(w)) return "PET_BABY";
+            
+            // 15. Spor/Outdoor
+            for(let w of D_SPORTS) if(l.includes(w)) return "SPORTS";
+            
+            // 16. Ev/Yapı Market
+            for(let w of D_HOME) if(l.includes(w)) return "HOME";
+            
+            // Varsayılan - Genel arama
+            return "GENERAL";
+        }
+
+        function updateHistory(q){let h=JSON.parse(localStorage.getItem('ph_hist')||'[]');h=h.filter(i=>i!==q);h.unshift(q);if(h.length>5)h.pop();localStorage.setItem('ph_hist',JSON.stringify(h));renderHistory()}
+        function clearHistory(){localStorage.removeItem('ph_hist');renderHistory();document.getElementById('gridContainer').innerHTML='';document.getElementById('resultInfo').classList.add('hidden');document.getElementById('initialContent').classList.remove('hidden')}
+        function renderHistory(){const c=document.getElementById('historyArea');const h=JSON.parse(localStorage.getItem('ph_hist')||'[]');if(h.length===0){c.classList.add('hidden');return}c.innerHTML=`<span class="text-xs font-bold text-slate-300 self-center mr-1">SON:</span>`;h.forEach(i=>{const chip=document.createElement('div');chip.className='history-chip';chip.innerHTML=`<i class="fa-solid fa-clock-rotate-left text-[10px] text-slate-400"></i> ${i}`;chip.onclick=()=>{document.getElementById('queryInput').value=i;runEngine()};c.appendChild(chip)});const clearBtn=document.createElement('button');clearBtn.className='history-clear-btn';clearBtn.innerHTML='<i class="fa-solid fa-trash-can"></i>';clearBtn.title='Geçmişi Temizle';clearBtn.onclick=(e)=>{e.stopPropagation();clearHistory()};c.appendChild(clearBtn);c.classList.remove('hidden')}
+        function toggleClearBtn(){const i=document.getElementById('queryInput'),b=document.getElementById('clearBtn');if(i.value.length>0)b.classList.add('visible');else b.classList.remove('visible')}
+        function clearSearch(){document.getElementById('queryInput').value='';document.getElementById('gridContainer').innerHTML='';document.getElementById('errorPanel').classList.add('hidden');document.getElementById('typoContainer').classList.add('hidden');document.getElementById('resultInfo').classList.add('hidden');document.getElementById('initialContent').classList.remove('hidden');toggleClearBtn();document.getElementById('queryInput').focus()}
+        
+        // ==================== ARAMA MOTORU ====================
+        
+        function runEngine(){
+            const inp=document.getElementById('queryInput'),grid=document.getElementById('gridContainer'),err=document.getElementById('errorPanel'),btn=document.getElementById('searchBtn'),init=document.getElementById('initialContent');
+            let q=inp.value.trim();
+            grid.innerHTML='';
+            err.classList.add('hidden');
+            document.getElementById('typoContainer').classList.add('hidden');
+            document.getElementById('resultInfo').classList.add('hidden');
+            
+            if(q.length===0){init.classList.remove('hidden');return}
+            init.classList.add('hidden');
+
+            btn.classList.add('btn-loading');btn.innerHTML='ARANIYOR...';
+            
+            setTimeout(()=>{
+                btn.classList.remove('btn-loading');btn.innerHTML='ARA';
+                const v=validateQuery(q);
+                if(!v.valid){if(!v.silent){document.getElementById('errorText').innerText=v.msg;err.classList.remove('hidden')}return}
+                
+                checkTypos(q);
+                updateHistory(q);
+                
+                // Google Analytics
+                if(typeof gtag==='function')try{gtag('event','conversion',{'send_to':'AW-17749261970/fVEYCL6UkscbEJL9wI9C'})}catch(e){}
+                
+                const ql=q.toLowerCase();
+                const cat=detectCategory(ql);
+                
+                // Resmi marka mağazası kontrolü
+                let brandFound=null;
+                for(let k in BRANDS){
+                    if(BRANDS[k].k.some(x=>ql.includes(x))){
+                        brandFound=BRANDS[k];
+                        break;
+                    }
+                }
+                if(brandFound)createCard(brandFound.name,null,brandFound.u(q),"official",brandFound.i,null);
+                
+                // Mağaza filtreleme - Kategori bazlı
+                MARKETS.forEach(m=>{
+                    let show=false, highlight=false;
+                    
+                    // ========== TEKNOLOJİ KATEGORİLERİ ==========
+                    
+                    if(cat==="VR_GAMING"){
+                        // VR & Gaming - Sadece teknoloji ve gaming mağazaları
+                        if(["AMAZON","HEPSIBURADA","N11","MEDIAMARKT","VATAN","ITOPYA","INCEHESAP"].includes(m.name))show=true;
+                        if(["ITOPYA","MEDIAMARKT","AMAZON","VATAN"].includes(m.name))highlight=true;
+                    }
+                    else if(cat==="CONSOLE"){
+                        // Oyun Konsolları
+                        if(["AMAZON","HEPSIBURADA","TRENDYOL","N11","MEDIAMARKT","TEKNOSA","VATAN","ITOPYA","INCEHESAP"].includes(m.name))show=true;
+                        if(["MEDIAMARKT","AMAZON","ITOPYA","VATAN","TEKNOSA","INCEHESAP"].includes(m.name))highlight=true;
+                    }
+                    else if(cat==="HARDWARE"){
+                        // PC Donanım
+                        if(m.t.includes("pc"))show=true;
+                        if(["ITOPYA","INCEHESAP","SINERJI","VATAN"].includes(m.name))highlight=true;
+                    }
+                    else if(cat==="PHONE"){
+                        // Telefon
+                        if(["AMAZON","HEPSIBURADA","TRENDYOL","N11","MEDIAMARKT","TEKNOSA","VATAN"].includes(m.name))show=true;
+                        if(["AMAZON","HEPSIBURADA","MEDIAMARKT","VATAN","TRENDYOL","TEKNOSA"].includes(m.name))highlight=true;
+                        // Apple ürünleri için Troy
+                        if(m.name==="TROY" && ["iphone","apple"].some(k=>ql.includes(k))){show=true;highlight=true;}
+                    }
+                    else if(cat==="COMPUTER"){
+                        // Bilgisayar/Tablet
+                        if(["AMAZON","HEPSIBURADA","N11","MEDIAMARKT","TEKNOSA","VATAN","ITOPYA","INCEHESAP"].includes(m.name))show=true;
+                        if(["AMAZON","MEDIAMARKT","VATAN","INCEHESAP"].includes(m.name))highlight=true;
+                        // Apple ürünleri için Troy
+                        if(m.name==="TROY" && ["macbook","ipad","mac","apple"].some(k=>ql.includes(k))){show=true;highlight=true;}
+                    }
+                    else if(cat==="AUDIO"){
+                        // Kulaklık/Ses
+                        if(["AMAZON","HEPSIBURADA","TRENDYOL","N11","MEDIAMARKT","TEKNOSA","VATAN"].includes(m.name))show=true;
+                        if(["AMAZON","MEDIAMARKT","TEKNOSA","VATAN"].includes(m.name))highlight=true;
+                        // Apple ürünleri için Troy
+                        if(m.name==="TROY" && ["airpods"].some(k=>ql.includes(k))){show=true;highlight=true;}
+                    }
+                    else if(cat==="SMARTWATCH"){
+                        // Akıllı Saat
+                        if(["AMAZON","HEPSIBURADA","TRENDYOL","N11","MEDIAMARKT","TEKNOSA","VATAN"].includes(m.name))show=true;
+                        if(["AMAZON","MEDIAMARKT","TEKNOSA","VATAN"].includes(m.name))highlight=true;
+                        // Apple Watch için Troy
+                        if(m.name==="TROY" && ["apple watch","watch"].some(k=>ql.includes(k))){show=true;highlight=true;}
+                    }
+                    else if(cat==="CAMERA"){
+                        // Kamera/Fotoğraf/Drone
+                        if(["AMAZON","HEPSIBURADA","N11","MEDIAMARKT","TEKNOSA","VATAN"].includes(m.name))show=true;
+                        if(["AMAZON","MEDIAMARKT","VATAN","TEKNOSA"].includes(m.name))highlight=true;
+                    }
+                    else if(cat==="HOME_ELECTRONICS"){
+                        // Ev Elektroniği (Dyson, robot süpürge, airfryer vb.)
+                        if(["AMAZON","HEPSIBURADA","TRENDYOL","N11","MEDIAMARKT","TEKNOSA","VATAN"].includes(m.name))show=true;
+                        if(["AMAZON","MEDIAMARKT","TEKNOSA","VATAN"].includes(m.name))highlight=true;
+                    }
+                    
+                    // ========== DİĞER KATEGORİLER ==========
+                    
+                    else if(cat==="FASHION" || cat==="SPORTS"){
+                        // Moda & Spor
+                        if(m.t.includes("fashion") || m.t.includes("sneaker") || m.t.includes("sports"))show=true;
+                        if(["SUPERSTEP","SNEAKS UP","SPORTIVE","INTERSPORT","BOYNER"].includes(m.name))highlight=true;
+                        // Decathlon sadece decathlon ürünlerinde önerilsin
+                        if(m.name==="DECATHLON" && ql.includes("decathlon"))highlight=true;
+                        // Genel pazaryerleri de göster
+                        if(["AMAZON","HEPSIBURADA","TRENDYOL","N11"].includes(m.name))show=true;
+                    }
+                    else if(cat==="COSMETIC"){
+                        // Kozmetik
+                        if(m.t.includes("cosmetic"))show=true;
+                        if(["WATSONS","GRATIS","SEPHORA","ROSSMANN","FLORMAR","BOYNER"].includes(m.name))highlight=true;
+                        // Genel pazaryerleri
+                        if(["HEPSIBURADA","TRENDYOL"].includes(m.name))show=true;
+                    }
+                    else if(cat==="BOOK"){
+                        // Kitap
+                        if(m.t.includes("book"))show=true;
+                        if(["AMAZON","KITAPYURDU","İDEFİX","D&R","BKM KİTAP"].includes(m.name))highlight=true;
+                    }
+                    else if(cat==="TOY"){
+                        // Oyuncak
+                        if(m.t.includes("toy"))show=true;
+                        if(["D&R","İDEFİX","TOYZZ SHOP","AMAZON"].includes(m.name))highlight=true;
+                        if(["AMAZON","HEPSIBURADA","TRENDYOL","N11"].includes(m.name))show=true;
+                    }
+                    else if(cat==="PET_BABY"){
+                        // Pet & Bebek
+                        if(m.t.includes("pet"))show=true;
+                        if(["PETİ","ÇİÇEKSEPETİ"].includes(m.name))highlight=true;
+                        if(["AMAZON","HEPSIBURADA","TRENDYOL","N11"].includes(m.name))show=true;
+                    }
+                    else if(cat==="HOME"){
+                        // Ev & Yapı Market
+                        if(m.t.includes("home") || m.t.includes("home_decor"))show=true;
+                        if(["KOÇTAŞ","BAUHAUS","IKEA"].includes(m.name))highlight=true;
+                        // Teknoloji mağazalarını hariç tut
+                        if(["MEDIAMARKT","TEKNOSA"].includes(m.name))show=false;
+                    }
+                    else {
+                        // GENERAL - Tüm büyük pazaryerleri göster
+                        if(m.t.includes("market"))show=true;
+                        if(m.name==="AMAZON")highlight=true;
+                    }
+                    
+                    // Troy sadece Apple ürünleri için (genel kontrol)
+                    if(m.name==="TROY" && !["apple","iphone","mac","ipad","watch","airpods","macbook"].some(k=>ql.includes(k))){
+                        show=false;
+                    }
+
+                    if(show) createCard(m.name,m.logo,m.url+encodeURIComponent(q),highlight?"highlight":"normal",null,m);
+                });
+                
+                // Sonuç sayısı
+                const cardCount=grid.querySelectorAll('.base-card').length;
+                const resultInfo=document.getElementById('resultInfo');
+                const resultCount=document.getElementById('resultCount');
+                if(cardCount>0){
+                    resultCount.textContent=cardCount;
+                    resultInfo.classList.remove('hidden');
+                }else{
+                    resultInfo.classList.add('hidden');
+                }
+                
+                // Sonuç bulunamadı
+                if(grid.innerHTML===""){
+                    document.getElementById('errorText').innerText="Bu arama için uygun sonuç bulunamadı.";
+                    err.classList.remove('hidden');
+                }else{
+                    // Sonuçlara scroll
+                    setTimeout(()=>{
+                        const rect=grid.getBoundingClientRect();
+                        if(rect.top>window.innerHeight*0.4){
+                            window.scrollTo({top:window.scrollY+rect.top-100,behavior:'smooth'});
+                        }
+                    },150);
+                }
+            },300);
+        }
+
+        function createCard(n,l,u,t,i,td){
+            const g=document.getElementById('gridContainer'),c=document.createElement('a');c.href=u;c.target="_blank";c.rel="noopener noreferrer";
+            let cl="base-card animate-fade-in col-span-1 no-underline group ",ht="";
+            const needsInvert=td&&td.darkInvert;
+            const imgClass=needsInvert?"logo-img dark-invert":"logo-img";
+            if(t==="official"){
+                cl+="official-card md:col-span-2 lg:col-span-3";
+                if(n.includes("Nike")||n.includes("Adidas")||n.includes("Zara")||n.includes("Puma"))c.style.background="linear-gradient(135deg,#111827 0%,#374151 100%)";
+                else if(n.includes("Samsung"))c.style.background="linear-gradient(135deg,#034EA2 0%,#000000 100%)";
+                else if(n.includes("Xiaomi"))c.style.background="linear-gradient(135deg,#FF6900 0%,#E65100 100%)";
+                else if(n.includes("Dyson"))c.style.background="linear-gradient(135deg,#F06D9E 0%,#A31F50 100%)";
+                ht=`<div class="badge bg-white/20 backdrop-blur-sm shadow-sm"><i class="fa-solid fa-certificate"></i> RESMİ MAĞAZA</div><div class="flex items-center gap-4 md:gap-5 w-full pl-1 md:pl-2"><div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/10 flex items-center justify-center text-2xl md:text-3xl text-white shrink-0"><i class="fa-brands ${i}"></i></div><div class="flex-grow"><div class="text-xl md:text-2xl font-black tracking-tight leading-none mb-1">${n}</div><div class="text-[10px] md:text-xs font-bold opacity-70 tracking-widest uppercase">ARACISIZ SATIŞ</div></div><div class="text-white/80 text-2xl md:text-3xl group-hover:translate-x-2 transition-transform shrink-0 pr-1 md:pr-2"><i class="fa-solid fa-arrow-right"></i></div></div>`;
+            } else if(t==="highlight"){
+                cl+="recommended-card";c.style.setProperty('--theme-color',td.c);
+                ht=`<div class="badge shadow-sm"><i class="fa-solid fa-check-circle mr-1"></i> ÖNERİLEN</div><div class="logo-wrapper mb-auto mt-2 pl-1"><img src="${l}" class="${imgClass}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="fallback-text text-slate-800" style="color:${td.c}">${n}</span></div><div class="text-green-700 font-extrabold text-sm flex items-center justify-end gap-2 group-hover:gap-3 transition-all pr-1 mt-3">Fiyatı Gör <i class="fa-solid fa-chevron-right text-xs"></i></div>`;
+            } else {
+                cl+="link-card";c.style.setProperty('--theme-color',td.c);c.style.setProperty('--theme-shadow',td.s);
+                ht=`<div class="logo-wrapper my-auto pl-1"><img src="${l}" class="${imgClass}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="fallback-text text-slate-700" style="color:${td.c}">${n}</span></div><div class="absolute bottom-4 right-4 text-slate-300 group-hover:text-[color:var(--theme-color)] transition-colors text-lg"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>`;
+            }
+            c.className=cl;c.innerHTML=ht;g.appendChild(c);
+        }
+        function toggleTheme(){const html=document.documentElement;const icon=document.getElementById('themeIcon');const isDark=html.classList.toggle('dark');localStorage.setItem('theme',isDark?'dark':'light');icon.className=isDark?'fa-solid fa-sun':'fa-solid fa-moon';updateMetaTheme(isDark)}
+        function updateMetaTheme(isDark){const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=isDark?'#0f172a':'#2563eb'}
+        function initTheme(){const saved=localStorage.getItem('theme');const prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;const isDark=saved?saved==='dark':prefersDark;if(isDark){document.documentElement.classList.add('dark');document.getElementById('themeIcon').className='fa-solid fa-sun'}updateMetaTheme(isDark)}
+        initTheme();
+        window.onload=()=>{document.getElementById('queryInput').focus();renderHistory()};
+        document.getElementById('queryInput').addEventListener('keypress',(e)=>{if(e.key==='Enter')runEngine()});
+    </script>
+</body>
+</html>
