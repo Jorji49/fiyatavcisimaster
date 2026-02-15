@@ -318,7 +318,9 @@ function createResultCard(item, isBest) {
             <h4 class="text-sm font-bold text-slate-800 dark:text-white truncate mb-1.5" title="${sTitle}">${sTitle}</h4>
             <div class="text-2xl price-tag">${sPrice}</div>
             <div class="accuracy-info mt-2">
-                <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border border-green-100 dark:border-green-900/30"><i class="fa-solid fa-bolt-lightning text-[9px]"></i> <span>CANLI VERİ</span></div>
+                ${isLive
+                    ? '<div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border border-green-100 dark:border-green-900/30"><i class="fa-solid fa-bolt-lightning text-[9px]"></i> <span>CANLI VERİ</span></div>'
+                    : '<div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 border border-amber-100 dark:border-amber-900/30"><i class="fa-solid fa-clock text-[9px]"></i> <span>DEMO / TAHMİNİ</span></div>'}
             </div>
         </div>
     </div>
