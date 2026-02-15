@@ -132,6 +132,9 @@
                 <div id="clearBtn" onclick="clearSearch()" class="px-2 md:px-4 text-lg md:text-xl shrink-0 h-full" title="Temizle"><i class="fa-solid fa-circle-xmark"></i></div>
                 <button id="searchBtn" onclick="runEngine()" style="color:#ffffff;background:#2563eb" class="hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 px-6 md:px-10 py-3 md:py-5 rounded-2xl font-bold transition-all shadow-lg flex items-center gap-2 md:gap-3 text-base md:text-lg shrink-0 justify-center active:scale-95 hover:shadow-xl ml-2">ARA</button>
             </div>
+            <div id="searchProgress" class="hidden w-full h-1 bg-slate-100 dark:bg-slate-700 mt-2 rounded-full overflow-hidden">
+                <div id="progressBar" class="h-full bg-blue-500 transition-all duration-300" style="width: 0%"></div>
+            </div>
             <div id="suggestionBox" class="hidden absolute left-0 right-0 top-full mt-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-2xl z-50 overflow-hidden max-h-72 overflow-y-auto"></div>
             <div id="typoContainer" class="hidden pl-4"></div>
             <div id="historyArea" class="mt-3 px-2 flex flex-wrap gap-2 justify-center md:justify-start hidden"></div>
@@ -143,8 +146,31 @@
             </div>
         </div>
 
-        <div id="resultInfo" class="hidden mb-4 text-center animate-fade-in">
-            <span class="text-sm font-bold" style="color:var(--text-secondary)"><i class="fa-solid fa-store mr-2"></i><span id="resultCount">0</span> mağaza bulundu</span>
+        <div id="resultInfo" class="hidden mb-6 animate-fade-in">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                <div class="flex items-center gap-2">
+                    <span class="text-sm font-bold text-slate-500 dark:text-slate-400">
+                        <i class="fa-solid fa-store mr-2"></i><span id="resultCount">0</span> mağaza bulundu
+                    </span>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-3">
+                    <div class="flex items-center gap-2">
+                        <label for="sortSelect" class="text-xs font-bold text-slate-400 uppercase">Sırala:</label>
+                        <select id="sortSelect" onchange="handleSortFilter()" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold outline-none focus:border-blue-500 transition-colors">
+                            <option value="price-asc">En Düşük Fiyat</option>
+                            <option value="price-desc">En Yüksek Fiyat</option>
+                        </select>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <label for="marketFilter" class="text-xs font-bold text-slate-400 uppercase">Mağaza:</label>
+                        <select id="marketFilter" onchange="handleSortFilter()" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold outline-none focus:border-blue-500 transition-colors">
+                            <option value="all">Tüm Mağazalar</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
         <div id="gridContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 pb-8 w-full"></div>
 
