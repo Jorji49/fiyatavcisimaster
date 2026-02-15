@@ -149,7 +149,14 @@ function handleInput(inp) {
   if (q.length < 2) { box.classList.add("hidden"); return; }
   const matches = ALL_WORDS.filter(w => normalizeForSearch(w).includes(normalizeForSearch(q))).slice(0, 5);
   if (matches.length > 0) {
-    box.innerHTML = matches.map(m => `<div class="px-6 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer font-bold" onclick="applySuggestion('${m}')">${m}</div>`).join("");
+    box.innerHTML = "";
+    matches.forEach(m => {
+        const div = document.createElement("div");
+        div.className = "px-6 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer font-bold";
+        div.textContent = m;
+        div.onclick = () => applySuggestion(m);
+        box.appendChild(div);
+    });
     box.classList.remove("hidden");
   } else { box.classList.add("hidden"); }
 }
@@ -233,6 +240,7 @@ async function runEngine() {
         renderResults(results);
 
         document.getElementById("resultInfo").classList.remove("hidden");
+        document.getElementById("initialContent").classList.add("hidden");
         updateSEO(q);
         checkTypos(q);
         updateHistory(q);
@@ -260,12 +268,16 @@ function updateMarketFilter(results) {
 function handleSortFilter() {
   const sortVal = document.getElementById("sortSelect").value;
   const marketVal = document.getElementById("marketFilter").value;
+  const minPrice = parseFloat(document.getElementById("minPrice")?.value) || 0;
+  const maxPrice = parseFloat(document.getElementById("maxPrice")?.value) || Infinity;
 
   let filtered = [...rawResults];
 
   if (marketVal !== "all") {
     filtered = filtered.filter(r => r.name === marketVal);
   }
+
+  filtered = filtered.filter(r => r.price >= minPrice && r.price <= maxPrice);
 
   if (sortVal === "price-asc") {
     filtered.sort((a, b) => a.price - b.price);
