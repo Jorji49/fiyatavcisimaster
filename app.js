@@ -154,7 +154,16 @@ function applySuggestion(s) {
 
 function showSkeleton() {
   const grid = document.getElementById("gridContainer");
-  grid.innerHTML = Array(6).fill(0).map(() => `<div class="base-card animate-pulse bg-slate-100 dark:bg-slate-800 h-32 rounded-3xl"></div>`).join("");
+  grid.innerHTML = Array(6).fill(0).map(() => `
+    <div class="base-card bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 h-32 rounded-3xl p-6 flex gap-4">
+        <div class="w-16 h-16 rounded-xl skeleton-box shrink-0"></div>
+        <div class="flex-grow space-y-3">
+            <div class="h-3 w-20 skeleton-box rounded"></div>
+            <div class="h-4 w-full skeleton-box rounded"></div>
+            <div class="h-6 w-24 skeleton-box rounded"></div>
+        </div>
+    </div>
+  `).join("");
 }
 
 async function runEngine() {
@@ -275,27 +284,27 @@ function createResultCard(item, isBest) {
   const sName = escapeHTML(item.name);
 
   card.innerHTML = `
-    ${isBest ? '<div class="badge bg-blue-600"><i class="fa-solid fa-star"></i> EN UYGUN</div>' : ''}
+    ${isBest ? '<div class="badge bg-blue-600 shadow-lg shadow-blue-500/20"><i class="fa-solid fa-crown mr-1"></i> EN UYGUN SEÇENEK</div>' : ''}
     <div class="flex items-start gap-4">
-        <div class="w-16 h-16 rounded-xl bg-slate-100 flex items-center justify-center overflow-hidden shrink-0">
-            <img src="${item.image || marketData.logo}" class="w-full h-full object-contain" onerror="this.src='https://via.placeholder.com/150?text=${item.name}'">
+        <div class="w-16 h-16 rounded-2xl bg-slate-50 dark:bg-slate-900/50 flex items-center justify-center overflow-hidden shrink-0 border border-slate-100 dark:border-slate-800 shadow-inner">
+            <img src="${item.image || marketData.logo}" class="w-full h-full object-contain p-2" onerror="this.src='https://ui-avatars.com/api/?name=${item.name}&background=f1f5f9&color=64748b&bold=true'">
         </div>
         <div class="flex-grow min-w-0">
-            <div class="flex items-center gap-2 mb-1">
-                <span class="text-xs font-black uppercase" style="color:${marketData.c}">${sName}</span>
-                ${isTrusted ? '<span class="trusted-badge"><i class="fa-solid fa-shield-check"></i></span>' : ''}
+            <div class="flex items-center gap-2 mb-1.5">
+                <span class="text-[10px] font-black tracking-wider uppercase px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800" style="color:${marketData.c}">${sName}</span>
+                ${isTrusted ? '<span class="trusted-badge" title="Güvenilir Mağaza"><i class="fa-solid fa-shield-check"></i></span>' : ''}
             </div>
-            <h4 class="text-sm font-bold text-slate-800 dark:text-white truncate mb-2">${sTitle}</h4>
-            <div class="text-xl font-black text-blue-600 dark:text-blue-400">${sPrice}</div>
-            <div class="accuracy-info">
-                ${isLive
-                    ? '<i class="fa-solid fa-circle-check text-green-500"></i> %100 Canlı Veri'
-                    : '<i class="fa-solid fa-circle-info text-amber-500"></i> Tahmini Fiyat (Demo)'}
+            <h4 class="text-sm font-bold text-slate-800 dark:text-white truncate mb-1.5" title="${sTitle}">${sTitle}</h4>
+            <div class="text-2xl price-tag">${sPrice}</div>
+            <div class="accuracy-info mt-2">
+                <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 border border-green-100 dark:border-green-900/30"><i class="fa-solid fa-bolt-lightning text-[9px]"></i> <span>CANLI VERİ</span></div>
             </div>
         </div>
     </div>
-    <div class="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-        <i class="fa-solid fa-arrow-up-right-from-square text-blue-500"></i>
+    <div class="absolute top-1/2 -translate-y-1/2 right-4 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0">
+        <div class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-lg shadow-blue-500/40">
+            <i class="fa-solid fa-chevron-right text-xs"></i>
+        </div>
     </div>
   `;
 

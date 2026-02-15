@@ -22,118 +22,129 @@ const MARKETS = [
       image: '.p-card-img',
       link: 'a'
     }
+  },
+  {
+    name: 'HEPSIBURADA',
+    searchUrl: 'https://www.hepsiburada.com/ara?q=',
+    selectors: {
+        container: 'li[class*="productListContent"]',
+        title: 'h3[data-test-id="product-card-name"]',
+        price: 'div[data-test-id="price-current-price"]',
+        image: 'img[data-test-id="product-image"]',
+        link: 'a'
+    }
   }
 ];
+
+let browserInstance = null;
+
+async function getBrowser() {
+    try {
+        if (!browserInstance || !browserInstance.isConnected()) {
+            browserInstance = await chromium.launch({
+                headless: true,
+                args: ['--no-sandbox', '--disable-setuid-sandbox']
+            });
+        }
+    } catch (err) {
+        console.error('Failed to launch browser, retrying...', err);
+        browserInstance = await chromium.launch({
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
+        });
+    }
+    return browserInstance;
+}
 
 async function scrapeMarket(context, market, query) {
     const page = await context.newPage();
     try {
-        await page.goto(market.searchUrl + encodeURIComponent(query), { waitUntil: 'domcontentloaded', timeout: 20000 });
-        await page.waitForTimeout(2000);
+        // Optimization: Block unnecessary resources but be careful with images if we want them
+        await page.route('**/*.{woff,woff2,css,font,svg}', (route) => route.abort());
+
+        await page.goto(market.searchUrl + encodeURIComponent(query), {
+            waitUntil: 'domcontentloaded',
+            timeout: 15000
+        });
+
+        // Wait for results to load
+        await page.waitForSelector(market.selectors.container, { timeout: 6000 }).catch(() => {});
 
         const results = await page.evaluate((m) => {
-            const items = Array.from(document.querySelectorAll(m.selectors.container)).slice(0, 3);
+            const items = Array.from(document.querySelectorAll(m.selectors.container)).slice(0, 4);
             return items.map(el => {
-                const title = el.querySelector(m.selectors.title)?.innerText.trim();
-                const priceText = el.querySelector(m.selectors.price)?.innerText.trim();
+                const titleEl = el.querySelector(m.selectors.title);
+                const priceEl = el.querySelector(m.selectors.price);
                 const imageEl = el.querySelector(m.selectors.image);
-                const image = imageEl?.src || imageEl?.getAttribute('data-src') || imageEl?.getAttribute('src');
-                const link = el.querySelector(m.selectors.link)?.href;
+                const linkEl = el.querySelector(m.selectors.link);
+
+                const title = titleEl ? titleEl.innerText.trim() : null;
+                const priceText = priceEl ? priceEl.innerText.trim() : null;
+                const image = imageEl ? (imageEl.src || imageEl.getAttribute('data-src') || imageEl.getAttribute('src')) : null;
+                const link = linkEl ? linkEl.href : null;
+
                 return { title, priceText, image, link };
             });
         }, market);
 
         await page.close();
-        return results.map(r => ({ ...r, marketName: market.name }));
+        return results
+            .filter(r => r.title && r.priceText)
+            .map(r => ({ ...r, marketName: market.name }));
     } catch (e) {
         console.error(`Error scraping ${market.name}:`, e.message);
-        await page.close();
+        try { await page.close(); } catch(err) {}
         return [];
     }
 }
 
-function getSimulatedPrice(query) {
-    const basePrices = {
-        'iphone': 45000,
-        'samsung': 30000,
-        'macbook': 55000,
-        'rtx': 25000,
-        'dyson': 20000,
-        'nike': 3500,
-        'adidas': 3000,
-        'lego': 2500,
-        'watch': 12000,
-        'airpods': 8000
-    };
-
-    let base = 5000;
-    for (let k in basePrices) {
-        if (query.toLowerCase().includes(k)) {
-            base = basePrices[k];
-            break;
-        }
-    }
-
-    return base + (Math.random() * base * 0.2) - (base * 0.1);
-}
-
 async function searchMarketplaces(query) {
     const results = [];
-    let browser;
+    const browser = await getBrowser();
 
     try {
-        browser = await chromium.launch({ headless: true });
         const context = await browser.newContext({
-            userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'
+            userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            viewport: { width: 1280, height: 720 },
+            extraHTTPHeaders: {
+                'Accept-Language': 'tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7'
+            }
         });
 
         const scrapingPromises = MARKETS.map(market => scrapeMarket(context, market, query));
         const allScrapedResults = await Promise.all(scrapingPromises);
 
         allScrapedResults.flat().forEach(r => {
-            if (r.title && r.priceText) {
-                const price = parseFloat(r.priceText.replace(/\./g, '').replace(',', '.').replace(/[^\d.]/g, '')) || null;
-                if (price) {
-                    results.push({
-                        name: r.marketName,
-                        productTitle: r.title,
-                        price: price,
-                        priceFormatted: price.toLocaleString('tr-TR', { style: 'currency', currency: 'TRY' }),
-                        url: r.link,
-                        image: r.image,
-                        type: 'LIVE'
-                    });
+            // Price parsing refinement
+            let cleanPrice = r.priceText.replace(/[^\d,]/g, '').replace(',', '.');
+            if (cleanPrice.split('.').length > 2) {
+                // Handle cases like 1.234,56 where we might have multiple dots
+                const parts = r.priceText.replace(/[^\d,.]/g, '').split(/[.,]/);
+                if (parts.length > 1) {
+                    const decimal = parts.pop();
+                    const whole = parts.join('');
+                    cleanPrice = `${whole}.${decimal}`;
                 }
             }
+
+            const price = parseFloat(cleanPrice) || null;
+
+            if (price) {
+                results.push({
+                    name: r.marketName,
+                    productTitle: r.title,
+                    price: price,
+                    priceFormatted: price.toLocaleString('tr-TR', { style: 'currency', currency: 'TRY' }),
+                    url: r.link,
+                    image: r.image,
+                    type: 'LIVE'
+                });
+            }
         });
+
+        await context.close();
     } catch (err) {
-        console.error('Scraping failed:', err);
-    } finally {
-        if (browser) await browser.close();
-    }
-
-    // Fallback/Supplement
-    const existingMarkets = new Set(results.map(r => r.name));
-    const allMarketNames = ['AMAZON', 'HEPSIBURADA', 'TRENDYOL', 'N11', 'MEDIAMARKT', 'VATAN', 'TEKNOSA'];
-
-    let i = 0;
-    while (results.length < 6 || existingMarkets.size < 4) {
-        const mName = allMarketNames[i % allMarketNames.length];
-        if (!existingMarkets.has(mName) || results.length < 5) {
-            const price = getSimulatedPrice(query);
-            results.push({
-                name: mName,
-                productTitle: `${query} - En Uygun Fiyat`,
-                price: price,
-                priceFormatted: price.toLocaleString('tr-TR', { style: 'currency', currency: 'TRY' }),
-                url: `https://www.google.com/search?q=${encodeURIComponent(query + ' ' + mName)}`,
-                image: 'https://via.placeholder.com/150?text=' + mName,
-                type: 'VERIFIED'
-            });
-            existingMarkets.add(mName);
-        }
-        i++;
-        if (i > 20) break;
+        console.error('Search failed:', err.stack);
     }
 
     return results.sort((a, b) => a.price - b.price);
