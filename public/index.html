@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <meta name="google-site-verification" content="nMB3IKgjahJHMbF_t6raK7s-HcOJmxbRgOHiQde53ns" />
+
+    <meta name="description" content="FiyatAvcısı: En güvenilir teknoloji, moda, kozmetik ve kitap fiyat arama motoru.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.fiyatavcisi.com.tr/">
+    <meta property="og:title" content="FiyatAvcısı | Güvenli Alışveriş & Fiyat Arama Motoru">
+    <meta property="og:description" content="En güvenilir teknoloji, moda, kozmetik ve kitap fiyat arama motoru.">
+    <meta property="og:image" content="https://www.fiyatavcisi.com.tr/apple-touch-icon.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.fiyatavcisi.com.tr/">
+    <meta property="twitter:title" content="FiyatAvcısı | Güvenli Alışveriş & Fiyat Arama Motoru">
+    <meta property="twitter:description" content="En güvenilir teknoloji, moda, kozmetik ve kitap fiyat arama motoru.">
+    <meta property="twitter:image" content="https://www.fiyatavcisi.com.tr/apple-touch-icon.png">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "url": "https://www.fiyatavcisi.com.tr/",
+      "name": "FiyatAvcısı",
+      "description": "En güvenilir teknoloji, moda, kozmetik ve kitap fiyat arama motoru.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://www.fiyatavcisi.com.tr/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    <meta name="theme-color" content="#2563eb">
+    <title>FiyatAvcısı | Güvenli Alışveriş & Fiyat Arama Motoru</title>
+
+    <link rel="icon" href="logo.png" type="image/png" sizes="96x96">
+    <link rel="shortcut icon" href="logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="logo.png">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17749261970"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-17749261970');</script>
+
+    <link href="./style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root{--bg-primary:#f8fafc;--bg-secondary:#ffffff;--bg-tertiary:#f1f5f9;--text-primary:#1e293b;--text-secondary:#64748b;--text-muted:#94a3b8;--border-color:#e2e8f0;--shadow-color:rgba(0,0,0,0.04);--card-bg:#ffffff;--footer-bg:#ffffff}
+        .dark{--bg-primary:#0f172a;--bg-secondary:#1e293b;--bg-tertiary:#334155;--text-primary:#f1f5f9;--text-secondary:#94a3b8;--text-muted:#64748b;--border-color:#334155;--shadow-color:rgba(0,0,0,0.3);--card-bg:#1e293b;--footer-bg:#1e293b}
+        body{background-color:var(--bg-primary);color:var(--text-primary);display:flex;flex-direction:column;min-height:100dvh;-webkit-tap-highlight-color:transparent;overflow-x:hidden;transition:background-color 0.3s,color 0.3s}
+        .search-container{background:var(--bg-secondary);border:1px solid var(--border-color);box-shadow:0 10px 30px -10px var(--shadow-color);transition:all 0.3s cubic-bezier(0.25,0.8,0.25,1)}
+        .search-container:focus-within{border-color:#3b82f6;box-shadow:0 25px 50px -12px rgba(59,130,246,0.15);transform:translateY(-2px)}
+        #clearBtn{opacity:0;pointer-events:none;transition:all 0.2s ease;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center}
+        #clearBtn.visible{opacity:1;pointer-events:all}
+        #clearBtn:hover{color:var(--text-secondary)}
+        .base-card{border-radius:1.25rem;min-height:120px;display:flex;flex-direction:column;justify-content:center;padding:1.618rem;position:relative;transition:all 0.25s cubic-bezier(0.25,0.8,0.25,1);cursor:pointer;text-decoration:none;-webkit-user-select:none;user-select:none}
+        .link-card{background:var(--card-bg);border:1px solid var(--border-color)}
+        .link-card:hover{border-color:var(--theme-color);box-shadow:0 16px 32px -8px var(--theme-shadow);transform:translateY(-3px)}
+        .recommended-card{background:#f0fdf4;border:2px solid #16a34a;box-shadow:0 10px 20px -5px rgba(22,163,74,0.08)}
+        .dark .recommended-card{background:#14532d;border-color:#22c55e}
+        .recommended-card:hover{transform:translateY(-3px);box-shadow:0 20px 40px -10px rgba(22,163,74,0.2)}
+        .official-card{background:#0f172a;color:white;border:none;display:flex;flex-direction:row;align-items:center}
+        .official-card:hover{transform:translateY(-3px);box-shadow:0 25px 50px -12px rgba(15,23,42,0.4)}
+        .badge{position:absolute;top:-1px;right:-1px;font-size:0.65rem;font-weight:800;padding:6px 14px;border-bottom-left-radius:1rem;border-top-right-radius:1rem;color:white;background:#16a34a;z-index:10;letter-spacing:0.05em}
+        .logo-wrapper{height:2.5rem;width:100%;display:flex;align-items:center;overflow:hidden}
+        .logo-img{height:100%;width:auto;max-width:150px;object-fit:contain;object-position:left;opacity:0.9;transition:0.3s;mix-blend-mode:multiply}
+        .dark .logo-img{mix-blend-mode:normal;filter:brightness(1.1)}
+        .dark .logo-img.dark-invert{filter:brightness(0) invert(1)}
+        .link-card:hover .logo-img,.recommended-card:hover .logo-img{opacity:1;transform:scale(1.05)}
+        .fallback-text{display:none;font-weight:800;font-size:1.25rem;text-transform:uppercase;letter-spacing:-0.02em;line-height:1.1}
+        .link-card .fallback-text{color:var(--text-secondary)}
+        .link-card:hover .fallback-text{color:var(--theme-color)}
+        .history-chip{font-size:0.75rem;font-weight:600;padding:6px 14px;border-radius:999px;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-secondary);cursor:pointer;transition:all 0.2s ease;display:inline-flex;align-items:center;gap:6px}
+        .history-chip:hover{background:var(--bg-tertiary);color:var(--text-primary);border-color:var(--text-muted);transform:translateY(-1px)}
+        .history-clear-btn{font-size:0.7rem;padding:6px 10px;border-radius:999px;background:transparent;border:1px solid var(--border-color);color:var(--text-muted);cursor:pointer;transition:all 0.2s ease;display:inline-flex;align-items:center;justify-content:center;margin-left:4px}
+        .history-clear-btn:hover{background:#fee2e2;border-color:#fca5a5;color:#dc2626}
+        .dark .history-clear-btn:hover{background:#7f1d1d;border-color:#991b1b;color:#fca5a5}
+        .typo-box{font-size:0.9rem;color:#dc2626;margin-top:0.5rem;display:flex;align-items:center;gap:0.5rem;animation:fadeIn 0.3s ease;flex-wrap:wrap}
+        .dark .typo-box{color:#f87171}
+        .typo-link{font-weight:800;color:#2563eb;cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:4px}
+        .typo-link:hover{color:#1e40af}
+        .dark .typo-link{color:#60a5fa}
+        .dark .typo-link:hover{color:#93c5fd}
+        .cat-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:1rem;padding:1.5rem;cursor:pointer;transition:all 0.2s;height:100%;text-align:center}
+        .cat-btn:hover{border-color:#3b82f6;transform:translateY(-3px);box-shadow:0 10px 20px -5px rgba(59,130,246,0.15)}
+        .cat-icon{font-size:1.5rem;color:#3b82f6;margin-bottom:0.5rem}
+        .cat-name{font-weight:700;color:var(--text-primary);font-size:0.9rem}
+        .theme-toggle{position:fixed;top:1rem;right:1rem;z-index:50;width:44px;height:44px;border-radius:50%;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.2rem;transition:all 0.3s;box-shadow:0 4px 12px var(--shadow-color)}
+        .theme-toggle:hover{transform:scale(1.1);box-shadow:0 8px 24px var(--shadow-color)}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+        .btn-loading{pointer-events:none;opacity:0.8}
+        .btn-loading i{display:none}
+        .btn-loading::after{content:"";display:inline-block;width:16px;height:16px;border:2px solid #fff;border-radius:50%;border-top-color:transparent;animation:spin 0.8s linear infinite;margin-left:8px}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .dark .text-slate-900,.dark .text-slate-800,.dark .text-slate-700{color:var(--text-primary)!important}
+        .dark .text-green-700{color:#4ade80!important}
+        .dark .text-green-600{color:#22c55e!important}
+        .dark .bg-red-50{background:#450a0a!important}
+        .dark .border-red-100{border-color:#7f1d1d!important}
+        .dark .text-red-700{color:#fca5a5!important}
+        .dark .bg-white{background-color:var(--bg-secondary)!important}
+        .dark .bg-slate-50{background-color:var(--bg-tertiary)!important}
+        .dark .border-slate-200{border-color:var(--border-color)!important}
+        .trusted-badge{background:linear-gradient(135deg,#059669 0%,#10b981 100%);color:white;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:800;display:inline-flex;align-items:center;gap:4px;box-shadow:0 2px 4px rgba(16,185,129,0.2)}
+        .accuracy-info{font-size:11px;color:var(--text-muted);display:flex;align-items:center;gap:4px;margin-top:4px;font-weight:600}
+
+        /* Dropdown Fixes */
+        select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 0.5rem center;background-size:1rem;padding-right:2rem!important}
+        .dark select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");color:white!important;background-color:var(--bg-primary)!important;border-color:var(--border-color)!important}
+
+        /* Skeleton Refinement */
+        .skeleton-box{background:linear-gradient(90deg,var(--bg-tertiary) 25%,var(--border-color) 50%,var(--bg-tertiary) 75%);background-size:200% 100%;animation:skeleton-loading 1.5s infinite}
+        @keyframes skeleton-loading{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+        .price-tag{background:linear-gradient(135deg,#3b82f6 0%,#2563eb 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:900}
+        .dark .price-tag{background:linear-gradient(135deg,#60a5fa 0%,#3b82f6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <button class="theme-toggle" onclick="toggleTheme()" title="Tema Değiştir">
+        <i class="fa-solid fa-moon" id="themeIcon"></i>
+    </button>
+    <div class="w-full max-w-6xl flex-grow mx-auto flex flex-col">
+
+        <div class="text-center mb-8 mt-8 md:mt-16 animate-fade-in">
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 mb-5">
+                <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-[1.5rem] flex items-center justify-center shadow-2xl transform hover:scale-105 hover:rotate-3 transition-all duration-300 shrink-0" style="background:linear-gradient(135deg,#3b82f6 0%,#2563eb 50%,#4f46e5 100%);box-shadow:0 20px 40px -10px rgba(59,130,246,0.5)">
+                    <i class="fa-solid fa-crosshairs text-3xl md:text-4xl" style="color:#ffffff;text-shadow:0 2px 8px rgba(0,0,0,0.3)"></i>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-black tracking-tighter leading-none select-none">
+                    <span class="text-slate-800 dark:text-white">Fiyat</span><span class="text-blue-600 dark:text-blue-400">Avcısı</span>
+                </h1>
+            </div>
+            <p class="text-slate-500 dark:text-slate-400 font-bold text-[10px] md:text-xs uppercase tracking-[0.3em] md:tracking-[0.4em] opacity-80 pl-1">Güvenli Alışveriş & Fiyat Motoru</p>
+        </div>
+
+        <div class="w-full max-w-4xl mx-auto mb-8 relative z-30 animate-fade-in" style="animation-delay:0.1s">
+            <div class="search-container rounded-3xl p-2 md:p-3 flex items-center w-full">
+                <div style="color:var(--text-muted)" class="text-xl md:text-2xl ml-3 md:ml-4 mr-2 md:mr-4 shrink-0"><i class="fa-solid fa-magnifying-glass"></i></div>
+                <input type="text" id="queryInput" class="flex-grow bg-transparent border-none outline-none text-slate-900 dark:text-white text-lg md:text-2xl py-3 md:py-4 font-bold placeholder-gray-300 dark:placeholder-slate-500 min-w-0" placeholder="Ürün, Marka veya Model ara..." autocomplete="off" oninput="handleInput(this)">
+                <div id="clearBtn" onclick="clearSearch()" class="px-2 md:px-4 text-lg md:text-xl shrink-0 h-full" title="Temizle"><i class="fa-solid fa-circle-xmark"></i></div>
+                <button id="searchBtn" onclick="runEngine()" style="color:#ffffff;background:#2563eb" class="hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 px-6 md:px-10 py-3 md:py-5 rounded-2xl font-bold transition-all shadow-lg flex items-center gap-2 md:gap-3 text-base md:text-lg shrink-0 justify-center active:scale-95 hover:shadow-xl ml-2">ARA</button>
+            </div>
+            <div id="searchProgress" class="hidden w-full h-1 bg-slate-100 dark:bg-slate-700 mt-2 rounded-full overflow-hidden">
+                <div id="progressBar" class="h-full bg-blue-500 transition-all duration-300" style="width: 0%"></div>
+            </div>
+            <div id="suggestionBox" class="hidden absolute left-0 right-0 top-full mt-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-2xl z-50 overflow-hidden max-h-72 overflow-y-auto"></div>
+            <div id="typoContainer" class="hidden pl-4"></div>
+            <div id="historyArea" class="mt-3 px-2 flex flex-wrap gap-2 justify-center md:justify-start hidden"></div>
+        </div>
+
+        <div id="errorPanel" class="hidden mb-10 mx-auto max-w-lg animate-fade-in w-full">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-4 flex items-center gap-4 justify-center text-red-700 font-bold text-sm shadow-sm">
+                <i class="fa-solid fa-circle-exclamation text-lg shrink-0"></i> <span id="errorText"></span>
+            </div>
+        </div>
+
+        <div id="resultInfo" class="hidden mb-6 animate-fade-in">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                <div class="flex items-center gap-2">
+                    <span class="text-sm font-bold text-slate-500 dark:text-slate-400">
+                        <i class="fa-solid fa-store mr-2"></i><span id="resultCount">0</span> mağaza bulundu
+                    </span>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-3">
+                    <div class="flex items-center gap-2">
+                        <label for="sortSelect" class="text-xs font-bold text-slate-400 uppercase">Sırala:</label>
+                        <select id="sortSelect" onchange="handleSortFilter()" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold outline-none focus:border-blue-500 transition-colors">
+                            <option value="price-asc">En Düşük Fiyat</option>
+                            <option value="price-desc">En Yüksek Fiyat</option>
+                        </select>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <label for="marketFilter" class="text-xs font-bold text-slate-400 uppercase">Mağaza:</label>
+                        <select id="marketFilter" onchange="handleSortFilter()" class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold outline-none focus:border-blue-500 transition-colors">
+                            <option value="all">Tüm Mağazalar</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="gridContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 pb-8 w-full"></div>
+
+        <div id="initialContent" class="animate-fade-in" style="animation-delay:0.2s">
+            <div class="mb-12">
+                <h3 class="text-center font-bold text-xs tracking-widest uppercase mb-6" style="color:var(--text-muted)">Popüler Kategoriler</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                    <div class="cat-btn" onclick="quickSearch('iPhone 16 Pro')"><i class="fa-solid fa-mobile-screen-button cat-icon"></i><span class="cat-name">Telefon</span></div>
+                    <div class="cat-btn" onclick="quickSearch('Nike Air Max')"><i class="fa-solid fa-shoe-prints cat-icon"></i><span class="cat-name">Giyim</span></div>
+                    <div class="cat-btn" onclick="quickSearch('RTX 4070')"><i class="fa-solid fa-microchip cat-icon"></i><span class="cat-name">Donanım</span></div>
+                    <div class="cat-btn" onclick="quickSearch('Dyson V15')"><i class="fa-solid fa-broom cat-icon"></i><span class="cat-name">Ev</span></div>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mt-4">
+                    <div class="cat-btn" onclick="quickSearch('Macbook Air M3')"><i class="fa-solid fa-laptop cat-icon"></i><span class="cat-name">Laptop</span></div>
+                    <div class="cat-btn" onclick="quickSearch('Samsung Galaxy S24')"><i class="fa-brands fa-android cat-icon"></i><span class="cat-name">Android Telefon</span></div>
+                    <div class="cat-btn" onclick="quickSearch('PlayStation 5')"><i class="fa-solid fa-gamepad cat-icon"></i><span class="cat-name">Oyun Konsolu</span></div>
+                    <div class="cat-btn" onclick="quickSearch('Airfryer')"><i class="fa-solid fa-blender cat-icon"></i><span class="cat-name">Mutfak</span></div>
+                </div>
+            </div>
+            <div class="mb-8">
+                <h3 class="text-center font-bold text-xs tracking-widest uppercase mb-4" style="color:var(--text-muted)">Trend Ürünler</h3>
+                <div class="flex flex-wrap justify-center gap-2 max-w-3xl mx-auto">
+                    <span class="history-chip" onclick="quickSearch('Apple Watch')"><i class="fa-solid fa-fire text-orange-500"></i> Apple Watch</span>
+                    <span class="history-chip" onclick="quickSearch('AirPods Pro')"><i class="fa-solid fa-fire text-orange-500"></i> AirPods Pro</span>
+                    <span class="history-chip" onclick="quickSearch('Adidas Samba')"><i class="fa-solid fa-fire text-orange-500"></i> Adidas Samba</span>
+                    <span class="history-chip" onclick="quickSearch('Lego Technic')"><i class="fa-solid fa-fire text-orange-500"></i> Lego Technic</span>
+                    <span class="history-chip" onclick="quickSearch('Robot Süpürge')"><i class="fa-solid fa-fire text-orange-500"></i> Robot Süpürge</span>
+                    <span class="history-chip" onclick="quickSearch('Parfüm Erkek')"><i class="fa-solid fa-fire text-orange-500"></i> Parfüm</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="w-full border-t py-12 md:py-16 mt-auto relative z-10 -mx-4 md:-mx-8 px-4 md:px-8 w-[calc(100%+2rem)] md:w-[calc(100%+4rem)] transition-colors" style="background:var(--bg-secondary);border-color:var(--border-color)">
+        <div class="max-w-5xl mx-auto text-center">
+            <div class="mb-10">
+                <a href="mailto:support@fiyatavcisi.com.tr" class="inline-flex items-center gap-2 font-bold transition-all px-6 py-3 rounded-full text-xs md:text-sm shadow-sm hover:shadow-lg hover:-translate-y-0.5" style="background:var(--bg-tertiary);color:var(--text-primary);border:1px solid var(--border-color)">
+                    <i class="fa-solid fa-envelope text-blue-500"></i>
+                    <span>support@fiyatavcisi.com.tr</span>
+                </a>
+            </div>
+            <div class="flex justify-center gap-6 mb-8 text-xs font-bold" style="color:var(--text-secondary)">
+                <a href="gizlilik.html" class="hover:text-blue-500 transition-colors">Gizlilik Politikası</a>
+                <a href="kullanim.html" class="hover:text-blue-500 transition-colors">Kullanım Koşulları</a>
+                <a href="cerez.html" class="hover:text-blue-500 transition-colors">Çerez Politikası</a>
+            </div>
+            <div class="text-[10px] md:text-[11px] leading-relaxed space-y-3 border-t pt-8 max-w-3xl mx-auto opacity-80" style="color:var(--text-muted);border-color:var(--border-color)">
+                <p><strong>YASAL UYARI:</strong> FiyatAvcısı, bir e-ticaret sitesi değildir. Kullanıcıları güvenilir satıcıların resmi sitelerine yönlendirir.</p>
+                <p class="pt-6 opacity-60 font-mono font-medium text-[9px] uppercase tracking-widest">&copy; 2025 FiyatAvcısı Inc. Tüm hakları saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

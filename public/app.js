@@ -138,12 +138,28 @@ function renderHistory() {
 function handleInput(inp) {
   const q = inp.value.trim();
   const box = document.getElementById("suggestionBox");
+  const clearBtn = document.getElementById("clearBtn");
+
+  if (q.length > 0) {
+    clearBtn.classList.add("visible");
+  } else {
+    clearBtn.classList.remove("visible");
+  }
+
   if (q.length < 2) { box.classList.add("hidden"); return; }
   const matches = ALL_WORDS.filter(w => normalizeForSearch(w).includes(normalizeForSearch(q))).slice(0, 5);
   if (matches.length > 0) {
     box.innerHTML = matches.map(m => `<div class="px-6 py-3 hover:bg-slate-50 dark:hover:bg-slate-700 cursor-pointer font-bold" onclick="applySuggestion('${m}')">${m}</div>`).join("");
     box.classList.remove("hidden");
   } else { box.classList.add("hidden"); }
+}
+
+function clearSearch() {
+  const inp = document.getElementById("queryInput");
+  inp.value = "";
+  document.getElementById("clearBtn").classList.remove("visible");
+  document.getElementById("suggestionBox").classList.add("hidden");
+  inp.focus();
 }
 
 function applySuggestion(s) {
@@ -192,6 +208,11 @@ async function runEngine() {
   try {
     const response = await fetch(`${API_BASE}/api/search?q=${encodeURIComponent(q)}`);
     pBar.style.width = "70%";
+
+    if (!response.ok) {
+        throw new Error("Sunucu hatası: " + response.status);
+    }
+
     const results = await response.json();
     rawResults = results;
     pBar.style.width = "100%";
