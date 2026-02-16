@@ -5,6 +5,13 @@ const path = require('path');
 const PORT = process.env.PORT || 8080;
 
 const server = http.createServer((req, res) => {
+    // Railway Health Check
+    if (req.url === '/health') {
+        res.writeHead(200, { 'Content-Type': 'text/plain' });
+        res.end('OK');
+        return;
+    }
+
     let filePath = path.join(__dirname, req.url === '/' ? 'index.html' : req.url);
 
     // Güvenlik: Dışarı sızmayı önle
@@ -35,8 +42,13 @@ const server = http.createServer((req, res) => {
             if (error.code === 'ENOENT') {
                 // SPA ise index.html döndür, değilse 404
                 fs.readFile(path.join(__dirname, 'index.html'), (err, indexContent) => {
-                    res.writeHead(200, { 'Content-Type': 'text/html' });
-                    res.end(indexContent, 'utf-8');
+                    if (err) {
+                        res.writeHead(404);
+                        res.end('Not Found');
+                    } else {
+                        res.writeHead(200, { 'Content-Type': 'text/html' });
+                        res.end(indexContent, 'utf-8');
+                    }
                 });
             } else {
                 res.writeHead(500);
