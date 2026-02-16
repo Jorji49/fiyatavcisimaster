@@ -12,6 +12,7 @@ class ShoppingDashboard extends StatelessWidget {
         child: Column(
           children: [
             _buildSavingsCard(),
+            _buildAutopilotEntry(context),
             _buildPersonalOffers(),
             _buildPriceAlerts(),
           ],
@@ -66,6 +67,22 @@ class ShoppingDashboard extends StatelessWidget {
           Chip(label: Text(badge, style: TextStyle(fontSize: 10))),
         ],
       )),
+    );
+  }
+
+  Widget _buildAutopilotEntry(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      color: Colors.blue.shade800,
+      child: ListTile(
+        leading: Icon(Icons.auto_awesome, color: Colors.white),
+        title: Text('Otopilot Asistanı', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        subtitle: Text('Bütçeni AI ile optimize et', style: TextStyle(color: Colors.white70)),
+        trailing: Icon(Icons.chevron_right, color: Colors.white),
+        onTap: () {
+          // Navigate to AutopilotView
+        },
+      ),
     );
   }
 

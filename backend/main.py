@@ -38,6 +38,14 @@ async def get_autopilot_strategy(items: str, budget: float):
     item_list = items.split(",")
     return autopilot_engine.optimize_shopping_list(item_list, budget)
 
+@app.get("/personalized-offers")
+async def get_offers():
+    return [
+        {"name": "iPhone 16 Pro", "badge": "DİP FİYAT", "price": 48500.0, "relevance": 0.95},
+        {"name": "Sony WH-1000XM5", "badge": "%15 FIRSAT", "price": 12400.0, "relevance": 0.88},
+        {"name": "Dyson V15 Detect", "badge": "STOK AZALDI", "price": 24900.0, "relevance": 0.82}
+    ]
+
 @app.get("/health")
 async def health_check():
     return {"status": "OK"}
