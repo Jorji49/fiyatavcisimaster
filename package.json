@@ -2,8 +2,9 @@
   "name": "fiyatavcisi",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "build": "npx tailwindcss -i ./input.css -o ./style.css --minify"
   },
   "keywords": [],
