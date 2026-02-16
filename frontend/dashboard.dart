@@ -22,13 +22,29 @@ class ShoppingDashboard extends StatelessWidget {
   }
 
   Widget _buildSavingsCard() {
-    return Card(
+    return Container(
       margin: EdgeInsets.all(16),
-      child: ListTile(
-        leading: Icon(Icons.account_balance_wallet, color: Colors.green),
-        title: Text('Toplam Tasarruf'),
-        subtitle: Text('₺1,250.00 bu ay'),
-        trailing: Icon(Icons.trending_up, color: Colors.green),
+      padding: EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: [Colors.blue.shade700, Colors.blue.shade900]),
+        borderRadius: BorderRadius.circular(32),
+        boxShadow: [BoxShadow(color: Colors.blue.withOpacity(0.3), blurRadius: 20, offset: Offset(0, 10))],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('TOPLAM TASARRUF', style: TextStyle(color: Colors.white70, fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 2)),
+          SizedBox(height: 8),
+          Text('₺1,420.50', style: TextStyle(color: Colors.white, fontSize: 36, fontWeight: FontWeight.black)),
+          SizedBox(height: 16),
+          Row(
+            children: [
+              Icon(Icons.trending_up, color: Colors.greenAccent, size: 16),
+              SizedBox(width: 4),
+              Text('%12 Artış (Geçen aya göre)', style: TextStyle(color: Colors.white60, fontSize: 12)),
+            ],
+          )
+        ],
       ),
     );
   }

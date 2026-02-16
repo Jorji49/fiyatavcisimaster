@@ -32,6 +32,29 @@ const server = http.createServer((req, res) => {
         return;
     }
 
+    // Proxy API requests to FastAPI backend
+    if (req.url.startsWith('/search') || req.url.startsWith('/autopilot') || req.url.startsWith('/personalized-offers')) {
+        const proxyReq = http.request({
+            host: '127.0.0.1',
+            port: 8000,
+            path: req.url,
+            method: req.method,
+            headers: req.headers
+        }, (proxyRes) => {
+            res.writeHead(proxyRes.statusCode, proxyRes.headers);
+            proxyRes.pipe(res, { end: true });
+        });
+
+        proxyReq.on('error', (e) => {
+            console.error(`Proxy Error: ${e.message}`);
+            res.writeHead(502);
+            res.end('Bad Gateway: Backend not responding');
+        });
+
+        req.pipe(proxyReq, { end: true });
+        return;
+    }
+
     // Path Sanitization to prevent Path Traversal
     let urlPath = req.url.split('?')[0];
     let filePath = path.join(process.cwd(), urlPath === '/' ? 'index.html' : urlPath);

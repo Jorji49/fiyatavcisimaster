@@ -1,36 +1,46 @@
 from typing import List, Dict, Any
-# import pinecone  # 'pip install pinecone-client'
-# from sentence_transformers import SentenceTransformer
+import random
 
 class SemanticSearch:
-    def __init__(self, api_key: str = "YOUR_PINECONE_KEY"):
-        # self.model = SentenceTransformer('multilingual-e5-base')
-        # pinecone.init(api_key=api_key, environment='us-west1-gcp')
-        # self.index = pinecone.Index("fiyat-avcisi")
-        pass
-
-    async def get_embeddings(self, text: str) -> List[float]:
-        """
-        Metni yüksek boyutlu vektöre dönüştürür.
-        """
-        # return self.model.encode([text])[0].tolist()
-        return [0.1] * 768 # Mock 768-dim vector
+    def __init__(self, provider: str = "pinecone"):
+        # Bilgi: Gerçek projede SentenceTransformer ve Vektör DB burada yüklenir.
+        self.mock_data = [
+            {"id": "l1", "name": "MacBook Air M3", "tags": ["laptop", "apple", "öğrenci", "pil"], "base_price": 45000, "specs": "18 Saat Pil Ömrü"},
+            {"id": "l2", "name": "ASUS Zenbook 14", "tags": ["laptop", "windows", "öğrenci", "hafif"], "base_price": 32000, "specs": "Ultra Hafif"},
+            {"id": "p1", "name": "iPhone 16 Pro", "tags": ["telefon", "apple", "kamera"], "base_price": 75000, "specs": "A18 Pro Chip"},
+            {"id": "h1", "name": "Dyson V15", "tags": ["ev", "süpürge", "temizlik"], "base_price": 28000, "specs": "Lazer Aydınlatma"},
+        ]
 
     async def hybrid_search(self, query: str, top_k: int = 10) -> List[Dict[str, Any]]:
         """
-        Hem anahtar kelime (BM25) hem de semantik (Vektör) arama sonuçlarını birleştirir.
+        Niyet analizi yapan simüle edilmiş semantik arama.
         """
-        query_vector = await self.get_embeddings(query)
+        query_lower = query.lower()
+        results = []
 
-        # pinecone_results = self.index.query(vector=query_vector, top_k=top_k, include_metadata=True)
+        for item in self.mock_data:
+            score = 0
+            # Basit semantik/anahtar kelime eşleşmesi simülasyonu
+            if any(tag in query_lower for tag in item["tags"]):
+                score += 0.5
+            if item["name"].lower() in query_lower or any(word in item["name"].lower() for word in query_lower.split()):
+                score += 0.4
 
-        # Mock logic for Teknofest Demo
-        if "laptop" in query.lower():
-            return [
-                {"name": "MacBook Air M3", "score": 0.98, "metadata": {"battery": "18h", "price": 45000}},
-                {"name": "HUAWEI MateBook D16", "score": 0.92, "metadata": {"battery": "12h", "price": 28000}}
-            ]
-        return []
+            # "Niyet" bazlı bonuslar
+            if "öğrenci" in query_lower and "öğrenci" in item["tags"]:
+                score += 0.3
+            if "ucuz" in query_lower or "fiyat" in query_lower:
+                score += 0.1
+
+            if score > 0:
+                results.append({
+                    "item": item,
+                    "relevance_score": round(min(score, 1.0), 2)
+                })
+
+        # Skora göre sırala
+        results.sort(key=lambda x: x["relevance_score"], reverse=True)
+        return results[:top_k]
 
 # Singleton Instance
 search_engine = SemanticSearch()

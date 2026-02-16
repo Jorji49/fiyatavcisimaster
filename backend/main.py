@@ -1,10 +1,13 @@
 from fastapi import FastAPI, Query
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 import os
 from pydantic import BaseModel
 import uvicorn
+from .intelligence import intelligence_engine
+from .search import search_engine
+from .autopilot import autopilot_engine
 
-app = FastAPI(title="Fiyat Avcısı API", version="2.0.0")
+app = FastAPI(title="Fiyat Avcısı API v3", version="3.0.0")
 
 class Product(BaseModel):
     id: str
@@ -12,38 +15,70 @@ class Product(BaseModel):
     price: float
     store: str
     buyability_score: float
-    predicted_price_7d: float
+    forecast: Dict[str, Any]
 
 @app.get("/")
 async def root():
-    return {"message": "Fiyat Avcısı Modernize API'sine Hoşgeldiniz", "status": "active"}
+    return {"message": "Fiyat Avcısı AI Decision Engine Active", "version": "3.0.0"}
 
-@app.get("/search", response_model=List[Product])
+@app.get("/search")
 async def search(q: str = Query(..., min_length=2)):
-    # Bu endpoint daha sonra search.py ve intelligence.py modüllerini kullanacak
-    return [
-        {
-            "id": "1",
-            "name": f"{q} için örnek sonuç",
-            "price": 1500.0,
-            "store": "Trendyol",
-            "buyability_score": 0.85,
-            "predicted_price_7d": 1450.0
-        }
-    ]
+    # Simüle edilmiş hibrit arama ve zeka entegrasyonu
+    search_results = await search_engine.hybrid_search(q)
+
+    products = []
+    for res in search_results:
+        item = res["item"]
+        price = item["base_price"]
+
+        # Zeka katmanı hesaplamaları
+        score = intelligence_engine.calculate_buyability_score(
+            price=price,
+            min_price=price * 0.9, # Simüle edilmiş min fiyat
+            seller_rating=9.5,
+            delivery_days=2
+        )
+
+        forecast = intelligence_engine.predict_7d_forecast(price, item["name"])
+
+        products.append({
+            "id": item["id"],
+            "name": item["name"],
+            "price": price,
+            "store": "Teknofest Store",
+            "buyability_score": score,
+            "forecast": forecast,
+            "specs": item["specs"]
+        })
+
+    return products
 
 @app.get("/autopilot")
 async def get_autopilot_strategy(items: str, budget: float):
-    from .autopilot import autopilot_engine
     item_list = items.split(",")
     return autopilot_engine.optimize_shopping_list(item_list, budget)
 
 @app.get("/personalized-offers")
 async def get_offers():
     return [
-        {"name": "iPhone 16 Pro", "badge": "DİP FİYAT", "price": 48500.0, "relevance": 0.95},
-        {"name": "Sony WH-1000XM5", "badge": "%15 FIRSAT", "price": 12400.0, "relevance": 0.88},
-        {"name": "Dyson V15 Detect", "badge": "STOK AZALDI", "price": 24900.0, "relevance": 0.82}
+        {
+            "name": "iPhone 16 Pro",
+            "badge": "DİP FİYAT",
+            "price": 48500.0,
+            "forecast": {"trend": "-2.5%", "direction": "down"}
+        },
+        {
+            "name": "Sony WH-1000XM5",
+            "badge": "%15 FIRSAT",
+            "price": 12400.0,
+            "forecast": {"trend": "+1.2%", "direction": "up"}
+        },
+        {
+            "name": "Dyson V15 Detect",
+            "badge": "STOK AZALDI",
+            "price": 24900.0,
+            "forecast": {"trend": "Sabit", "direction": "stable"}
+        }
     ]
 
 @app.get("/health")
