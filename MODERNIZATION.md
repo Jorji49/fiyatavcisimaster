@@ -1,107 +1,118 @@
-# Fiyat Avcısı Modernizasyon Stratejisi (Trendyol & T3 Vakfı Yarışması)
+# Fiyat Avcısı: Teknofest E-Ticaret Yarışması Modernizasyon ve Vizyon Belgesi
 
-Bu döküman, "Fiyat Avcısı" projesinin e-ticaret yarışması hedefleri doğrultusunda modernize edilmesi için hazırlanan teknik yol haritasını ve mimari detayları içerir.
+Bu döküman, "Fiyat Avcısı" projesinin Teknofest "Arama ve Alışveriş Deneyimini İyileştirme" teması kapsamında, sadece bir fiyat takipçisinden **"Yapay Zeka Destekli Akıllı Alışveriş Asistanı"**na dönüşüm yol haritasını içerir.
 
-## 1. Stratejik Yol Haritası
+## 1. Stratejik Proje Geliştirme Planı (Teknofest Yol Haritası)
 
-*   **Faz 1: Veri ve Altyapı (1-4 Hafta):** Mevcut Node.js yapısının Python (FastAPI) tabanlı bir mikroservis mimarisine taşınması. PostgreSQL ve Pinecone (Vector DB) kurulumu.
-*   **Faz 2: Zeka Katmanı (4-8 Hafta):** Prophet ve XGBoost modellerinin entegrasyonu. Semantic search motorunun devreye alınması.
-*   **Faz 3: Modern UI/UX (8-12 Hafta):** Flutter ile mobil ve web arayüzlerinin geliştirilmesi. "Akıllı Dashboard" özelliklerinin implementasyonu.
-*   **Faz 4: Ölçekleme ve Globalizasyon (12+ Hafta):** Çoklu dil desteği ve global pazar yeri entegrasyonları.
+*   **Faz 1: Veri Madenciliği ve Konsolidasyon (Hafta 1-2):** Mevcut scraper yapısının FastAPI ile asenkron (BeautifullSoup/Playwright) hale getirilmesi. Verilerin vektörelleştirme için hazırlanması.
+*   **Faz 2: Semantik Zeka Katmanı (Hafta 3-5):** Doğal dil işleme (NLP) modellerinin entegrasyonu. Pinecone/Milvus ile "Niyet Bazlı Arama" motorunun kurulması.
+*   **Faz 3: Tahminleme ve Analitik (Hafta 6-9):** XGBoost ve LSTM modelleri ile fiyat dalgalanması tahmini. Talep analizi modülünün PDR/KTR raporlarına temel teşkil edecek şekilde geliştirilmesi.
+*   **Faz 4: Hiper-Kişiselleştirilmiş UX (Hafta 10-12):** Flutter tabanlı "Akıllı Dashboard" ve "Alışveriş Radarı"nın hayata geçirilmesi.
 
 ## 2. Teknik Mimari Şeması (Text-Based)
 
 ```text
-[ Flutter Frontend (Mobile/Web) ]
+[ Flutter Frontend (Mobil/Web) ] <--> [ Firebase Cloud Messaging (Anlık Uyarılar) ]
            |
-           v (REST API / JSON)
-[ FastAPI Backend (Python) ] <------> [ Sentence-Transformers (Embedding) ]
-    |             |                           |
-    |             v                           v
-    |     [ PostgreSQL ] <-----------> [ Pinecone Vector DB ]
-    |     (Metadata/History)           (Semantic Product Vectors)
+           v (TLS 1.3 / gRPC veya REST)
+[ FastAPI Gateway (Backend) ] <------------> [ Auth & User Profile (PostgreSQL) ]
+    |             |                                    |
+    |             v                                    v
+    |     [ Vector Engine ] <-----------> [ Pinecone / Milvus DB ]
+    |     (Sentence-Transformers)         (Ürün Gömülmeleri - Embeddings)
     |
     v
-[ ML Service (Prophet/XGBoost) ]
-(Price Prediction & Demand Analysis)
+[ ML Core Service ] <-------------------> [ Redis Cache ]
+(XGBoost Price Predictor)                (Sık Aranan Tahminler)
+(LSTM Demand Analyzer)
 ```
 
-## 3. Tahminleme Modülü (Python/Prophet)
+## 3. Veri Bilimi: Fiyat Tahminleme (Python / XGBoost)
 
-Aşağıdaki kod, bir ürünün geçmiş fiyat verilerini kullanarak önümüzdeki 7 gün için fiyat tahmini yapar:
+Jüriyi etkileyecek olan, ürünün sadece geçmişini değil, geleceğini de söyleyebilme kabiliyetidir:
 
 ```python
-from fastapi import FastAPI
-from prophet import Prophet
+import xgboost as xgb
 import pandas as pd
+from datetime import datetime, timedelta
 
-app = FastAPI()
+def train_price_predictor(data):
+    # 'data' şunları içermeli: [tarih, fiyat, kategori_id, indirim_orani, stok_durumu]
+    df = pd.DataFrame(data)
 
-@app.post("/predict-price")
-async def predict_price(price_history: list):
-    # Not: Gerçek senaryoda model eğitimi asenkron bir worker (Celery/Redis)
-    # üzerinden yapılmalı veya önceden eğitilmiş bir model yüklenmelidir.
-    df = pd.DataFrame(price_history)
+    # Feature Engineering: Gecikmeli özellikler (Lag Features)
+    df['prev_day_price'] = df['price'].shift(1)
+    df['rolling_mean_7'] = df['price'].rolling(window=7).mean()
 
-    model = Prophet(daily_seasonality=True, changepoint_prior_scale=0.05)
-    model.fit(df) # Eğitim büyük veri setlerinde zaman alabilir
+    X = df.drop(['price', 'date'], axis=1)
+    y = df['price']
 
-    future = model.make_future_dataframe(periods=7)
-    forecast = model.predict(future)
+    model = xgb.XGBRegressor(objective='reg:squarederror', n_estimators=1000)
+    model.fit(X, y)
+    return model
 
-    return forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].tail(7).to_dict(orient="records")
+# API Endpoint Örneği
+@app.get("/predict/{product_id}")
+async def get_prediction(product_id: str):
+    # Modelden 7 günlük trend tahmini al
+    # Çıktı: "Önümüzdeki 3 gün içinde %15 indirim bekleniyor. Beklemeni öneririz."
+    pass
 ```
 
-## 4. Akıllı Arama (Semantic Search)
+## 4. Akıllı Arama: Semantik Mimari (NLP)
 
-Kullanıcının "iPhone gibi kaliteli telefonlar" aramasını anlayan yapı:
+Kullanıcı "öğrenci dostu telefon" dediğinde, sistemin bunu "uygun fiyat + yüksek batarya" olarak anlaması:
 
 ```python
 from sentence_transformers import SentenceTransformer
 import pinecone
 
-# Pinecone & Model Init
-pc = pinecone.Pinecone(api_key="YOUR_API_KEY")
-index = pc.Index("products")
-model = SentenceTransformer('all-MiniLM-L6-v2')
+# Semantik vektörleştirme (Örn: Multilingual MiniLM)
+model = SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2')
 
-def semantic_search(query: str):
-    # Sorguyu vektöre çevir
-    query_vector = model.encode(query).tolist()
+def get_semantic_results(user_query):
+    # 1. Sorguyu vektöre çevir
+    query_embedding = model.encode(user_query).tolist()
 
-    # Pinecone'da benzer ürünleri ara
-    results = index.query(
-        vector=query_vector,
-        top_k=5,
-        include_metadata=True
-    )
+    # 2. Vektör veritabanında (Pinecone) benzerlik araması yap
+    index = pinecone.Index("shopping-assistant")
+    results = index.query(vector=query_embedding, top_k=10, include_metadata=True)
+
     return results
 ```
 
-## 5. Kullanıcı Dostu Önyüz (Flutter - Akıllı Dashboard)
+## 5. Modern Dashboard: Alışveriş Radarı (Flutter)
 
-"Fiyat/Performans Radarı" için örnek Flutter widget yapısı:
+Kullanıcıya özel "Fiyat/Performans Skoru" gösterimi:
 
 ```dart
-class PriceRadarChart extends StatelessWidget {
-  final List<double> values; // [Fiyat, Performans, Popülerlik, Güven, Garanti]
+// Custom Radar Chart için teknik ipucu:
+// 'fl_chart' veya 'syncfusion_flutter_charts' paketleri kullanılabilir.
+
+class ShoppingRadarWidget extends StatelessWidget {
+  final Map<String, double> metrics; // {Fiyat: 0.8, Batarya: 0.9, Popülerlik: 0.6}
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Container(
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        gradient: LinearGradient(colors: [Colors.blue.shade900, Colors.black]),
+      ),
       child: Column(
         children: [
-          Text("Ürün Skor Radarı", style: TextStyle(fontWeight: FontWeight.bold)),
-          // Not: RadarChart için 'fl_chart' paketi kullanılabilir.
-          RadarChart(
-            data: values,
-            labels: ["Fiyat", "Performans", "Popülerlik", "Güven", "Garanti"],
-            color: Colors.blueAccent,
+          Text("Ürün Skor Radarı", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          // CustomPaint ile Radar Chart çizimi veya hazır widget entegrasyonu
+          SfRadarChart(
+            series: <RadarSeries>[
+              RadarSeries<MetricData, String>(
+                dataSource: getChartData(metrics),
+                xValueMapper: (MetricData data, _) => data.category,
+                yValueMapper: (MetricData data, _) => data.value,
+              )
+            ],
           ),
-          ElevatedButton(
-            onPressed: () => print("En uygun zaman: Haftaya Salı!"),
-            child: Text("Satın Alma Analizi"),
-          )
         ],
       ),
     );
@@ -109,8 +120,10 @@ class PriceRadarChart extends StatelessWidget {
 }
 ```
 
-## 6. Vurucu Özellik (Killer Feature): "Fiyat Avcısı - Otopilot"
+## 6. Yarışma Raporu İçin "Vurucu Yenilik" (Killer Feature)
 
-**Özellik:** Sadece fiyat takibi değil, **"AI-Negotiator"** entegrasyonu.
-**Detay:** Kullanıcı bir bütçe belirler. Sistem, ürünün fiyat tahminleme modeline göre en düşük seviyeye ulaşacağı anı (örn: "Haftaya Salı saat 03:00") tahmin eder ve eğer pazar yeri API'ları destekliyorsa (veya kullanıcı yetkisiyle) otomatik satın alma veya "Sepete At & Bildir" işlemini gerçekleştirir.
-**Jüriye Mesaj:** "Biz sadece fiyatı göstermiyoruz, veriyi aksiyona dönüştürüp kullanıcının parasını ve zamanını otopilotta yönetiyoruz."
+**Özellik Adı:** **"Fiyat Avcısı - Otonom Bütçe Koruyucu"**
+
+*   **Nedir?** Kullanıcı bir ürüne "hedef fiyat" koymak yerine, sisteme **"Bana bu özelliklerde (örn: 12GB RAM, OLED ekran) en iyi telefonu, önümüzdeki 1 ayın en düşük fiyat noktasında otomatik rezerve et/yakala"** talimatı verir.
+*   **Teknik Fark:** Sadece bir "scraping" değil; XGBoost ile fiyat tahmini, Pinecone ile semantik eşleştirme ve asenkron workerlar ile "en doğru saniyede" bildirim gönderen bir **Trading Bot** mantığıdır.
+*   **Jüriye Mesaj:** "Biz kullanıcıya sadece fiyatları listelemiyoruz; ona bir finansal veri bilimci gibi danışmanlık yapıyoruz ve bütçesini otonom olarak koruyoruz."
