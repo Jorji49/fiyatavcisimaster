@@ -84,29 +84,6 @@
         </div>
     </div>
 
-    <script>
-        function toggleTheme(){
-            document.documentElement.classList.toggle('dark');
-            const icon=document.getElementById('themeIcon');
-            if(document.documentElement.classList.contains('dark')){
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-                localStorage.setItem('theme','dark');
-            }else{
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
-                localStorage.setItem('theme','light');
-            }
-        }
-        (function(){
-            const saved=localStorage.getItem('theme');
-            const prefersDark=window.matchMedia('(prefers-color-scheme:dark)').matches;
-            if(saved==='dark'||(saved===null&&prefersDark)){
-                document.documentElement.classList.add('dark');
-                document.getElementById('themeIcon').classList.remove('fa-moon');
-                document.getElementById('themeIcon').classList.add('fa-sun');
-            }
-        })();
-    </script>
+    <script src="js/theme.js"></script>
 </body>
 </html>
