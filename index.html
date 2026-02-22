@@ -1329,12 +1329,9 @@
             }
             c.className=cl;c.innerHTML=ht;g.appendChild(c);
         }
-        function toggleTheme(){const html=document.documentElement;const icon=document.getElementById('themeIcon');const isDark=html.classList.toggle('dark');localStorage.setItem('theme',isDark?'dark':'light');icon.className=isDark?'fa-solid fa-sun':'fa-solid fa-moon';updateMetaTheme(isDark)}
-        function updateMetaTheme(isDark){const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=isDark?'#0f172a':'#2563eb'}
-        function initTheme(){const saved=localStorage.getItem('theme');const prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;const isDark=saved?saved==='dark':prefersDark;if(isDark){document.documentElement.classList.add('dark');document.getElementById('themeIcon').className='fa-solid fa-sun'}updateMetaTheme(isDark)}
-        initTheme();
         window.onload=()=>{document.getElementById('queryInput').focus();renderHistory()};
         document.getElementById('queryInput').addEventListener('keypress',(e)=>{if(e.key==='Enter')runEngine()});
     </script>
+    <script src="js/theme.js"></script>
 </body>
 </html>
