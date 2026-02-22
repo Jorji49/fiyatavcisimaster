@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "test": "node --test tests/*.test.js",
     "build": "npx tailwindcss -i ./input.css -o ./style.css --minify"
   },
   "keywords": [],
