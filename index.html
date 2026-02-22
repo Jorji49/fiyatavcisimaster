@@ -13,8 +13,19 @@
     <link rel="icon" href="logo.png" type="image/png" sizes="96x96">
     <link rel="shortcut icon" href="logo.png" type="image/png">
     <link rel="apple-touch-icon" href="logo.png">
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17749261970"></script>
-    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-17749261970');</script>
+    <script src="js/config.js"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        if (typeof CONFIG !== 'undefined' && CONFIG.GOOGLE_ADS_ID) {
+            gtag('config', CONFIG.GOOGLE_ADS_ID);
+            const script = document.createElement('script');
+            script.async = true;
+            script.src = `https://www.googletagmanager.com/gtag/js?id=${CONFIG.GOOGLE_ADS_ID}`;
+            document.head.appendChild(script);
+        }
+    </script>
 
     <link href="./style.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -1150,7 +1161,11 @@
                 updateHistory(q);
                 
                 // Google Analytics
-                if(typeof gtag==='function')try{gtag('event','conversion',{'send_to':'AW-17749261970/fVEYCL6UkscbEJL9wI9C'})}catch(e){}
+                if(typeof gtag === 'function' && typeof CONFIG !== 'undefined' && CONFIG.GOOGLE_ADS_CONVERSION_ID) {
+                    try {
+                        gtag('event', 'conversion', {'send_to': CONFIG.GOOGLE_ADS_CONVERSION_ID});
+                    } catch(e) {}
+                }
                 
                 const ql=q.toLowerCase();
                 const cat=detectCategory(ql);
