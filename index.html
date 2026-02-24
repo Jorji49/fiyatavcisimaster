@@ -10,11 +10,33 @@
     <meta name="theme-color" content="#2563eb">
     <title>FiyatAvcısı | Güvenli Alışveriş & Fiyat Arama Motoru</title>
 
-    <link rel="icon" href="logo.png" type="image/png" sizes="96x96">
-    <link rel="shortcut icon" href="logo.png" type="image/png">
-    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.fiyatavcisi.com.tr/">
+    <meta property="og:title" content="FiyatAvcısı | Güvenli Alışveriş & Fiyat Arama Motoru">
+    <meta property="og:description" content="FiyatAvcısı ile en iyi fiyatları bulun. Teknoloji, moda, kozmetik ve daha fazlası için Türkiye'nin en güvenilir fiyat karşılaştırma sitesi.">
+    <meta property="og:image" content="https://www.fiyatavcisi.com.tr/web-app-manifest-512x512.png">
+    <meta property="og:locale" content="tr_TR">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="FiyatAvcısı | Güvenli Alışveriş & Fiyat Arama Motoru">
+    <meta name="twitter:description" content="FiyatAvcısı ile en iyi fiyatları bulun. Türkiye'nin en güvenilir fiyat karşılaştırma sitesi.">
+    <meta name="twitter:image" content="https://www.fiyatavcisi.com.tr/web-app-manifest-512x512.png">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="FiyatAvcısı">
+    <link rel="canonical" href="https://www.fiyatavcisi.com.tr/">
+
+    <!-- Google Tag Manager / Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17749261970"></script>
     <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-17749261970');</script>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3432912669665213" crossorigin="anonymous"></script>
 
     <link href="./style.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -35,6 +57,13 @@
         .recommended-card{background:#f0fdf4;border:2px solid #16a34a;box-shadow:0 10px 20px -5px rgba(22,163,74,0.08)}
         .dark .recommended-card{background:#14532d;border-color:#22c55e}
         .recommended-card:hover{transform:translateY(-3px);box-shadow:0 20px 40px -10px rgba(22,163,74,0.2)}
+        .amazon-aff-card{background:linear-gradient(135deg,#FF9900 0%,#FF6600 60%,#e65000 100%);color:#fff;border:none;display:flex;flex-direction:row;align-items:center;gap:0;position:relative;overflow:hidden}
+        .amazon-aff-card::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.12) 0%,transparent 60%);pointer-events:none}
+        .amazon-aff-card::after{content:"";position:absolute;top:-60px;right:-60px;width:180px;height:180px;background:rgba(255,255,255,0.08);border-radius:50%;pointer-events:none}
+        .amazon-aff-card:hover{transform:translateY(-4px);box-shadow:0 30px 60px -10px rgba(255,100,0,0.55)}
+        .dark .amazon-aff-card{background:linear-gradient(135deg,#FF9900 0%,#FF6600 60%,#e65000 100%)}
+        @keyframes aff-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,153,0,0.5)}50%{box-shadow:0 0 0 10px rgba(255,153,0,0)}}
+        .amazon-aff-card{animation:aff-pulse 2.5s ease-in-out infinite}
         .official-card{background:#0f172a;color:white;border:none;display:flex;flex-direction:row;align-items:center}
         .official-card:hover{transform:translateY(-3px);box-shadow:0 25px 50px -12px rgba(15,23,42,0.4)}
         .badge{position:absolute;top:-1px;right:-1px;font-size:0.65rem;font-weight:800;padding:6px 14px;border-bottom-left-radius:1rem;border-top-right-radius:1rem;color:white;background:#16a34a;z-index:10;letter-spacing:0.05em}
@@ -74,6 +103,22 @@
         .dark .bg-red-50{background:#450a0a!important}
         .dark .border-red-100{border-color:#7f1d1d!important}
         .dark .text-red-700{color:#fca5a5!important}
+        /* Amazon Affiliate Styles */
+        .aff-section{margin-bottom:3rem}
+        .aff-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;max-width:900px;margin:0 auto}
+        @media(min-width:640px){.aff-grid{grid-template-columns:repeat(3,1fr)}}
+        @media(min-width:1024px){.aff-grid{grid-template-columns:repeat(5,1fr)}}
+        .aff-card{display:flex;flex-direction:column;align-items:center;text-align:center;background:var(--card-bg);border:1px solid var(--border-color);border-radius:1.25rem;padding:1.2rem 0.8rem;text-decoration:none;transition:all 0.25s cubic-bezier(0.25,0.8,0.25,1);position:relative;overflow:hidden}
+        .aff-card:hover{transform:translateY(-4px);box-shadow:0 20px 40px -10px rgba(255,153,0,0.25);border-color:#FF9900}
+        .aff-card .aff-icon{font-size:2rem;margin-bottom:0.6rem;background:linear-gradient(135deg,#FF9900,#FF6600);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .aff-card .aff-name{font-size:0.75rem;font-weight:800;color:var(--text-primary);line-height:1.3;margin-bottom:0.5rem}
+        .aff-card .aff-badge{font-size:0.6rem;font-weight:700;background:#FF9900;color:#fff;padding:3px 10px;border-radius:999px;margin-top:auto;letter-spacing:0.04em}
+        .aff-card .aff-hot{position:absolute;top:8px;right:8px;font-size:0.6rem;font-weight:800;background:#ef4444;color:#fff;padding:2px 7px;border-radius:999px}
+        .aff-deals-btn{display:inline-flex;align-items:center;gap:0.5rem;background:linear-gradient(135deg,#FF9900,#FF6600);color:#fff;font-weight:800;font-size:0.85rem;padding:0.7rem 1.6rem;border-radius:999px;text-decoration:none;transition:all 0.25s;box-shadow:0 8px 20px -5px rgba(255,153,0,0.5);margin-top:1.2rem}
+        .aff-deals-btn:hover{transform:translateY(-2px);box-shadow:0 16px 30px -5px rgba(255,153,0,0.6)}
+        .dark .aff-card{background:var(--card-bg)}
+        /* AdSense banner */
+        .adsense-banner{width:100%;max-width:900px;margin:0 auto 2rem auto;min-height:90px;border-radius:0.75rem;overflow:hidden;background:var(--bg-tertiary)}
     </style>
 </head>
 <body class="p-4 md:p-8">
@@ -114,7 +159,18 @@
         <div id="resultInfo" class="hidden mb-4 text-center animate-fade-in">
             <span class="text-sm font-bold" style="color:var(--text-secondary)"><i class="fa-solid fa-store mr-2"></i><span id="resultCount">0</span> mağaza bulundu</span>
         </div>
-        <div id="gridContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 pb-8 w-full"></div>
+        <div id="gridContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 pb-4 w-full"></div>
+
+        <!-- AdSense - Sonuç altı reklam -->
+        <div id="adsenseResultsArea" class="w-full max-w-4xl mx-auto mb-8 hidden">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-3432912669665213"
+                 data-ad-slot="auto"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
 
         <div id="initialContent" class="animate-fade-in" style="animation-delay:0.2s">
             <div class="mb-12">
@@ -127,9 +183,87 @@
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mt-4">
                     <div class="cat-btn" onclick="quickSearch('Macbook Air M3')"><i class="fa-solid fa-laptop cat-icon"></i><span class="cat-name">Laptop</span></div>
-                    <div class="cat-btn" onclick="quickSearch('Samsung Galaxy S24')"><i class="fa-brands fa-android cat-icon"></i><span class="cat-name">Android Telefon</span></div>
+                    <div class="cat-btn" onclick="quickSearch('Samsung Galaxy S25')"><i class="fa-brands fa-android cat-icon"></i><span class="cat-name">Android Telefon</span></div>
                     <div class="cat-btn" onclick="quickSearch('PlayStation 5')"><i class="fa-solid fa-gamepad cat-icon"></i><span class="cat-name">Oyun Konsolu</span></div>
                     <div class="cat-btn" onclick="quickSearch('Airfryer')"><i class="fa-solid fa-blender cat-icon"></i><span class="cat-name">Mutfak</span></div>
+                </div>
+            </div>
+
+            <!-- AdSense Banner -->
+            <div class="adsense-banner">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-3432912669665213"
+                     data-ad-slot="auto"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+
+            <!-- Amazon Affiliate Ürünleri -->
+            <div class="aff-section">
+                <h3 class="text-center font-bold text-xs tracking-widest uppercase mb-2" style="color:var(--text-muted)"><i class="fa-brands fa-amazon" style="color:#FF9900"></i> Amazon'da Öne Çıkan Ürünler</h3>
+                <p class="text-center text-[10px] mb-5" style="color:var(--text-muted)">Reklam — Amazon Affiliate Ortaklık Programı kapsamındaki bağlantılar</p>
+                <div class="aff-grid">
+                    <a href="https://amzn.to/4qRMaz6" target="_blank" rel="noopener sponsored" class="aff-card">
+                        <span class="aff-hot">YENİ</span>
+                        <i class="fa-brands fa-apple aff-icon"></i>
+                        <span class="aff-name">iPhone 17</span>
+                        <span class="aff-badge">Amazon'da Gör</span>
+                    </a>
+                    <a href="https://amzn.to/4b86dEI" target="_blank" rel="noopener sponsored" class="aff-card">
+                        <span class="aff-hot">YENİ</span>
+                        <i class="fa-brands fa-apple aff-icon"></i>
+                        <span class="aff-name">iPhone Air</span>
+                        <span class="aff-badge">Amazon'da Gör</span>
+                    </a>
+                    <a href="https://amzn.to/3ZQ5din" target="_blank" rel="noopener sponsored" class="aff-card">
+                        <i class="fa-brands fa-apple aff-icon"></i>
+                        <span class="aff-name">iPhone 17 Pro</span>
+                        <span class="aff-badge">Amazon'da Gör</span>
+                    </a>
+                    <a href="https://amzn.to/3ZPXpx4" target="_blank" rel="noopener sponsored" class="aff-card">
+                        <i class="fa-brands fa-apple aff-icon"></i>
+                        <span class="aff-name">iPhone 17 Pro Max</span>
+                        <span class="aff-badge">Amazon'da Gör</span>
+                    </a>
+                    <a href="https://amzn.to/4rH21C4" target="_blank" rel="noopener sponsored" class="aff-card">
+                        <span class="aff-hot">🔥</span>
+                        <i class="fa-brands fa-android aff-icon"></i>
+                        <span class="aff-name">Samsung Galaxy S25+</span>
+                        <span class="aff-badge">Amazon'da Gör</span>
+                    </a>
+                    <a href="https://amzn.to/4aJSN0l" target="_blank" rel="noopener sponsored" class="aff-card">
+                        <i class="fa-brands fa-android aff-icon"></i>
+                        <span class="aff-name">Samsung Galaxy S25 Ultra</span>
+                        <span class="aff-badge">Amazon'da Gör</span>
+                    </a>
+                    <a href="https://amzn.to/3OJ0Q6d" target="_blank" rel="noopener sponsored" class="aff-card">
+                        <i class="fa-brands fa-apple aff-icon"></i>
+                        <span class="aff-name">iPhone 16e</span>
+                        <span class="aff-badge">Amazon'da Gör</span>
+                    </a>
+                    <a href="https://amzn.to/4kPRZf0" target="_blank" rel="noopener sponsored" class="aff-card">
+                        <i class="fa-brands fa-apple aff-icon"></i>
+                        <span class="aff-name">MacBook Air</span>
+                        <span class="aff-badge">Amazon'da Gör</span>
+                    </a>
+                    <a href="https://amzn.to/4qPuJ27" target="_blank" rel="noopener sponsored" class="aff-card">
+                        <i class="fa-brands fa-apple aff-icon"></i>
+                        <span class="aff-name">AirPods 4</span>
+                        <span class="aff-badge">Amazon'da Gör</span>
+                    </a>
+                    <a href="https://amzn.to/3P0CXqQ" target="_blank" rel="noopener sponsored" class="aff-card">
+                        <span class="aff-hot">%50</span>
+                        <i class="fa-solid fa-tags aff-icon"></i>
+                        <span class="aff-name">Günün Fırsatları</span>
+                        <span class="aff-badge">Tümünü Gör →</span>
+                    </a>
+                </div>
+                <div class="text-center">
+                    <a href="https://amzn.to/3P0CXqQ" target="_blank" rel="noopener sponsored" class="aff-deals-btn">
+                        <i class="fa-brands fa-amazon"></i> Tüm Amazon Fırsatlarını Gör
+                    </a>
                 </div>
             </div>
             <div class="mb-8">
@@ -141,6 +275,9 @@
                     <span class="history-chip" onclick="quickSearch('Lego Technic')"><i class="fa-solid fa-fire text-orange-500"></i> Lego Technic</span>
                     <span class="history-chip" onclick="quickSearch('Robot Süpürge')"><i class="fa-solid fa-fire text-orange-500"></i> Robot Süpürge</span>
                     <span class="history-chip" onclick="quickSearch('Parfüm Erkek')"><i class="fa-solid fa-fire text-orange-500"></i> Parfüm</span>
+                    <span class="history-chip" onclick="quickSearch('iPhone 17')"><i class="fa-solid fa-fire text-orange-500"></i> iPhone 17</span>
+                    <span class="history-chip" onclick="quickSearch('MacBook Air M3')"><i class="fa-solid fa-fire text-orange-500"></i> MacBook Air</span>
+                    <span class="history-chip" onclick="quickSearch('Samsung Galaxy S25')"><i class="fa-solid fa-fire text-orange-500"></i> Galaxy S25</span>
                 </div>
             </div>
         </div>
@@ -161,7 +298,8 @@
             </div>
             <div class="text-[10px] md:text-[11px] leading-relaxed space-y-3 border-t pt-8 max-w-3xl mx-auto opacity-80" style="color:var(--text-muted);border-color:var(--border-color)">
                 <p><strong>YASAL UYARI:</strong> FiyatAvcısı, bir e-ticaret sitesi değildir. Kullanıcıları güvenilir satıcıların resmi sitelerine yönlendirir.</p>
-                <p class="pt-6 opacity-60 font-mono font-medium text-[9px] uppercase tracking-widest">&copy; 2025 FiyatAvcısı Inc. Tüm hakları saklıdır.</p>
+                <p><strong>AMAZON ORTAKLIK PROGRAMI:</strong> FiyatAvcısı, Amazon.com.tr Ortaklık Programı'na katılmaktadır. Bu sitedeki Amazon bağlantıları affiliate (ortaklık) linklerdir; bu linkler aracılığıyla yapılan alışverişlerden komisyon kazanabiliriz. Bu durum ürün fiyatlarını etkilemez.</p>
+                <p class="pt-6 opacity-60 font-mono font-medium text-[9px] uppercase tracking-widest">&copy; 2026 FiyatAvcısı Inc. Tüm hakları saklıdır.</p>
             </div>
         </div>
     </footer>
@@ -944,6 +1082,27 @@
             regex: new RegExp(c.d.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'))
         }));
 
+        // ==================== AMAZON AFFİLİATE LİNKLERİ ====================
+        const AFFILIATE_LINKS=[
+            {k:["iphone 17 pro max","iphone17 pro max"],u:"https://amzn.to/3ZPXpx4"},
+            {k:["iphone 17 pro","iphone17pro"],u:"https://amzn.to/3ZQ5din"},
+            {k:["iphone air","iphone air 17"],u:"https://amzn.to/4b86dEI"},
+            {k:["iphone 16e","iphone16e"],u:"https://amzn.to/3OJ0Q6d"},
+            {k:["iphone 17","iphone17"],u:"https://amzn.to/4qRMaz6"},
+            {k:["s25 ultra","galaxy s25 ultra","samsung s25 ultra"],u:"https://amzn.to/4aJSN0l"},
+            {k:["s25+","s25 plus","galaxy s25+","galaxy s25 plus","samsung s25+","samsung s25 plus"],u:"https://amzn.to/4rH21C4"},
+            {k:["macbook air","macbook air m"],u:"https://amzn.to/4kPRZf0"},
+            {k:["airpods 4","airpods4"],u:"https://amzn.to/4qPuJ27"}
+        ];
+
+        function getAffiliateUrl(q){
+            const ql=q.toLowerCase();
+            for(let a of AFFILIATE_LINKS){
+                if(a.k.some(kw=>ql.includes(kw)))return a.u;
+            }
+            return null;
+        }
+
         // ==================== MARKA MAĞAZALARI ====================
         const BRANDS={
             // Teknoloji
@@ -1242,18 +1401,29 @@
                         show=false;
                     }
 
-                    if(show) createCard(m.name,m.logo,m.url+encodeURIComponent(q),highlight?"highlight":"normal",null,m);
+                    if(show){
+                        let cardUrl=m.url+encodeURIComponent(q);
+                        let cardType=highlight?"highlight":"normal";
+                        if(m.name==="AMAZON"){
+                            const affUrl=getAffiliateUrl(q);
+                            if(affUrl){cardUrl=affUrl;cardType="affiliate";}
+                        }
+                        createCard(m.name,m.logo,cardUrl,cardType,null,m);
+                    }
                 });
 
                 // Sonuç sayısı
                 const cardCount=grid.querySelectorAll('.base-card').length;
                 const resultInfo=document.getElementById('resultInfo');
                 const resultCount=document.getElementById('resultCount');
+                const adsenseResultsArea=document.getElementById('adsenseResultsArea');
                 if(cardCount>0){
                     resultCount.textContent=cardCount;
                     resultInfo.classList.remove('hidden');
+                    if(adsenseResultsArea)adsenseResultsArea.classList.remove('hidden');
                 }else{
                     resultInfo.classList.add('hidden');
+                    if(adsenseResultsArea)adsenseResultsArea.classList.add('hidden');
                 }
 
                 // Sonuç bulunamadı
@@ -1277,7 +1447,22 @@
             let cl="base-card animate-fade-in col-span-1 no-underline group ",ht="";
             const needsInvert=td&&td.darkInvert;
             const imgClass=needsInvert?"logo-img dark-invert":"logo-img";
-            if(t==="official"){
+            if(t==="affiliate"){
+                cl+="amazon-aff-card md:col-span-2 lg:col-span-3";
+                ht=`<div class="badge" style="background:rgba(0,0,0,0.35);backdrop-filter:blur(6px);font-size:0.6rem"><i class="fa-solid fa-bolt mr-1"></i> EN İYİ FİYAT</div><div class="flex items-center gap-4 md:gap-6 w-full px-1 md:px-2 py-1">
+                    <div class="rounded-2xl bg-white flex items-center justify-center shrink-0 shadow-lg" style="padding:0.55rem 1rem;height:56px">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/320px-Amazon_logo.svg.png" style="height:28px;width:auto;display:block" alt="Amazon">
+                    </div>
+                    <div class="flex-grow">
+                        <div class="text-[10px] font-bold uppercase tracking-widest opacity-75 mb-0.5">Amazon Affiliate &middot; Reklam</div>
+                        <div class="text-xl md:text-2xl font-black tracking-tight leading-tight">Amazon'da En İyi Fiyatı Gör</div>
+                        <div class="text-xs font-bold mt-1 opacity-80">Hızlı Teslimat &bull; Prime Eligible &bull; Güvenli Alışveriş</div>
+                    </div>
+                    <div class="flex flex-col items-center gap-2 shrink-0 pr-1 md:pr-2">
+                        <div class="bg-white text-orange-600 font-black text-sm px-5 py-2.5 rounded-xl shadow-lg group-hover:scale-105 transition-transform whitespace-nowrap">Amazon'da Gör <i class="fa-solid fa-arrow-right ml-1"></i></div>
+                    </div>
+                </div>`;
+            } else if(t==="official"){
                 cl+="official-card md:col-span-2 lg:col-span-3";
                 if(n.includes("Nike")||n.includes("Adidas")||n.includes("Zara")||n.includes("Puma"))c.style.background="linear-gradient(135deg,#111827 0%,#374151 100%)";
                 else if(n.includes("Samsung"))c.style.background="linear-gradient(135deg,#034EA2 0%,#000000 100%)";
