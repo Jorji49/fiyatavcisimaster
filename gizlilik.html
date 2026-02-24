@@ -1,108 +1,74 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gizlilik Politikası | FiyatAvcısı</title>
-    <meta name="description" content="FiyatAvcısı gizlilik politikası. Kişisel verilerinizin nasıl korunduğunu öğrenin.">
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-    <link rel="manifest" href="site.webmanifest">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3432912669665213" crossorigin="anonymous"></script>
-    
-    <link href="./style.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        :root{--bg-primary:#f8fafc;--bg-secondary:#ffffff;--bg-tertiary:#f1f5f9;--text-primary:#1e293b;--text-secondary:#64748b;--text-muted:#94a3b8;--border-color:#e2e8f0;--shadow-color:rgba(0,0,0,0.04);--card-bg:#ffffff}
-        .dark{--bg-primary:#0f172a;--bg-secondary:#1e293b;--bg-tertiary:#334155;--text-primary:#f1f5f9;--text-secondary:#94a3b8;--text-muted:#64748b;--border-color:#334155;--shadow-color:rgba(0,0,0,0.3);--card-bg:#1e293b}
-        body{font-family:'Plus Jakarta Sans',sans-serif;background-color:var(--bg-primary);color:var(--text-primary);min-height:100dvh;transition:background-color 0.3s,color 0.3s}
-        .content-card{background:var(--card-bg);border:1px solid var(--border-color);box-shadow:0 10px 30px -10px var(--shadow-color);transition:all 0.3s}
-        .theme-toggle{position:fixed;top:1rem;right:1rem;z-index:50;width:44px;height:44px;border-radius:50%;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.2rem;transition:all 0.3s;box-shadow:0 4px 12px var(--shadow-color)}
-        .theme-toggle:hover{transform:scale(1.1);box-shadow:0 8px 24px var(--shadow-color)}
-        h1{color:var(--text-primary)}
-        h2{color:var(--text-primary)}
-        p,li{color:var(--text-secondary)}
-        strong{color:var(--text-primary)}
-        a.back-link{color:var(--text-muted);transition:color 0.2s}
-        a.back-link:hover{color:#3b82f6}
-    </style>
-</head>
-<body class="p-4 md:p-8">
-    <button class="theme-toggle" onclick="toggleTheme()" title="Tema Değiştir">
-        <i class="fa-solid fa-moon" id="themeIcon"></i>
-    </button>
-
-    <div class="max-w-4xl mx-auto p-6 md:p-12">
-        <div class="mb-8 text-center">
-            <a href="index.html" class="inline-flex items-center justify-center gap-3 no-underline hover:opacity-80 transition-opacity">
-                <div class="w-11 h-11 rounded-xl flex items-center justify-center shadow-lg" style="background:linear-gradient(135deg,#3b82f6 0%,#2563eb 50%,#4f46e5 100%);box-shadow:0 8px 20px -6px rgba(59,130,246,0.5)">
-                    <i class="fa-solid fa-crosshairs text-white" style="font-size:1.25rem"></i>
-                </div>
-                <span class="text-3xl tracking-tight" style="font-weight:900">
-                    <span style="color:var(--text-primary)">Fiyat</span><span class="text-blue-600 dark:text-blue-400">Avcısı</span>
-                </span>
-            </a>
-        </div>
-
-        <div class="content-card p-8 md:p-12 rounded-3xl">
-            <div class="flex items-center gap-4 mb-8">
-                <div class="w-14 h-14 rounded-2xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
-                    <i class="fa-solid fa-shield-halved text-blue-600 dark:text-blue-400" style="font-size:1.5rem"></i>
-                </div>
-                <div>
-                    <h1 class="text-2xl md:text-3xl font-bold leading-tight">Gizlilik Politikası</h1>
-                    <p class="text-sm mt-1" style="color:var(--text-muted)">Son Güncelleme: 2 Aralık 2025</p>
-                </div>
-            </div>
-
-            <h2 class="text-xl font-bold mt-8 mb-3 flex items-center gap-3"><i class="fa-solid fa-eye text-blue-500" style="font-size:1rem;width:20px;text-align:center"></i> 1. Genel Bakış</h2>
-            <p class="mb-4 leading-relaxed">
-                FiyatAvcısı ("biz", "sitemiz"), kullanıcılarının gizliliğine önem verir. Bu Gizlilik Politikası, web sitemizi ziyaret ettiğinizde hangi bilgilerin toplandığını ve bu bilgilerin nasıl kullanıldığını açıklar. Sitemizi kullanarak bu politikayı kabul etmiş sayılırsınız.
-            </p>
-
-            <h2 class="text-xl font-bold mt-8 mb-3 flex items-center gap-3"><i class="fa-solid fa-database text-green-500" style="font-size:1rem;width:20px;text-align:center"></i> 2. Toplanan Bilgiler</h2>
-            <p class="mb-4 leading-relaxed">
-                FiyatAvcısı, kullanıcılarından doğrudan kişisel bilgi (isim, kredi kartı, adres vb.) <strong>talep etmez ve saklamaz.</strong> Sitemiz bir arama motoru işlevi görür ve sizi ilgili satıcıların resmi sitelerine yönlendirir.
-            </p>
-            <p class="mb-4 leading-relaxed">
-                Ancak, hizmet kalitemizi artırmak için Google Analytics ve benzeri araçlar aracılığıyla anonim trafik verileri (tarayıcı türü, ziyaret süresi, tıklanan linkler vb.) toplanabilir.
-            </p>
-
-            <h2 class="text-xl font-bold mt-8 mb-3 flex items-center gap-3"><i class="fa-solid fa-cookie-bite text-amber-500" style="font-size:1rem;width:20px;text-align:center"></i> 3. Çerezler (Cookies) ve Reklamlar</h2>
-            <p class="mb-4 leading-relaxed">
-                Sitemizde Google AdSense reklamları yayınlanmaktadır. Google ve üçüncü taraf tedarikçiler, kullanıcıların web sitemize veya diğer web sitelerine yaptığı önceki ziyaretlere dayalı olarak reklam yayınlamak için çerezleri kullanır.
-            </p>
-
-            <h2 class="text-xl font-bold mt-8 mb-3 flex items-center gap-3"><i class="fa-solid fa-arrow-up-right-from-square text-purple-500" style="font-size:1rem;width:20px;text-align:center"></i> 4. Dış Bağlantılar</h2>
-            <p class="mb-4 leading-relaxed">
-                Sitemiz, üçüncü taraf web sitelerine (Amazon, Trendyol, Hepsiburada vb.) bağlantılar içerir. Bu sitelerin gizlilik uygulamalarından FiyatAvcısı sorumlu değildir. Yönlendirildiğiniz sitenin gizlilik politikasını incelemenizi öneririz.
-            </p>
-
-            <h2 class="text-xl font-bold mt-8 mb-3 flex items-center gap-3"><i class="fa-solid fa-envelope text-rose-500" style="font-size:1rem;width:20px;text-align:center"></i> 5. İletişim</h2>
-            <p class="mb-4 leading-relaxed">
-                Bu politika hakkında sorularınız varsa bizimle iletişime geçebilirsiniz:
-            </p>
-            <a href="mailto:support@fiyatavcisi.com.tr" class="inline-flex items-center gap-2 font-bold px-5 py-3 rounded-xl text-sm transition-all hover:-translate-y-0.5" style="background:var(--bg-tertiary);color:var(--text-primary);border:1px solid var(--border-color)">
-                <i class="fa-solid fa-envelope text-blue-500"></i>
-                support@fiyatavcisi.com.tr
-            </a>
-        </div>
-
-        <div class="text-center mt-8">
-            <a href="index.html" class="back-link inline-flex items-center gap-2 text-sm font-bold">
-                <i class="fa-solid fa-arrow-left"></i> Ana Sayfaya Dön
-            </a>
-        </div>
-
-        <div class="text-center mt-6 text-xs font-medium" style="color:var(--text-muted)">
-            &copy; 2026 FiyatAvcısı. Tüm Hakları Saklıdır.
-        </div>
-    </div>
-
-    <script>
+<!DOCTYPE html> 
+<html lang="tr"> 
+    <head> 
+        <meta charset="UTF-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+        <title>Gizlilik Politikası | FiyatAvcısı</title>         
+        <meta name="description" content="FiyatAvcısı gizlilik politikası. Kişisel verilerinizin nasıl korunduğunu öğrenin."> 
+        <link rel="icon" type="image/svg+xml" href="favicon.svg"> 
+        <link rel="icon" type="image/x-icon" href="favicon.ico"> 
+        <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png"> 
+        <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png"> 
+        <link rel="manifest" href="site.webmanifest"> 
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3432912669665213" crossorigin="anonymous"></script>         
+        <link href="./style.css" rel="stylesheet"> 
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> 
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"> 
+        <style>:root { --bg-primary: #f8fafc; --bg-secondary: #ffffff; --bg-tertiary: #f1f5f9; --text-primary: #1e293b; --text-secondary: #64748b; --text-muted: #94a3b8; --border-color: #e2e8f0; --shadow-color: rgba(0,0,0,0.04); --card-bg: #ffffff; } .dark { --bg-primary: #0f172a; --bg-secondary: #1e293b; --bg-tertiary: #334155; --text-primary: #f1f5f9; --text-secondary: #94a3b8; --text-muted: #64748b; --border-color: #334155; --shadow-color: rgba(0,0,0,0.3); --card-bg: #1e293b; } body { font-family: 'Plus Jakarta Sans',sans-serif; background-color: var(--bg-primary); color: var(--text-primary); min-height: 100dvh; transition: background-color 0.3s,color 0.3s; } .content-card { background: var(--card-bg); border: 1px solid var(--border-color); box-shadow: 0 10px 30px -10px var(--shadow-color); transition: all 0.3s; } .theme-toggle { position: fixed; top: 1rem; right: 1rem; z-index: 50; width: 44px; height: 44px; border-radius: 50%; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: all 0.3s; box-shadow: 0 4px 12px var(--shadow-color); } .theme-toggle:hover { transform: scale(1.1); box-shadow: 0 8px 24px var(--shadow-color); } h1 { color: var(--text-primary); } h2 { color: var(--text-primary); } p, li { color: var(--text-secondary); } strong { color: var(--text-primary); } a.back-link { color: var(--text-muted); transition: color 0.2s; } a.back-link:hover { color: #3b82f6; }</style>         
+    </head>     
+    <body class="p-4 md:p-8"> 
+        <button class="theme-toggle" onclick="toggleTheme()" title="Tema Değiştir"> 
+            <i class="fa-solid fa-moon" id="themeIcon"></i> 
+        </button>         
+        <div class="max-w-4xl mx-auto p-6 md:p-12"> 
+            <div class="mb-8 text-center"> 
+                <a href="index.html" class="inline-flex items-center justify-center gap-3 no-underline hover:opacity-80 transition-opacity">  <div class="w-11 h-11 rounded-xl flex items-center justify-center shadow-lg" style="background:linear-gradient(135deg,#3b82f6 0%,#2563eb 50%,#4f46e5 100%);box-shadow:0 8px 20px -6px rgba(59,130,246,0.5)">                          
+</div>  <span class="text-3xl tracking-tight" style="font-weight:900">    </span>  </a> 
+            </div>             
+            <div class="content-card p-8 md:p-12 rounded-3xl"> 
+                <div class="flex items-center gap-4 mb-8"> 
+                    <div class="w-14 h-14 rounded-2xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center shrink-0">                          
+</div>                     
+                    <div> 
+                        <h1 class="text-2xl md:text-3xl font-bold leading-tight">Gizlilik Politikası</h1> 
+                        <p class="text-sm mt-1" style="color:var(--text-muted)">&nbsp;Son Güncelleme: 2 Aralık 2025</p> 
+                    </div>                     
+                </div>                 
+                <h2 class="text-xl font-bold mt-8 mb-3 flex items-center gap-3"> 1. Genel Bakış</h2> 
+                <p class="mb-4 leading-relaxed"> 
+                FiyatAvcısı ("biz", "sitemiz"), kullanıcılarının gizliliğine önem verir. Bu Gizlilik Politikası, web sitemizi ziyaret ettiğinizde hangi bilgilerin toplandığını ve bu bilgilerin nasıl kullanıldığını açıklar. Sitemizi kullanarak bu politikayı kabul etmiş sayılırsınız. </p> 
+                <h2 class="text-xl font-bold mt-8 mb-3 flex items-center gap-3"> 2. Toplanan Bilgiler</h2> 
+                <p class="mb-4 leading-relaxed"> 
+                FiyatAvcısı, kullanıcılarından doğrudan kişisel bilgi (isim, kredi kartı, adres vb.) <strong>talep etmez ve saklamaz.</strong> Sitemiz bir arama motoru işlevi görür ve sizi ilgili satıcıların resmi sitelerine yönlendirir. </p> 
+                <p class="mb-4 leading-relaxed"> 
+                Ancak, hizmet kalitemizi artırmak için Google Analytics ve benzeri araçlar aracılığıyla anonim trafik verileri (tarayıcı türü, ziyaret süresi, tıklanan linkler vb.) toplanabilir. </p> 
+                <h2 class="text-xl font-bold mt-8 mb-3 flex items-center gap-3"> 3. Çerezler (Cookies) ve Reklamlar</h2> 
+                <p class="mb-4 leading-relaxed"> 
+                Sitemizde Google AdSense reklamları yayınlanmaktadır. Google ve üçüncü taraf tedarikçiler, kullanıcıların web sitemize veya diğer web sitelerine yaptığı önceki ziyaretlere dayalı olarak reklam yayınlamak için çerezleri kullanır. </p> 
+                <h2 class="text-xl font-bold mt-8 mb-3 flex items-center gap-3"> 4. Dış Bağlantılar</h2> 
+                <p class="mb-4 leading-relaxed"> 
+                Sitemiz, üçüncü taraf web sitelerine (Amazon, Trendyol, Hepsiburada vb.) bağlantılar içerir. Bu sitelerin gizlilik uygulamalarından FiyatAvcısı sorumlu değildir. Yönlendirildiğiniz sitenin gizlilik politikasını incelemenizi öneririz. </p> 
+                <h2 class="text-xl font-bold mt-8 mb-3 flex items-center gap-3"> 5. İletişim</h2> 
+                <p class="mb-4 leading-relaxed">Bu politika hakkında sorularınız varsa bizimle iletişime geçebilirsiniz: support@fiyatavcisi.com.tr</p>                  
+            </div>             
+            <div class="text-center mt-8"> 
+                <a href="index.html" class="back-link inline-flex items-center gap-2 text-sm font-bold">  <i class="fa-solid fa-arrow-left"></i> Ana Sayfaya Dön </a> 
+            </div>             
+            <div class="text-center mt-6 text-xs font-medium" style="color:var(--text-muted)">
+                <div></div>
+                <p></p>
+                <p></p>
+                <p></p>
+                <p></p>
+                <p></p>
+                <p></p>
+                <p></p>
+                <p></p>
+                <p></p>
+                <p>&nbsp;&copy; 2026 FiyatAvcısı. Tüm Hakları Saklıdır.</p>
+            </div>             
+        </div>         
+        <script>
         function toggleTheme(){
             document.documentElement.classList.toggle('dark');
             const icon=document.getElementById('themeIcon');
@@ -125,6 +91,6 @@
                 document.getElementById('themeIcon').classList.add('fa-sun');
             }
         })();
-    </script>
-</body>
+    </script>         
+    </body>     
 </html>
