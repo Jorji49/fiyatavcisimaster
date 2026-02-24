@@ -1544,36 +1544,6 @@
             }
             c.className=cl;c.innerHTML=ht;g.appendChild(c);
         }
-                cl+="amazon-aff-card md:col-span-2 lg:col-span-3";
-                ht=`<div class="badge" style="background:rgba(0,0,0,0.35);backdrop-filter:blur(6px);font-size:0.6rem"><i class="fa-solid fa-bolt mr-1"></i> EN İYİ FİYAT</div><div class="flex items-center gap-4 md:gap-6 w-full px-1 md:px-2 py-1">
-                    <div class="rounded-2xl bg-white flex items-center justify-center shrink-0 shadow-lg" style="padding:0.55rem 1rem;height:56px">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Amazon_logo.svg/320px-Amazon_logo.svg.png" style="height:28px;width:auto;display:block" alt="Amazon">
-                    </div>
-                    <div class="flex-grow">
-                        <div class="text-[10px] font-bold uppercase tracking-widest opacity-75 mb-0.5">Amazon Affiliate &middot; Reklam</div>
-                        <div class="text-xl md:text-2xl font-black tracking-tight leading-tight">Amazon'da En İyi Fiyatı Gör</div>
-                        <div class="text-xs font-bold mt-1 opacity-80">Hızlı Teslimat &bull; Prime Eligible &bull; Güvenli Alışveriş</div>
-                    </div>
-                    <div class="flex flex-col items-center gap-2 shrink-0 pr-1 md:pr-2">
-                        <div class="bg-white text-orange-600 font-black text-sm px-5 py-2.5 rounded-xl shadow-lg group-hover:scale-105 transition-transform whitespace-nowrap">Amazon'da Gör <i class="fa-solid fa-arrow-right ml-1"></i></div>
-                    </div>
-                </div>`;
-            } else if(t==="official"){
-                cl+="official-card md:col-span-2 lg:col-span-3";
-                if(n.includes("Nike")||n.includes("Adidas")||n.includes("Zara")||n.includes("Puma"))c.style.background="linear-gradient(135deg,#111827 0%,#374151 100%)";
-                else if(n.includes("Samsung"))c.style.background="linear-gradient(135deg,#034EA2 0%,#000000 100%)";
-                else if(n.includes("Xiaomi"))c.style.background="linear-gradient(135deg,#FF6900 0%,#E65100 100%)";
-                else if(n.includes("Dyson"))c.style.background="linear-gradient(135deg,#F06D9E 0%,#A31F50 100%)";
-                ht=`<div class="badge bg-white/20 backdrop-blur-sm shadow-sm"><i class="fa-solid fa-certificate"></i> RESMİ MAĞAZA</div><div class="flex items-center gap-4 md:gap-5 w-full pl-1 md:pl-2"><div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/10 flex items-center justify-center text-2xl md:text-3xl text-white shrink-0"><i class="fa-brands ${i}"></i></div><div class="flex-grow"><div class="text-xl md:text-2xl font-black tracking-tight leading-none mb-1">${n}</div><div class="text-[10px] md:text-xs font-bold opacity-70 tracking-widest uppercase">ARACISIZ SATIŞ</div></div><div class="text-white/80 text-2xl md:text-3xl group-hover:translate-x-2 transition-transform shrink-0 pr-1 md:pr-2"><i class="fa-solid fa-arrow-right"></i></div></div>`;
-            } else if(t==="highlight"){
-                cl+="recommended-card";c.style.setProperty('--theme-color',td.c);
-                ht=`<div class="badge shadow-sm"><i class="fa-solid fa-check-circle mr-1"></i> ÖNERİLEN</div><div class="logo-wrapper mb-auto mt-2 pl-1"><img src="${l}" class="${imgClass}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="fallback-text text-slate-800" style="color:${td.c}">${n}</span></div><div class="text-green-700 font-extrabold text-sm flex items-center justify-end gap-2 group-hover:gap-3 transition-all pr-1 mt-3">Fiyatı Gör <i class="fa-solid fa-chevron-right text-xs"></i></div>`;
-            } else {
-                cl+="link-card";c.style.setProperty('--theme-color',td.c);c.style.setProperty('--theme-shadow',td.s);
-                ht=`<div class="logo-wrapper my-auto pl-1"><img src="${l}" class="${imgClass}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="fallback-text text-slate-700" style="color:${td.c}">${n}</span></div><div class="absolute bottom-4 right-4 text-slate-300 group-hover:text-[color:var(--theme-color)] transition-colors text-lg"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>`;
-            }
-            c.className=cl;c.innerHTML=ht;g.appendChild(c);
-        }
         function toggleTheme(){const html=document.documentElement;const icon=document.getElementById('themeIcon');const isDark=html.classList.toggle('dark');localStorage.setItem('theme',isDark?'dark':'light');icon.className=isDark?'fa-solid fa-sun':'fa-solid fa-moon';updateMetaTheme(isDark)}
         function updateMetaTheme(isDark){const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=isDark?'#0f172a':'#2563eb'}
         function initTheme(){const saved=localStorage.getItem('theme');const prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;const isDark=saved?saved==='dark':prefersDark;if(isDark){document.documentElement.classList.add('dark');document.getElementById('themeIcon').className='fa-solid fa-sun'}updateMetaTheme(isDark)}
