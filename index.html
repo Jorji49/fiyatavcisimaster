@@ -164,6 +164,12 @@
         .takvim-sub{font-size:0.73rem;color:var(--text-secondary);font-weight:600}
         .takvim-arr{font-size:1rem;color:var(--text-muted);flex-shrink:0;transition:transform 0.2s}
         .takvim-banner:hover .takvim-arr{transform:translateX(4px);color:#2563eb}
+        /* Arama Öneri Açılır Menüsü */
+        .suggest-dropdown{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:1.5rem;box-shadow:0 20px 48px -8px var(--shadow-color);z-index:50;overflow:hidden;animation:fadeIn 0.15s ease}
+        .suggest-item{display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1.25rem;font-size:0.9rem;font-weight:700;color:var(--text-primary);cursor:pointer;transition:background 0.12s;border-top:1px solid var(--border-color)}
+        .suggest-item:first-child{border-top:none}
+        .suggest-item:hover,.suggest-item.sg-active{background:var(--bg-tertiary)}
+        .suggest-item i{color:var(--text-muted);font-size:0.7rem;flex-shrink:0;width:14px;text-align:center}
         /* Fiyat İyi Mi Rozeti */
         .price-badge{display:inline-flex;align-items:center;gap:0.3rem;font-size:0.62rem;font-weight:800;padding:2px 8px;border-radius:999px;vertical-align:middle;margin-left:0.4rem}
         .price-badge.low{background:#dcfce7;color:#15803d}.dark .price-badge.low{background:#14532d;color:#4ade80}
@@ -212,10 +218,11 @@
         <div class="w-full max-w-4xl mx-auto mb-8 relative z-30 animate-fade-in" style="animation-delay:0.1s">
             <div class="search-container rounded-3xl p-2 md:p-3 flex items-center w-full">
                 <div style="color:var(--text-muted)" class="text-xl md:text-2xl ml-3 md:ml-4 mr-2 md:mr-4 shrink-0"><i class="fa-solid fa-magnifying-glass"></i></div>
-                <input type="text" id="queryInput" class="flex-grow bg-transparent border-none outline-none text-slate-900 dark:text-white text-lg md:text-2xl py-3 md:py-4 font-bold placeholder-gray-300 dark:placeholder-slate-500 min-w-0" placeholder="Ürün, Marka veya Model ara..." autocomplete="off" oninput="toggleClearBtn()">
+                <input type="text" id="queryInput" class="flex-grow bg-transparent border-none outline-none text-slate-900 dark:text-white text-lg md:text-2xl py-3 md:py-4 font-bold placeholder-gray-300 dark:placeholder-slate-500 min-w-0" placeholder="Ürün, Marka veya Model ara..." autocomplete="off" oninput="handleInput(this.value)" onkeydown="handleSuggestKey(event)">
                 <div id="clearBtn" onclick="clearSearch()" class="px-2 md:px-4 text-lg md:text-xl shrink-0 h-full" title="Temizle"><i class="fa-solid fa-circle-xmark"></i></div>
                 <button id="searchBtn" onclick="runEngine()" style="color:#ffffff;background:#2563eb" class="hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 px-6 md:px-10 py-3 md:py-5 rounded-2xl font-bold transition-all shadow-lg flex items-center gap-2 md:gap-3 text-base md:text-lg shrink-0 justify-center active:scale-95 hover:shadow-xl ml-2">ARA</button>
             </div>
+            <div id="suggestDropdown" class="suggest-dropdown hidden"></div>
             <div id="typoContainer" class="hidden pl-4"></div>
             <div id="historyArea" class="mt-3 px-2 flex flex-wrap gap-2 justify-center md:justify-start hidden"></div>
         </div>
@@ -1330,11 +1337,12 @@
         function clearHistory(){localStorage.removeItem('ph_hist');renderHistory();document.getElementById('gridContainer').innerHTML='';document.getElementById('resultInfo').classList.add('hidden');document.getElementById('initialContent').classList.remove('hidden')}
         function renderHistory(){const c=document.getElementById('historyArea');const h=JSON.parse(localStorage.getItem('ph_hist')||'[]');if(h.length===0){c.classList.add('hidden');return}c.innerHTML=`<span class="text-xs font-bold text-slate-300 self-center mr-1">SON:</span>`;h.forEach(i=>{const chip=document.createElement('div');chip.className='history-chip';chip.innerHTML=`<i class="fa-solid fa-clock-rotate-left text-[10px] text-slate-400"></i> ${i}`;chip.onclick=()=>{document.getElementById('queryInput').value=i;runEngine()};c.appendChild(chip)});const clearBtn=document.createElement('button');clearBtn.className='history-clear-btn';clearBtn.innerHTML='<i class="fa-solid fa-trash-can"></i>';clearBtn.title='Geçmişi Temizle';clearBtn.onclick=(e)=>{e.stopPropagation();clearHistory()};c.appendChild(clearBtn);c.classList.remove('hidden')}
         function toggleClearBtn(){const i=document.getElementById('queryInput'),b=document.getElementById('clearBtn');if(i.value.length>0)b.classList.add('visible');else b.classList.remove('visible')}
-        function clearSearch(){document.getElementById('queryInput').value='';document.getElementById('gridContainer').innerHTML='';document.getElementById('errorPanel').classList.add('hidden');document.getElementById('typoContainer').classList.add('hidden');document.getElementById('resultInfo').classList.add('hidden');document.getElementById('shareBar').classList.add('hidden');document.getElementById('budgetHint').classList.add('hidden');document.getElementById('adsenseResultsArea').classList.add('hidden');const pb=document.getElementById('priceBadge');if(pb)pb.innerHTML='';document.getElementById('initialContent').classList.remove('hidden');updateUrl('');toggleClearBtn();document.getElementById('queryInput').focus()}
+        function clearSearch(){document.getElementById('queryInput').value='';document.getElementById('gridContainer').innerHTML='';document.getElementById('errorPanel').classList.add('hidden');document.getElementById('typoContainer').classList.add('hidden');document.getElementById('resultInfo').classList.add('hidden');document.getElementById('shareBar').classList.add('hidden');document.getElementById('budgetHint').classList.add('hidden');document.getElementById('adsenseResultsArea').classList.add('hidden');const pb=document.getElementById('priceBadge');if(pb)pb.innerHTML='';document.getElementById('initialContent').classList.remove('hidden');updateUrl('');toggleClearBtn();hideSuggest();document.getElementById('queryInput').focus()}
 
         // ==================== ARAMA MOTORU ====================
 
         function runEngine(){
+            hideSuggest();
             const inp=document.getElementById('queryInput'),grid=document.getElementById('gridContainer'),err=document.getElementById('errorPanel'),btn=document.getElementById('searchBtn'),init=document.getElementById('initialContent');
             let q=inp.value.trim();
             // Doğal Dil Arama: "bütçem 15000 iphone 17" → alarm set + temiz sorgu
@@ -1627,6 +1635,17 @@
             const now=Date.now();
             const cached=JSON.parse(localStorage.getItem('fx_rates')||'null');
             if(cached&&(now-cached.t)<3600000){RATES=cached;updateKurBar();return;}
+            // Önce Netlify Function (CDN kenarında önbelleğe alınır) — iframe/CORS sorunu yok
+            try{
+                const r=await fetch('/.netlify/functions/rates');
+                if(!r.ok)throw new Error('rates fn err');
+                const d=await r.json();
+                RATES.usd=d.usd_try;RATES.eur=d.eur_try;RATES.gbp=d.gbp_try;
+                RATES.t=now;
+                localStorage.setItem('fx_rates',JSON.stringify(RATES));
+                updateKurBar();return;
+            }catch(e){}
+            // Fallback: doğrudan jsdelivr
             try{
                 const r=await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json');
                 const d=await r.json();
@@ -1635,7 +1654,7 @@
                 RATES.gbp=(1/d.usd.gbp)*d.usd.try;
                 RATES.t=now;
                 localStorage.setItem('fx_rates',JSON.stringify(RATES));
-            }catch(e){RATES.usd=37.8;RATES.eur=41.0;RATES.gbp=48.5;}
+            }catch(e){RATES.usd=38.5;RATES.eur=41.8;RATES.gbp=49.2;}
             updateKurBar();
         }
         function updateKurBar(){
@@ -1761,6 +1780,54 @@
             updateFavCount();
             document.querySelectorAll('.fav-btn').forEach(btn=>{if(decodeURIComponent(btn.dataset.url||'')===url){btn.classList.remove('active');btn.innerHTML='<i class="fa-regular fa-heart"></i>';}});
         }
+
+        // ==================== ARAMA ÖNERİLERİ (Google Suggest Proxy) ====================
+        let _sgTimer=null,_sgIdx=-1;
+        function handleInput(v){
+            toggleClearBtn();
+            clearTimeout(_sgTimer);
+            if(v.length<2){hideSuggest();return;}
+            _sgTimer=setTimeout(()=>fetchSuggest(v),260);
+        }
+        async function fetchSuggest(q){
+            try{
+                const r=await fetch('/.netlify/functions/suggest?q='+encodeURIComponent(q));
+                if(!r.ok)return;
+                const items=await r.json();
+                renderSuggest(items,q);
+            }catch(e){hideSuggest();}
+        }
+        function renderSuggest(items,q){
+            const box=document.getElementById('suggestDropdown');
+            if(!box)return;
+            if(!items||items.length===0){hideSuggest();return;}
+            _sgIdx=-1;
+            box.innerHTML=items.map((s,i)=>`<div class="suggest-item" data-idx="${i}" onclick="pickSuggest('${s.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')"><i class="fa-solid fa-magnifying-glass"></i><span>${s}</span></div>`).join('');
+            box.classList.remove('hidden');
+        }
+        function hideSuggest(){
+            const box=document.getElementById('suggestDropdown');
+            if(box){box.classList.add('hidden');box.innerHTML='';}
+            _sgIdx=-1;
+        }
+        function pickSuggest(val){
+            document.getElementById('queryInput').value=val;
+            hideSuggest();
+            runEngine();
+        }
+        function handleSuggestKey(e){
+            const box=document.getElementById('suggestDropdown');
+            if(!box||box.classList.contains('hidden'))return;
+            const items=box.querySelectorAll('.suggest-item');
+            if(e.key==='ArrowDown'){e.preventDefault();_sgIdx=Math.min(_sgIdx+1,items.length-1);}
+            else if(e.key==='ArrowUp'){e.preventDefault();_sgIdx=Math.max(_sgIdx-1,-1);}
+            else if(e.key==='Escape'){hideSuggest();return;}
+            else if(e.key==='Enter'&&_sgIdx>=0){e.preventDefault();items[_sgIdx].click();return;}
+            else return;
+            items.forEach((el,i)=>el.classList.toggle('sg-active',i===_sgIdx));
+            if(_sgIdx>=0)document.getElementById('queryInput').value=items[_sgIdx].querySelector('span').textContent;
+        }
+        document.addEventListener('click',(e)=>{if(!e.target.closest('.w-full.max-w-4xl'))hideSuggest();});
 
         initTheme();
         window.onload=()=>{document.getElementById('queryInput').focus();renderHistory();fetchRates();updateFavCount();setTimeout(initUrlSearch,100);registerSW();};
