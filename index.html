@@ -117,6 +117,22 @@
         .aff-deals-btn{display:inline-flex;align-items:center;gap:0.5rem;background:linear-gradient(135deg,#FF9900,#FF6600);color:#fff;font-weight:800;font-size:0.85rem;padding:0.7rem 1.6rem;border-radius:999px;text-decoration:none;transition:all 0.25s;box-shadow:0 8px 20px -5px rgba(255,153,0,0.5);margin-top:1.2rem}
         .aff-deals-btn:hover{transform:translateY(-2px);box-shadow:0 16px 30px -5px rgba(255,153,0,0.6)}
         .dark .aff-card{background:var(--card-bg)}
+        /* Canlı Amazon Sonuçları */
+        .amz-live-section{margin-bottom:2rem;animation:fadeIn 0.4s ease}
+        .amz-live-title{font-size:0.68rem;font-weight:800;letter-spacing:0.13em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.85rem;display:flex;align-items:center;gap:0.5rem}
+        .amz-live-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0.85rem}
+        @media(min-width:640px){.amz-live-grid{grid-template-columns:repeat(3,1fr)}}
+        @media(min-width:1024px){.amz-live-grid{grid-template-columns:repeat(5,1fr)}}
+        .amz-live-card{display:flex;flex-direction:column;background:var(--card-bg);border:1px solid var(--border-color);border-radius:1rem;overflow:hidden;text-decoration:none;transition:all 0.2s;position:relative}
+        .amz-live-card:hover{transform:translateY(-3px);box-shadow:0 14px 28px -6px rgba(255,153,0,0.2);border-color:#FF9900}
+        .amz-live-img{width:100%;aspect-ratio:1;object-fit:contain;background:#fff;padding:0.6rem}
+        .amz-live-body{padding:0.6rem 0.7rem;flex:1;display:flex;flex-direction:column;gap:0.25rem}
+        .amz-live-name{font-size:0.7rem;font-weight:700;color:var(--text-primary);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+        .amz-live-price{font-size:0.85rem;font-weight:900;color:#FF6600;margin-top:auto;padding-top:0.25rem}
+        .dark .amz-live-price{color:#FF9900}
+        .amz-live-badge{font-size:0.55rem;font-weight:800;background:linear-gradient(135deg,#FF9900,#FF6600);color:#fff;padding:2px 7px;border-radius:999px;margin-top:0.3rem;align-self:flex-start}
+        .amz-skeleton{background:var(--bg-tertiary);border-radius:1rem;overflow:hidden;animation:shimmer 1.4s infinite linear}
+        @keyframes shimmer{0%{opacity:0.6}50%{opacity:1}100%{opacity:0.6}}
         /* AdSense banner */
         .adsense-banner{width:100%;max-width:900px;margin:0 auto 2rem auto;min-height:90px;border-radius:0.75rem;overflow:hidden;background:var(--bg-tertiary)}
         /* Kur Bar */
@@ -232,6 +248,9 @@
         <div id="budgetHint" class="hidden budget-hint mb-2"></div>
         <div id="shareBar" class="hidden share-bar mb-4"></div>
         <div id="gridContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 pb-4 w-full"></div>
+
+        <!-- Canlı Amazon Sonuçları -->
+        <div id="amzResults" class="w-full max-w-6xl mx-auto hidden"></div>
 
         <!-- AdSense - Sonuç altı reklam -->
         <div id="adsenseResultsArea" class="w-full max-w-4xl mx-auto mb-8 hidden">
@@ -1332,7 +1351,7 @@
         function clearHistory(){localStorage.removeItem('ph_hist');renderHistory();document.getElementById('gridContainer').innerHTML='';document.getElementById('resultInfo').classList.add('hidden');document.getElementById('initialContent').classList.remove('hidden')}
         function renderHistory(){const c=document.getElementById('historyArea');const h=JSON.parse(localStorage.getItem('ph_hist')||'[]');if(h.length===0){c.classList.add('hidden');return}c.innerHTML=`<span class="text-xs font-bold text-slate-300 self-center mr-1">SON:</span>`;h.forEach(i=>{const chip=document.createElement('div');chip.className='history-chip';chip.innerHTML=`<i class="fa-solid fa-clock-rotate-left text-[10px] text-slate-400"></i> ${i}`;chip.onclick=()=>{document.getElementById('queryInput').value=i;runEngine()};c.appendChild(chip)});const clearBtn=document.createElement('button');clearBtn.className='history-clear-btn';clearBtn.innerHTML='<i class="fa-solid fa-trash-can"></i>';clearBtn.title='Geçmişi Temizle';clearBtn.onclick=(e)=>{e.stopPropagation();clearHistory()};c.appendChild(clearBtn);c.classList.remove('hidden')}
         function toggleClearBtn(){const i=document.getElementById('queryInput'),b=document.getElementById('clearBtn');if(i.value.length>0)b.classList.add('visible');else b.classList.remove('visible')}
-        function clearSearch(){document.getElementById('queryInput').value='';document.getElementById('gridContainer').innerHTML='';document.getElementById('errorPanel').classList.add('hidden');document.getElementById('typoContainer').classList.add('hidden');document.getElementById('resultInfo').classList.add('hidden');document.getElementById('shareBar').classList.add('hidden');document.getElementById('budgetHint').classList.add('hidden');document.getElementById('adsenseResultsArea').classList.add('hidden');const pb=document.getElementById('priceBadge');if(pb)pb.innerHTML='';document.getElementById('initialContent').classList.remove('hidden');updateUrl('');toggleClearBtn();document.getElementById('queryInput').focus()}
+        function clearSearch(){document.getElementById('queryInput').value='';document.getElementById('gridContainer').innerHTML='';document.getElementById('errorPanel').classList.add('hidden');document.getElementById('typoContainer').classList.add('hidden');document.getElementById('resultInfo').classList.add('hidden');document.getElementById('shareBar').classList.add('hidden');document.getElementById('budgetHint').classList.add('hidden');document.getElementById('adsenseResultsArea').classList.add('hidden');document.getElementById('amzResults').classList.add('hidden');const pb=document.getElementById('priceBadge');if(pb)pb.innerHTML='';document.getElementById('initialContent').classList.remove('hidden');updateUrl('');toggleClearBtn();document.getElementById('queryInput').focus()}
 
         // ==================== ARAMA MOTORU ====================
 
@@ -1516,6 +1535,7 @@
                     updateUrl(q);
                     showShareBar(q,cardCount);
                     showBudgetHint(q,cardCount);
+                    fetchAmazonResults(q);
                 }else{
                     resultInfo.classList.add('hidden');
                     if(adsenseResultsArea)adsenseResultsArea.classList.add('hidden');
@@ -1581,6 +1601,46 @@
             }
             c.className=cl;c.innerHTML=ht;g.appendChild(c);
         }
+        // ==================== CANLI AMAZON SONUÇLARI ====================
+        async function fetchAmazonResults(q){
+            const el=document.getElementById('amzResults');
+            if(!el)return;
+
+            // Skeleton yüklenirken göster
+            el.innerHTML=`<div class="amz-live-section"><div class="amz-live-title"><i class="fa-brands fa-amazon" style="color:#FF9900"></i> Amazon'da Gerçek Fiyatlar <span style="font-weight:500;text-transform:none;letter-spacing:0;font-size:0.62rem;opacity:0.7">yükleniyor...</span></div><div class="amz-live-grid">${Array(5).fill('<div class="amz-skeleton" style="height:220px"></div>').join('')}</div></div>`;
+            el.classList.remove('hidden');
+
+            // sessionStorage cache (1 saat)
+            const cacheKey='amz_'+q.toLowerCase().trim();
+            try{
+                const cached=JSON.parse(sessionStorage.getItem(cacheKey)||'null');
+                if(cached&&Date.now()-cached.t<3600000){renderAmzCards(el,q,cached.d);return;}
+            }catch(e){}
+
+            try{
+                const res=await fetch(`/.netlify/functions/amz?kw=${encodeURIComponent(q)}`);
+                if(!res.ok)throw new Error('HTTP '+res.status);
+                const items=await res.json();
+                if(!Array.isArray(items)||items.length===0){el.classList.add('hidden');return;}
+                try{sessionStorage.setItem(cacheKey,JSON.stringify({t:Date.now(),d:items}));}catch(e){}
+                renderAmzCards(el,q,items);
+            }catch(err){
+                el.classList.add('hidden');
+            }
+        }
+
+        function renderAmzCards(el,q,items){
+            if(!items||items.length===0){el.classList.add('hidden');return;}
+            const cards=items.map(p=>{
+                const img=p.image?`<img src="${p.image}" class="amz-live-img" alt="" loading="lazy">`:`<div class="amz-live-img" style="display:flex;align-items:center;justify-content:center;font-size:2rem;opacity:0.2"><i class="fa-brands fa-amazon"></i></div>`;
+                const price=p.price?`<div class="amz-live-price">${p.price}</div>`:'';
+                const title=p.title?p.title.substring(0,80)+(p.title.length>80?'…':''):'';
+                return`<a href="${p.url}" target="_blank" rel="noopener sponsored" class="amz-live-card">${img}<div class="amz-live-body"><div class="amz-live-name">${title}</div>${price}<div class="amz-live-badge">Amazon'da Gör</div></div></a>`;
+            }).join('');
+            el.innerHTML=`<div class="amz-live-section"><div class="amz-live-title"><i class="fa-brands fa-amazon" style="color:#FF9900"></i> Amazon'da Sonuçlar <span style="font-weight:500;text-transform:none;letter-spacing:0;font-size:0.62rem;opacity:0.6">&middot; ${items.length} ürün</span></div><div class="amz-live-grid">${cards}</div><p style="font-size:0.6rem;color:var(--text-muted);margin-top:0.6rem;text-align:right">Affiliate bağlantılar içerir</p></div>`;
+            el.classList.remove('hidden');
+        }
+
         // ==================== DOĞAL DİL ARAMA ====================
         function parseNLQuery(q){
             const patterns=[
