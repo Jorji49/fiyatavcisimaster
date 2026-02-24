@@ -120,10 +120,11 @@
         /* AdSense banner */
         .adsense-banner{width:100%;max-width:900px;margin:0 auto 2rem auto;min-height:90px;border-radius:0.75rem;overflow:hidden;background:var(--bg-tertiary)}
         /* Kur Bar */
-        .kur-bar{display:flex;align-items:center;justify-content:center;gap:0.6rem 1rem;flex-wrap:wrap;padding:0.45rem 1.25rem;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:999px;font-size:0.72rem;font-weight:700;color:var(--text-secondary);max-width:fit-content;margin:0 auto 1.25rem auto;cursor:default}
-        .kur-item{display:inline-flex;align-items:center;gap:0.3rem}
-        .kur-val{color:var(--text-primary);font-weight:800}
-        .kur-sep{opacity:0.25}
+        .kur-bar{display:inline-flex;align-items:center;justify-content:center;gap:0;padding:0.45rem 0.75rem;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:999px;font-size:0.72rem;font-weight:700;color:var(--text-secondary);margin:0 auto 1.25rem auto;cursor:default;overflow:hidden}
+        .kur-item{display:inline-flex;align-items:center;justify-content:center;gap:0.25rem;width:6.5rem;padding:0.1rem 0}
+        .kur-sym{font-weight:700;opacity:0.5;min-width:0.75rem;text-align:center}
+        .kur-val{color:var(--text-primary);font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:0.01em}
+        .kur-sep{width:1px;height:1.2em;background:var(--border-color);flex-shrink:0;margin:0 0.1rem}
         /* Favoriler Toggle */
         .fav-toggle-btn{position:fixed;top:1rem;left:1rem;z-index:50;width:44px;height:44px;border-radius:50%;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:all 0.3s;box-shadow:0 4px 12px var(--shadow-color)}
         .fav-toggle-btn:hover{transform:scale(1.1);color:#ef4444}
@@ -1569,7 +1570,12 @@
             const b=document.getElementById('kurBar');
             if(!b||!RATES.usd)return;
             const f=n=>n.toFixed(2).replace('.',',');
-            b.innerHTML=`<span class="kur-item"><span class="opacity-55">$</span><span class="kur-val">${f(RATES.usd)}&nbsp;₺</span></span><span class="kur-sep">|</span><span class="kur-item"><span class="opacity-55">€</span><span class="kur-val">${f(RATES.eur)}&nbsp;₺</span></span><span class="kur-sep">|</span><span class="kur-item"><span class="opacity-55">£</span><span class="kur-val">${f(RATES.gbp)}&nbsp;₺</span></span><span class="kur-sep hidden md:inline">|</span><span class="opacity-40 text-[10px] hidden md:inline">Canlı Kur</span>`;
+            b.innerHTML=
+                `<span class="kur-item"><span class="kur-sym">$</span><span class="kur-val">${f(RATES.usd)}&thinsp;₺</span></span>`+
+                `<span class="kur-sep"></span>`+
+                `<span class="kur-item"><span class="kur-sym">€</span><span class="kur-val">${f(RATES.eur)}&thinsp;₺</span></span>`+
+                `<span class="kur-sep"></span>`+
+                `<span class="kur-item"><span class="kur-sym">£</span><span class="kur-val">${f(RATES.gbp)}&thinsp;₺</span></span>`;
         }
 
         // ==================== PAYLASILABILIR URL ====================
@@ -1599,27 +1605,32 @@
         }
 
         // ==================== BÜTÇE İPUCU ====================
+        // USD bazlı resmi/MSRP fiyatlar — dolar sabit, euro cross-rate ile hesaplanır
         const PRICE_DB=[
-            {k:['iphone 17 pro max'],p:89900},{k:['iphone 17 pro'],p:74900},
-            {k:['iphone air'],p:59900},{k:['iphone 16e'],p:44900},{k:['iphone 17'],p:54900},
-            {k:['galaxy s25 ultra','s25 ultra'],p:84900},{k:['galaxy s25+','s25 plus','s25+'],p:64900},{k:['galaxy s25'],p:49900},
-            {k:['macbook air'],p:69900},{k:['macbook pro'],p:99900},{k:['ipad pro'],p:54900},{k:['ipad'],p:34900},
-            {k:['airpods pro'],p:8900},{k:['airpods 4'],p:6500},{k:['apple watch ultra'],p:35900},{k:['apple watch'],p:21900},
-            {k:['rtx 5090'],p:64900},{k:['rtx 5080'],p:44900},{k:['rtx 5070 ti'],p:32900},{k:['rtx 5070'],p:24900},
-            {k:['rtx 4090'],p:44999},{k:['rtx 4080 super'],p:29999},{k:['rtx 4080'],p:27999},{k:['rtx 4070 ti'],p:19999},{k:['rtx 4070'],p:16999},
-            {k:['ps5','playstation 5'],p:21999},{k:['xbox series x'],p:23999},
-            {k:['dyson v15','dyson v16'],p:18999},{k:['dyson airwrap'],p:22999},
+            {k:['iphone 17 pro max'],u:1599},{k:['iphone 17 pro'],u:1199},
+            {k:['iphone air'],u:899},{k:['iphone 16e'],u:599},{k:['iphone 17'],u:799},
+            {k:['galaxy s25 ultra','s25 ultra'],u:1299},{k:['galaxy s25+','s25 plus','s25+'],u:999},{k:['galaxy s25'],u:799},
+            {k:['macbook air'],u:1099},{k:['macbook pro 16'],u:2499},{k:['macbook pro'],u:1599},
+            {k:['ipad pro'],u:999},{k:['ipad air'],u:599},{k:['ipad'],u:449},
+            {k:['airpods pro'],u:249},{k:['airpods 4'],u:179},{k:['airpods max'],u:549},
+            {k:['apple watch ultra'],u:799},{k:['apple watch'],u:399},
+            {k:['rtx 5090'],u:1999},{k:['rtx 5080'],u:1199},{k:['rtx 5070 ti'],u:749},{k:['rtx 5070'],u:549},{k:['rtx 5060 ti'],u:379},{k:['rtx 5060'],u:299},
+            {k:['rtx 4090'],u:1599},{k:['rtx 4080 super'],u:999},{k:['rtx 4080'],u:1199},{k:['rtx 4070 ti'],u:799},{k:['rtx 4070 super'],u:599},{k:['rtx 4070'],u:599},
+            {k:['ps5 pro'],u:699},{k:['ps5','playstation 5'],u:499},{k:['xbox series x'],u:499},{k:['xbox series s'],u:299},
+            {k:['dyson v16'],u:849},{k:['dyson v15'],u:749},{k:['dyson airwrap'],u:599},{k:['dyson supersonic'],u:429},
+            {k:['samsung qd-oled','odyssey oled'],u:799},{k:['lg oled'],u:1299},
         ];
         function showBudgetHint(q,count){
             const h=document.getElementById('budgetHint');
             if(!h||count===0||!RATES.usd){if(h)h.classList.add('hidden');return;}
             const ql=q.toLowerCase();
-            let price=null;
-            for(let p of PRICE_DB){if(p.k.some(k=>ql.includes(k))){price=p.p;break;}}
-            if(price){
-                const usd=Math.round(price/RATES.usd);
-                const eur=Math.round(price/RATES.eur);
-                h.innerHTML=`<i class="fa-solid fa-circle-info mr-1.5 text-blue-400"></i>Tahmini: <strong>~${price.toLocaleString('tr-TR')} ₺</strong> &middot; <strong>~$${usd.toLocaleString('en-US')}</strong> &middot; <strong>~€${eur.toLocaleString('en-US')}</strong> <span class="opacity-40 text-[10px] ml-1">(piyasa tahmini)</span>`;
+            let entry=null;
+            for(let p of PRICE_DB){if(p.k.some(k=>ql.includes(k))){entry=p;break;}}
+            if(entry){
+                const usd=entry.u;
+                // EUR cross-rate: 1 USD = (RATES.usd / RATES.eur) EUR
+                const eur=Math.round(usd*(RATES.usd/RATES.eur));
+                h.innerHTML=`<i class="fa-solid fa-tag mr-1.5 text-blue-400"></i>Uluslararası fiyat: <strong>$${usd.toLocaleString('en-US')}</strong> &middot; <strong>€${eur.toLocaleString('en-US')}</strong> <span class="opacity-40 text-[10px] ml-1">(MSRP, ülkeye göre değişir)</span>`;
                 h.classList.remove('hidden');
             } else {h.classList.add('hidden');}
         }
