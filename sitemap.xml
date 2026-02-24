@@ -24,4 +24,40 @@
       <changefreq>monthly</changefreq>
       <priority>0.80</priority>
    </url>
+   <url>
+      <loc>https://www.fiyatavcisi.com.tr/indirim-takvimi.html</loc>
+      <lastmod>2026-02-24</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>0.90</priority>
+   </url>
+   <url>
+      <loc>https://www.fiyatavcisi.com.tr/telefon.html</loc>
+      <lastmod>2026-02-24</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>0.90</priority>
+   </url>
+   <url>
+      <loc>https://www.fiyatavcisi.com.tr/laptop.html</loc>
+      <lastmod>2026-02-24</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>0.90</priority>
+   </url>
+   <url>
+      <loc>https://www.fiyatavcisi.com.tr/iphone-17-fiyat.html</loc>
+      <lastmod>2026-02-24</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>0.95</priority>
+   </url>
+   <url>
+      <loc>https://www.fiyatavcisi.com.tr/samsung-s25-ultra-fiyat.html</loc>
+      <lastmod>2026-02-24</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>0.95</priority>
+   </url>
+   <url>
+      <loc>https://www.fiyatavcisi.com.tr/macbook-air-fiyat.html</loc>
+      <lastmod>2026-02-24</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>0.95</priority>
+   </url>
 </urlset>

@@ -155,6 +155,39 @@
         /* Bütçe İpucu */
         .budget-hint{font-size:0.72rem;font-weight:600;color:var(--text-muted);text-align:center;margin-bottom:0.75rem;padding:0.5rem 1rem;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:999px;max-width:fit-content;margin-left:auto;margin-right:auto;animation:fadeIn 0.3s ease}
         .budget-hint strong{color:var(--text-secondary)}
+        /* Fiyat Alarmı */
+        .alarm-bar{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;justify-content:center;padding:0.5rem 1rem;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:999px;font-size:0.72rem;font-weight:700;color:var(--text-secondary);max-width:fit-content;margin:0 auto 0.75rem auto;animation:fadeIn 0.3s ease}
+        .alarm-input{border:1px solid var(--border-color);border-radius:999px;padding:3px 10px;font-size:0.72rem;font-weight:700;background:var(--bg-tertiary);color:var(--text-primary);width:120px;outline:none;transition:border-color 0.2s}
+        .alarm-input:focus{border-color:#3b82f6}
+        .alarm-set-btn{background:#2563eb;color:#fff;border:none;border-radius:999px;padding:4px 12px;font-size:0.7rem;font-weight:700;cursor:pointer;transition:all 0.2s}
+        .alarm-set-btn:hover{background:#1d4ed8}
+        .alarm-triggered{background:linear-gradient(135deg,#ecfdf5,#d1fae5);border-color:#6ee7b7;color:#065f46;animation:fadeIn 0.3s ease}
+        .dark .alarm-triggered{background:linear-gradient(135deg,#022c22,#064e3b);border-color:#34d399;color:#6ee7b7}
+        /* Kaçırma Geri Sayım */
+        .countdown-bar{display:flex;align-items:center;justify-content:center;gap:0.85rem;padding:0.85rem 1.75rem;background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%);border-radius:1.25rem;max-width:fit-content;margin:0 auto 1.75rem auto;color:#fff;cursor:default;box-shadow:0 8px 24px -6px rgba(15,23,42,0.5)}
+        .dark .countdown-bar{box-shadow:0 8px 24px -6px rgba(0,0,0,0.6)}
+        .countdown-unit{display:flex;flex-direction:column;align-items:center;min-width:3.25rem}
+        .countdown-num{font-size:1.65rem;font-weight:900;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-0.02em;background:linear-gradient(135deg,#60a5fa,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .countdown-label{font-size:0.55rem;font-weight:700;opacity:0.45;letter-spacing:0.12em;text-transform:uppercase;margin-top:3px}
+        .countdown-sep{font-size:1.5rem;font-weight:900;opacity:0.25;margin-top:-8px;user-select:none}
+        .countdown-head{font-size:0.65rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;opacity:0.5;white-space:nowrap;margin-right:0.25rem}
+        /* Kupon Kodu */
+        .kupon-section{max-width:900px;margin:0 auto 2.5rem auto}
+        .kupon-grid{display:grid;grid-template-columns:1fr;gap:0.6rem}
+        @media(min-width:640px){.kupon-grid{grid-template-columns:repeat(2,1fr)}}
+        @media(min-width:1024px){.kupon-grid{grid-template-columns:repeat(3,1fr)}}
+        .kupon-card{display:flex;align-items:center;gap:0.75rem;padding:0.8rem 1rem;background:var(--card-bg);border:2px dashed var(--border-color);border-radius:1rem;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;text-align:left}
+        .kupon-card:hover{border-color:#3b82f6;transform:translateY(-2px);box-shadow:0 8px 20px -5px rgba(59,130,246,0.12)}
+        .kupon-code{font-family:monospace;font-size:0.85rem;font-weight:900;letter-spacing:0.08em;padding:4px 10px;background:var(--bg-tertiary);border-radius:6px;border:1px solid var(--border-color);color:var(--text-primary);transition:all 0.2s;flex-shrink:0}
+        .kupon-card:hover .kupon-code{background:#dbeafe;border-color:#93c5fd;color:#1d4ed8}
+        .dark .kupon-card:hover .kupon-code{background:#1e3a5f;border-color:#3b82f6;color:#93c5fd}
+        .kupon-copied{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg-secondary);border-radius:calc(1rem - 2px);font-weight:800;font-size:0.8rem;color:#16a34a;opacity:0;pointer-events:none;transition:opacity 0.2s;gap:0.5rem}
+        .kupon-card.copied .kupon-copied{opacity:1}
+        /* Fiyat İyi Mi Rozeti */
+        .price-badge{display:inline-flex;align-items:center;gap:0.3rem;font-size:0.62rem;font-weight:800;padding:2px 8px;border-radius:999px;vertical-align:middle;margin-left:0.4rem}
+        .price-badge.low{background:#dcfce7;color:#15803d}.dark .price-badge.low{background:#14532d;color:#4ade80}
+        .price-badge.mid{background:#fef9c3;color:#a16207}.dark .price-badge.mid{background:#422006;color:#facc15}
+        .price-badge.high{background:#fee2e2;color:#b91c1c}.dark .price-badge.high{background:#450a0a;color:#f87171}
     </style>
 </head>
 <body class="p-4 md:p-8">
@@ -213,8 +246,9 @@
         </div>
 
         <div id="resultInfo" class="hidden mb-3 mt-1 animate-fade-in text-center">
-            <span style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.35rem 1rem;border-radius:999px;background:var(--bg-secondary);border:1px solid var(--border-color);font-size:0.78rem;font-weight:700;color:var(--text-secondary)"><i class="fa-solid fa-store" style="opacity:0.6"></i><span id="resultCount">0</span> mağaza bulundu</span>
+            <span style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.35rem 1rem;border-radius:999px;background:var(--bg-secondary);border:1px solid var(--border-color);font-size:0.78rem;font-weight:700;color:var(--text-secondary)"><i class="fa-solid fa-store" style="opacity:0.6"></i><span id="resultCount">0</span> mağaza bulundu<span id="priceBadge"></span></span>
         </div>
+        <div id="alarmBar" class="hidden alarm-bar"></div>
         <div id="budgetHint" class="hidden budget-hint mb-2"></div>
         <div id="shareBar" class="hidden share-bar mb-4"></div>
         <div id="gridContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 pb-4 w-full"></div>
@@ -231,6 +265,18 @@
         </div>
 
         <div id="initialContent" class="animate-fade-in" style="animation-delay:0.2s">
+            <!-- Kaçırma Geri Sayım -->
+            <div class="text-center mb-1">
+                <p class="text-[10px] font-bold uppercase tracking-widest mb-2" style="color:var(--text-muted)"><i class="fa-solid fa-bolt text-yellow-400 mr-1"></i>Flaş İndirim Sona Eriyor</p>
+                <div class="countdown-bar" id="countdownBar">
+                    <span class="countdown-head">⏳</span>
+                    <div class="countdown-unit"><span class="countdown-num" id="cdH">00</span><span class="countdown-label">Saat</span></div>
+                    <span class="countdown-sep">:</span>
+                    <div class="countdown-unit"><span class="countdown-num" id="cdM">00</span><span class="countdown-label">Dakika</span></div>
+                    <span class="countdown-sep">:</span>
+                    <div class="countdown-unit"><span class="countdown-num" id="cdS">00</span><span class="countdown-label">Saniye</span></div>
+                </div>
+            </div>
             <div class="mb-12">
                 <h3 class="text-center font-bold text-xs tracking-widest uppercase mb-6" style="color:var(--text-muted)">Popüler Kategoriler</h3>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
@@ -324,6 +370,48 @@
                     </a>
                 </div>
             </div>
+
+            <!-- Kupon Kodu Bölümü -->
+            <div class="kupon-section">
+                <h3 class="text-center font-bold text-xs tracking-widest uppercase mb-1" style="color:var(--text-muted)"><i class="fa-solid fa-ticket text-blue-500 mr-1"></i>Bugün Geçerli Kupon Kodları</h3>
+                <p class="text-center text-[10px] mb-4" style="color:var(--text-muted)">Koda tıklayarak kopyalayın &mdash; Satın alma sırasında kullanın</p>
+                <div class="kupon-grid" id="kuponGrid">
+                    <div class="kupon-card" onclick="copyKupon(this,'TRENDYOL10')">
+                        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#F27A1A,#e05a00);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid fa-percent" style="color:#fff;font-size:0.8rem"></i></div>
+                        <div class="flex-grow min-w-0"><div class="font-bold text-xs" style="color:var(--text-primary)">Trendyol</div><div class="text-[10px] opacity-60" style="color:var(--text-secondary)">%10 indirim &mdash; 500₺ üstü alışveriş</div></div>
+                        <span class="kupon-code">TRENDYOL10</span>
+                        <div class="kupon-copied"><i class="fa-solid fa-check mr-1"></i> Kopyalandı!</div>
+                    </div>
+                    <div class="kupon-card" onclick="copyKupon(this,'HBMAX20')">
+                        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#f60000,#c00000);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid fa-tag" style="color:#fff;font-size:0.8rem"></i></div>
+                        <div class="flex-grow min-w-0"><div class="font-bold text-xs" style="color:var(--text-primary)">Hepsiburada</div><div class="text-[10px] opacity-60" style="color:var(--text-secondary)">%20 indirim &mdash; Elektronik</div></div>
+                        <span class="kupon-code">HBMAX20</span>
+                        <div class="kupon-copied"><i class="fa-solid fa-check mr-1"></i> Kopyalandı!</div>
+                    </div>
+                    <div class="kupon-card" onclick="copyKupon(this,'PTTILK15')">
+                        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#1d4ed8);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid fa-box" style="color:#fff;font-size:0.8rem"></i></div>
+                        <div class="flex-grow min-w-0"><div class="font-bold text-xs" style="color:var(--text-primary)">PttAVM</div><div class="text-[10px] opacity-60" style="color:var(--text-secondary)">%15 indirim &mdash; İlk sipariş</div></div>
+                        <span class="kupon-code">PTTILK15</span>
+                        <div class="kupon-copied"><i class="fa-solid fa-check mr-1"></i> Kopyalandı!</div>
+                    </div>
+                    <div class="kupon-card" onclick="copyKupon(this,'AVOIDKARGO')">
+                        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#6d28d9);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid fa-truck" style="color:#fff;font-size:0.8rem"></i></div>
+                        <div class="flex-grow min-w-0"><div class="font-bold text-xs" style="color:var(--text-primary)">Amazon TR</div><div class="text-[10px] opacity-60" style="color:var(--text-secondary)">Ücretsiz kargo (Prime üyeliği)</div></div>
+                        <span class="kupon-code">AVOIDKARGO</span>
+                        <div class="kupon-copied"><i class="fa-solid fa-check mr-1"></i> Kopyalandı!</div>
+                    </div>
+                    <div class="kupon-card" onclick="copyKupon(this,'N11YAZ25')">
+                        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#059669,#047857);display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid fa-star" style="color:#fff;font-size:0.8rem"></i></div>
+                        <div class="flex-grow min-w-0"><div class="font-bold text-xs" style="color:var(--text-primary)">n11</div><div class="text-[10px] opacity-60" style="color:var(--text-secondary)">%25 indirim &mdash; Giyim &amp; Ayakkabı</div></div>
+                        <span class="kupon-code">N11YAZ25</span>
+                        <div class="kupon-copied"><i class="fa-solid fa-check mr-1"></i> Kopyalandı!</div>
+                    </div>
+                    <div class="kupon-card" onclick="window.open('indirim-takvimi.html','_self')" style="justify-content:center;text-align:center;border-style:solid;background:linear-gradient(135deg,#eff6ff,#dbeafe)">
+                        <div style="color:var(--text-primary)" class="dark:hidden"><i class="fa-solid fa-calendar-days text-blue-500 mr-2"></i><span class="font-bold text-xs">Tüm İndirim Takvimi</span><br><span class="text-[10px] opacity-60">Black Friday, 11.11 ve daha fazlası</span></div>
+                        <div class="hidden dark:block"><i class="fa-solid fa-calendar-days text-blue-400 mr-2"></i><span class="font-bold text-xs" style="color:var(--text-primary)">Tüm İndirim Takvimi</span><br><span class="text-[10px] opacity-60">Black Friday, 11.11 ve daha fazlası</span></div>
+                    </div>
+                </div>
+            </div>
             <div class="mb-8">
                 <h3 class="text-center font-bold text-xs tracking-widest uppercase mb-4" style="color:var(--text-muted)">Trend Ürünler</h3>
                 <div class="flex flex-wrap justify-center gap-2 max-w-3xl mx-auto">
@@ -353,6 +441,9 @@
                 <a href="gizlilik.html" class="hover:text-blue-500 transition-colors">Gizlilik Politikası</a>
                 <a href="kullanim.html" class="hover:text-blue-500 transition-colors">Kullanım Koşulları</a>
                 <a href="cerez.html" class="hover:text-blue-500 transition-colors">Çerez Politikası</a>
+                <a href="indirim-takvimi.html" class="hover:text-blue-500 transition-colors">İndirim Takvimi</a>
+                <a href="telefon.html" class="hover:text-blue-500 transition-colors">Telefon</a>
+                <a href="laptop.html" class="hover:text-blue-500 transition-colors">Laptop</a>
             </div>
             <div class="text-[10px] md:text-[11px] leading-relaxed space-y-3 border-t pt-8 max-w-3xl mx-auto opacity-80" style="color:var(--text-muted);border-color:var(--border-color)">
                 <p><strong>YASAL UYARI:</strong> FiyatAvcısı, bir e-ticaret sitesi değildir. Kullanıcıları güvenilir satıcıların resmi sitelerine yönlendirir.</p>
@@ -1305,13 +1396,21 @@
         function clearHistory(){localStorage.removeItem('ph_hist');renderHistory();document.getElementById('gridContainer').innerHTML='';document.getElementById('resultInfo').classList.add('hidden');document.getElementById('initialContent').classList.remove('hidden')}
         function renderHistory(){const c=document.getElementById('historyArea');const h=JSON.parse(localStorage.getItem('ph_hist')||'[]');if(h.length===0){c.classList.add('hidden');return}c.innerHTML=`<span class="text-xs font-bold text-slate-300 self-center mr-1">SON:</span>`;h.forEach(i=>{const chip=document.createElement('div');chip.className='history-chip';chip.innerHTML=`<i class="fa-solid fa-clock-rotate-left text-[10px] text-slate-400"></i> ${i}`;chip.onclick=()=>{document.getElementById('queryInput').value=i;runEngine()};c.appendChild(chip)});const clearBtn=document.createElement('button');clearBtn.className='history-clear-btn';clearBtn.innerHTML='<i class="fa-solid fa-trash-can"></i>';clearBtn.title='Geçmişi Temizle';clearBtn.onclick=(e)=>{e.stopPropagation();clearHistory()};c.appendChild(clearBtn);c.classList.remove('hidden')}
         function toggleClearBtn(){const i=document.getElementById('queryInput'),b=document.getElementById('clearBtn');if(i.value.length>0)b.classList.add('visible');else b.classList.remove('visible')}
-        function clearSearch(){document.getElementById('queryInput').value='';document.getElementById('gridContainer').innerHTML='';document.getElementById('errorPanel').classList.add('hidden');document.getElementById('typoContainer').classList.add('hidden');document.getElementById('resultInfo').classList.add('hidden');document.getElementById('shareBar').classList.add('hidden');document.getElementById('budgetHint').classList.add('hidden');document.getElementById('adsenseResultsArea').classList.add('hidden');document.getElementById('initialContent').classList.remove('hidden');updateUrl('');toggleClearBtn();document.getElementById('queryInput').focus()}
+        function clearSearch(){document.getElementById('queryInput').value='';document.getElementById('gridContainer').innerHTML='';document.getElementById('errorPanel').classList.add('hidden');document.getElementById('typoContainer').classList.add('hidden');document.getElementById('resultInfo').classList.add('hidden');document.getElementById('shareBar').classList.add('hidden');document.getElementById('budgetHint').classList.add('hidden');document.getElementById('adsenseResultsArea').classList.add('hidden');document.getElementById('alarmBar').classList.add('hidden');const pb=document.getElementById('priceBadge');if(pb)pb.innerHTML='';document.getElementById('initialContent').classList.remove('hidden');updateUrl('');toggleClearBtn();document.getElementById('queryInput').focus()}
 
         // ==================== ARAMA MOTORU ====================
 
         function runEngine(){
             const inp=document.getElementById('queryInput'),grid=document.getElementById('gridContainer'),err=document.getElementById('errorPanel'),btn=document.getElementById('searchBtn'),init=document.getElementById('initialContent');
             let q=inp.value.trim();
+            // Doğal Dil Arama: "bütçem 15000 iphone 17" → alarm set + temiz sorgu
+            const nlResult=parseNLQuery(q);
+            if(nlResult.budget){
+                q=nlResult.cleanQuery||q;
+                inp.value=q;
+                toggleClearBtn();
+                if(RATES.usd){const usd=Math.round(nlResult.budget/RATES.usd);showAlarmDialog(q,usd,true);}
+            }
             grid.innerHTML='';
             err.classList.add('hidden');
             document.getElementById('typoContainer').classList.add('hidden');
@@ -1547,6 +1646,102 @@
             }
             c.className=cl;c.innerHTML=ht;g.appendChild(c);
         }
+        // ==================== DOĞAL DİL ARAMA ====================
+        function parseNLQuery(q){
+            const patterns=[
+                /(?:bütçem|bütçe|max|en fazla|maksimum)[:\s]+?([\d.,]+)\s*(?:tl|₺|lira)?\s*(.+)?/i,
+                /([\d.,]+)\s*(?:tl|₺|lira)\s+(?:altı|kadar|'[ae] kadar|ye kadar)\s*(.+)/i,
+                /^([\d.,]+)\s*(?:tl|₺)?\s+(.{4,})/i,
+            ];
+            for(let re of patterns){
+                const m=q.match(re);
+                if(m){
+                    const raw=m[1].replace(/\./g,'').replace(',','.');
+                    const budget=parseFloat(raw);
+                    if(budget>=100){
+                        const cleanQuery=(m[2]||'').trim();
+                        return{budget,cleanQuery:cleanQuery||q};
+                    }
+                }
+            }
+            return{budget:null,cleanQuery:q};
+        }
+
+        // ==================== FİYAT ALARMI ====================
+        function getAlarm(){return JSON.parse(localStorage.getItem('fiyat_alarm')||'null');}
+        function saveAlarm(a){localStorage.setItem('fiyat_alarm',JSON.stringify(a));}
+        function clearAlarm(){
+            localStorage.removeItem('fiyat_alarm');
+            const bar=document.getElementById('alarmBar');if(bar)bar.classList.add('hidden');
+        }
+        function renderAlarmBar(){
+            const bar=document.getElementById('alarmBar');const alarm=getAlarm();
+            if(!bar||!alarm){if(bar)bar.classList.add('hidden');return;}
+            bar.innerHTML=`<i class="fa-solid fa-bell text-blue-400 mr-1"></i><span style="color:var(--text-secondary)">Alarm: <strong style="color:var(--text-primary)">${alarm.q}</strong> → <strong style="color:var(--text-primary)">$${alarm.usd}</strong></span><button onclick="clearAlarm()" style="background:transparent;border:none;cursor:pointer;color:var(--text-muted);font-size:0.75rem;padding:0 4px;line-height:1;margin-left:6px" title="Sil"><i class="fa-solid fa-xmark"></i></button>`;
+            bar.classList.remove('hidden');
+        }
+        function showAlarmDialog(q,suggestedUsd,autoSet){
+            if(autoSet){saveAlarm({q,usd:suggestedUsd,set:Date.now()});renderAlarmBar();return;}
+            const input=window.prompt(`"${q}" için fiyat alarmı (USD):\n\nBu ürünün satış fiyatı girildiğiniz değerin altına inince sizi uyaracak.\n\n(Tahmini MSRP: $${suggestedUsd})`,String(suggestedUsd));
+            if(input===null)return;
+            const usd=parseFloat(input);
+            if(isNaN(usd)||usd<=0){alert('Geçerli bir dolar tutarı girin.');return;}
+            saveAlarm({q,usd,set:Date.now()});renderAlarmBar();
+        }
+        function checkAlarm(q,entry){
+            const bar=document.getElementById('alarmBar');
+            const alarm=getAlarm();
+            if(!alarm||!bar)return;
+            if(!entry){renderAlarmBar();return;}
+            const diff=entry.u-alarm.usd;
+            if(diff<=0){
+                bar.innerHTML=`<i class="fa-solid fa-bell-ring text-green-400 mr-1"></i><strong style="color:#15803d">Bütçenize uygun!</strong><span style="color:var(--text-secondary)"> MSRP <strong>$${entry.u}</strong> ≤ alarm <strong>$${alarm.usd}</strong></span><button onclick="clearAlarm()" style="background:transparent;border:none;cursor:pointer;opacity:0.5;padding:0 4px;font-size:0.75rem"><i class="fa-solid fa-xmark"></i></button>`;
+                bar.className='alarm-bar alarm-triggered';
+            } else {
+                bar.innerHTML=`<i class="fa-solid fa-bell text-slate-400 mr-1"></i><span style="color:var(--text-secondary)">Alarm: <strong>$${alarm.usd}</strong> &mdash; MSRP şu an <strong>$${entry.u}</strong> (+$${diff})</span><button onclick="clearAlarm()" style="background:transparent;border:none;cursor:pointer;opacity:0.5;padding:0 4px;font-size:0.75rem"><i class="fa-solid fa-xmark"></i></button>`;
+                bar.className='alarm-bar';
+            }
+            bar.classList.remove('hidden');
+        }
+
+        // ==================== FİYAT ROZETİ ====================
+        const NEW_GEN=['iphone 17','iphone air','iphone 16e','galaxy s25','rtx 50','rx 9','core ultra 200','ryzen 9 99','ryzen 7 97','m4 chip','m4 pro','m4 max','m4 ultra'];
+        const OLD_GEN=['iphone 16','iphone 15','iphone 14','galaxy s24','galaxy s23','rtx 40','rx 7','macbook air m3','macbook pro m3','airpods 4','ps5','xbox series'];
+        function getPriceBadge(ql){
+            if(NEW_GEN.some(k=>ql.includes(k)))return'<span class="price-badge mid">🟡 Piyasa Fiyatı</span>';
+            if(OLD_GEN.some(k=>ql.includes(k)))return'<span class="price-badge low">🟢 Fiyat Düştü</span>';
+            return'';
+        }
+        function updatePriceBadge(q,entry){
+            const el=document.getElementById('priceBadge');if(!el)return;
+            if(!entry){el.innerHTML='';return;}
+            el.innerHTML=getPriceBadge(q.toLowerCase());
+        }
+
+        // ==================== KUPON ====================
+        function copyKupon(el,code){
+            navigator.clipboard.writeText(code).catch(()=>{const t=document.createElement('textarea');t.value=code;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);});
+            el.classList.add('copied');
+            setTimeout(()=>el.classList.remove('copied'),1600);
+        }
+
+        // ==================== GERİ SAYIM (gece yarısı) ====================
+        function initCountdown(){updateCountdown();setInterval(updateCountdown,1000);}
+        function updateCountdown(){
+            const now=new Date();
+            const midnight=new Date(now);midnight.setHours(24,0,0,0);
+            const diff=midnight-now;
+            const h=Math.floor(diff/3600000);
+            const m=Math.floor((diff%3600000)/60000);
+            const s=Math.floor((diff%60000)/1000);
+            const pad=n=>String(n).padStart(2,'0');
+            const elH=document.getElementById('cdH'),elM=document.getElementById('cdM'),elS=document.getElementById('cdS');
+            if(elH)elH.textContent=pad(h);if(elM)elM.textContent=pad(m);if(elS)elS.textContent=pad(s);
+        }
+
+        // ==================== PWA ====================
+        function registerSW(){if('serviceWorker'in navigator){navigator.serviceWorker.register('/sw.js').catch(()=>{});}}
+
         function toggleTheme(){const html=document.documentElement;const icon=document.getElementById('themeIcon');const isDark=html.classList.toggle('dark');localStorage.setItem('theme',isDark?'dark':'light');icon.className=isDark?'fa-solid fa-sun':'fa-solid fa-moon';updateMetaTheme(isDark)}
         function updateMetaTheme(isDark){const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=isDark?'#0f172a':'#2563eb'}
         function initTheme(){const saved=localStorage.getItem('theme');const prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;const isDark=saved?saved==='dark':prefersDark;if(isDark){document.documentElement.classList.add('dark');document.getElementById('themeIcon').className='fa-solid fa-sun'}updateMetaTheme(isDark)}
@@ -1624,15 +1819,16 @@
         ];
         function showBudgetHint(q,count){
             const h=document.getElementById('budgetHint');
-            if(!h||count===0||!RATES.usd){if(h)h.classList.add('hidden');return;}
             const ql=q.toLowerCase();
             let entry=null;
             for(let p of PRICE_DB){if(p.k.some(k=>ql.includes(k))){entry=p;break;}}
+            updatePriceBadge(q,entry);
+            if(!h||count===0||!RATES.usd){if(h)h.classList.add('hidden');return;}
+            checkAlarm(q,entry);
             if(entry){
                 const usd=entry.u;
-                // EUR cross-rate: 1 USD = (RATES.usd / RATES.eur) EUR
                 const eur=Math.round(usd*(RATES.usd/RATES.eur));
-                h.innerHTML=`<i class="fa-solid fa-tag mr-1.5 text-blue-400"></i>Uluslararası fiyat: <strong>$${usd.toLocaleString('en-US')}</strong> &middot; <strong>€${eur.toLocaleString('en-US')}</strong> <span class="opacity-40 text-[10px] ml-1">(MSRP, ülkeye göre değişir)</span>`;
+                h.innerHTML=`<i class="fa-solid fa-tag mr-1.5 text-blue-400"></i>Uluslararası fiyat: <strong>$${usd.toLocaleString('en-US')}</strong> &middot; <strong>€${eur.toLocaleString('en-US')}</strong> &middot; <button onclick="showAlarmDialog('${ql.substring(0,30)}',${usd})" style="background:transparent;border:none;cursor:pointer;font-size:0.7rem;font-weight:800;color:#3b82f6;padding:0;text-decoration:underline" title="Fiyat alarmı kur"><i class="fa-solid fa-bell text-[11px] mr-0.5"></i>Alarm Kur</button> <span class="opacity-40 text-[10px] ml-1">(MSRP)</span>`;
                 h.classList.remove('hidden');
             } else {h.classList.add('hidden');}
         }
@@ -1693,7 +1889,7 @@
         }
 
         initTheme();
-        window.onload=()=>{document.getElementById('queryInput').focus();renderHistory();fetchRates();updateFavCount();setTimeout(initUrlSearch,100);};
+        window.onload=()=>{document.getElementById('queryInput').focus();renderHistory();fetchRates();updateFavCount();setTimeout(initUrlSearch,100);initCountdown();registerSW();const a=getAlarm();if(a)renderAlarmBar();};
         document.getElementById('queryInput').addEventListener('keypress',(e)=>{if(e.key==='Enter')runEngine()});
         document.addEventListener('keydown',(e)=>{if(e.key==='/'&&document.activeElement!==document.getElementById('queryInput')){e.preventDefault();document.getElementById('queryInput').focus();}});
     </script>
