@@ -1178,7 +1178,7 @@
         function clearHistory(){localStorage.removeItem('ph_hist');renderHistory();document.getElementById('gridContainer').innerHTML='';document.getElementById('resultInfo').classList.add('hidden');document.getElementById('initialContent').classList.remove('hidden')}
         function renderHistory(){const c=document.getElementById('historyArea');const h=JSON.parse(localStorage.getItem('ph_hist')||'[]');if(h.length===0){c.classList.add('hidden');return}c.innerHTML=`<span class="text-xs font-bold text-slate-300 self-center mr-1">SON:</span>`;h.forEach(i=>{const chip=document.createElement('div');chip.className='history-chip';chip.innerHTML=`<i class="fa-solid fa-clock-rotate-left text-[10px] text-slate-400"></i> ${i}`;chip.onclick=()=>{document.getElementById('queryInput').value=i;runEngine()};c.appendChild(chip)});const clearBtn=document.createElement('button');clearBtn.className='history-clear-btn';clearBtn.innerHTML='<i class="fa-solid fa-trash-can"></i>';clearBtn.title='Geçmişi Temizle';clearBtn.onclick=(e)=>{e.stopPropagation();clearHistory()};c.appendChild(clearBtn);c.classList.remove('hidden')}
         function toggleClearBtn(){const i=document.getElementById('queryInput'),b=document.getElementById('clearBtn');if(i.value.length>0)b.classList.add('visible');else b.classList.remove('visible')}
-        function clearSearch(){document.getElementById('queryInput').value='';document.getElementById('gridContainer').innerHTML='';document.getElementById('adsenseResultsArea').classList.add('hidden');const pb=document.getElementById('priceBadge');if(pb)pb.innerHTML='';document.getElementById('initialContent').classList.remove('hidden');updateUrl('');toggleClearBtn();hideSuggest();document.getElementById('queryInput').focus()}
+        function clearSearch(){document.getElementById('queryInput').value='';document.getElementById('gridContainer').innerHTML='';adge');if(pb)pb.innerHTML='';document.getElementById('initialContent').classList.remove('hidden');updateUrl('');toggleClearBtn();hideSuggest();document.getElementById('queryInput').focus()}
 
         // ==================== ARAMA MOTORU ====================
 
@@ -1388,14 +1388,27 @@
             },300);
         }
 
+        function _restoreSlot(card,slot){
+            if(card.classList.contains('recommended-card')){
+                slot.innerHTML='Fiyatı Gör <i class="fa-solid fa-chevron-right text-xs"></i>';
+            } else {
+                slot.innerHTML='';
+            }
+        }
         async function fetchAndInjectPrices(q){
+            // Yükleniyor göstergesi
+            const allCards=document.querySelectorAll('[data-store-key]');
+            allCards.forEach(function(card){
+                const slot=card.querySelector('.card-price-slot');
+                if(!slot)return;
+                slot.innerHTML='<span style="font-size:0.75rem;opacity:0.55;font-style:italic;animation:pulse 1s infinite">yükleniyor…</span>';
+            });
             try{
                 const res=await fetch('/.netlify/functions/search?q='+encodeURIComponent(q));
-                if(!res.ok)return;
+                if(!res.ok){allCards.forEach(function(c){var s=c.querySelector('.card-price-slot');if(s)_restoreSlot(c,s);});return;}
                 const d=await res.json();
-                if(!d.ok||!d.products||!d.products.length)return;
+                if(!d.ok||!d.products||!d.products.length){allCards.forEach(function(c){var s=c.querySelector('.card-price-slot');if(s)_restoreSlot(c,s);});return;}
                 const priceMap={};
-                const allCards=document.querySelectorAll('[data-store-key]');
                 d.products.forEach(function(p){
                     if(!p.price||!p.store)return;
                     const normStore=p.store.toLowerCase().replace(/[^a-z0-9]/g,'');
@@ -1406,16 +1419,21 @@
                         }
                     });
                 });
-                Object.keys(priceMap).forEach(function(key){
+                allCards.forEach(function(card){
+                    const key=card.dataset.storeKey;
                     const info=priceMap[key];
-                    const card=document.querySelector('[data-store-key="'+key+'"]');
-                    if(!card)return;
                     const slot=card.querySelector('.card-price-slot');
                     if(!slot)return;
-                    if(info.url)card.href=info.url;
-                    slot.innerHTML='<span style="font-weight:900;color:#16a34a;font-size:0.95rem">'+info.price+'</span> <i class="fa-solid fa-chevron-right text-xs" style="color:#16a34a"></i>';
+                    if(info){
+                        if(info.url)card.href=info.url;
+                        slot.innerHTML='<span style="font-weight:900;color:#16a34a;font-size:0.95rem">'+info.price+'</span> <i class="fa-solid fa-chevron-right text-xs" style="color:#16a34a"></i>';
+                    } else {
+                        _restoreSlot(card,slot);
+                    }
                 });
-            }catch(e){}
+            }catch(e){
+                allCards.forEach(function(c){var s=c.querySelector('.card-price-slot');if(s)_restoreSlot(c,s);});
+            }
         }
 
         function createCard(n,l,u,t,i,td){

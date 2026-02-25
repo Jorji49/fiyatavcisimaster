@@ -25,7 +25,7 @@ const EXCLUDE_WORDS = [
 ];
 
 // Model varyant kelimeleri (uzundan kısaya sıralı)
-const MODEL_VARIANTS = ['pro max','pro','plus','max','ultra','air'];
+const MODEL_VARIANTS = ['pro max','fan edition','pro','plus','max','ultra','air','edge','lite','fe'];
 
 function isTurkishStore(storeName) {
   if (!storeName) return false;
