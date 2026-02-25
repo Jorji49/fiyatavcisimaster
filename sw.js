@@ -6,12 +6,7 @@ const PRECACHE = [
   '/favicon.ico',
   '/favicon.svg',
   '/site.webmanifest',
-  '/telefon.html',
-  '/laptop.html',
-  '/indirim-takvimi.html',
-  '/iphone-17-fiyat.html',
-  '/samsung-s25-ultra-fiyat.html',
-  '/macbook-air-fiyat.html'
+  '/indirim-takvimi.html'
 ];
 
 // Install — pre-cache main assets
