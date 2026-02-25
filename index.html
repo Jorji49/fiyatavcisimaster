@@ -1389,13 +1389,6 @@
             },300);
         }
 
-        function _restoreSlot(card,slot){
-            if(card.classList.contains('recommended-card')){
-                slot.innerHTML='Fiyat\u0131 G\u00f6r <i class="fa-solid fa-chevron-right text-xs"></i>';
-            } else {
-                slot.innerHTML='';
-            }
-        }
         var _fetchId=0;
         async function fetchAndInjectPrices(q){
             var myId=++_fetchId;
@@ -1419,7 +1412,7 @@
                 if(!d.ok||!d.products||!d.products.length){loadingEl.textContent='';return;}
                 var allCards=document.querySelectorAll('[data-store-key]');
                 var priceMap={};
-                var STORE_ALIASES={'amazoncomtr':'amazon','amazoncomtramazoncomtrpazaryeri':'amazon','mediamarktpazaryeri':'mediamarkt','mediamarkttrkiye':'mediamarkt','vatanbilgisayar':'vatan','n11com':'n11','garantiliteknoloji':'garantili','ciceksepeticom':'ciceksepeti','trendyolcom':'trendyol','hepsiburadacom':'hepsiburada'};
+                var STORE_ALIASES={'amazoncomtr':'amazon','amazoncomtramazoncomtrpazaryeri':'amazon','mediamarktpazaryeri':'mediamarkt','mediamarkttrkiye':'mediamarkt','vatanbilgisayar':'vatan','n11com':'n11','trendyolcom':'trendyol','hepsiburadacom':'hepsiburada','dr':'d&r','drmcom':'d&r','bkmkitapcom':'bkmkitap','kitapyurducom':'kitapyurdu','idefixcom':'idefix','toyzzshopcom':'toyzzshop','peticomtr':'peti'};
                 d.products.forEach(function(p){
                     if(!p.price||!p.store)return;
                     var normStore=p.store.toLowerCase().replace(/[^a-z0-9]/g,'');
@@ -1460,7 +1453,6 @@
             const imgClass=needsInvert?"logo-img dark-invert":"logo-img";
             const isFaved=getFavs().some(f=>f.url===u);
             const favHtml=`<button class="fav-btn${isFaved?' active':''}" onclick="event.preventDefault();event.stopPropagation();toggleFavByBtn(this)" data-url="${encodeURIComponent(u)}" data-name="${n.replace(/"/g,'&quot;')}" data-logo="${(l||'').replace(/"/g,'&quot;')}" title="${isFaved?'Favorilerden Çıkar':'Favorilere Ekle'}"><i class="fa-${isFaved?'solid':'regular'} fa-heart"></i></button>`;
-            const searchQ=encodeURIComponent(document.getElementById('queryInput').value.trim());
             if(t==="affiliate"){
                 cl+="amazon-aff-card md:col-span-2 lg:col-span-3";
                 ht=`<div class="badge" style="background:rgba(0,0,0,0.35);backdrop-filter:blur(6px);font-size:0.6rem"><i class="fa-solid fa-bolt mr-1"></i> EN İYİ FİYAT</div><div class="flex items-center gap-4 md:gap-6 w-full px-1 md:px-2 py-1">
@@ -1737,7 +1729,7 @@
             'HEPSIBURADA':{s:5,t:'Halka Açık Şirket'},
             'TRENDYOL':{s:5,t:'ETBİS Kaydı'},
             'MEDIAMARKT':{s:5,t:'Uluslararası Zincir'},
-            'TEKNOSA':{s:5,t:'BİST Şiirketi'},
+            'TEKNOSA':{s:5,t:'BİST Şirketi'},
             'VATAN':{s:5,t:'ETBİS Kaydı'},
             'N11':{s:4,t:'ETBİS Kaydı'},
             'INCEHESAP':{s:4,t:'ETBİS Kaydı'},
@@ -1760,7 +1752,7 @@
             'SPORTIVE':{s:4,t:'ETBİS Kaydı'},
             'KITAPYURDU':{s:4,t:'ETBİS Kaydı'},
             'BKM KİTAP':{s:4,t:'ETBİS Kaydı'},
-            'İDEFX':{s:4,t:'ETBİS Kaydı'},
+            'İDEFİX':{s:4,t:'ETBİS Kaydı'},
             'PETİ':{s:4,t:'ETBİS Kaydı'},
             'TOYZZ SHOP':{s:4,t:'ETBİS Kaydı'},
             'ÇİÇEKSEPETİ':{s:5,t:'ETBİS Kaydı'},

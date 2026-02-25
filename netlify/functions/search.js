@@ -3,14 +3,20 @@
 const RAPIDAPI_KEY = 'cff20d59acmsh970aa2dcb009325p1b3b3djsn0e21ab811c7f';
 const HOST = 'real-time-product-search.p.rapidapi.com';
 
-// Kabul edilen Türk mağazaları
+const CORS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS'
+};
+
+// Frontend MARKETS kartlarıyla senkronize — yalnızca karşılığı olan mağazalar
 const TR_STORES = [
-  'trendyol','hepsiburada','n11','mediamarkt','vatan','teknosa',
-  'itopya','incehesap','sinerji','troy','ciceksepeti','çiçeksepeti',
-  'morhipo','boyner','carrefoursa','a101','gratis','watsons','sephora',
-  'rossmann','kitapyurdu','idefix','d&r','bkm','toyzz','decathlon',
-  'intersport','sportive','superstep','sneaks','lcwaikiki','lcw',
-  'garantili','amazon','migros','peti'
+  'trendyol','hepsiburada','n11','amazon',
+  'mediamarkt','teknosa','vatan',
+  'itopya','incehesap','sinerji','troy',
+  'superstep','sneaks','sportive','intersport','decathlon','boyner',
+  'd&r','kitapyurdu','idefix','bkm','toyzz','peti',
+  'watsons','gratis','rossmann','sephora'
 ];
 
 // Aksesuar / alakasız ürün kelimeleri (tam kelime eşleşmesi yapılacaklar * ile işaretli)
@@ -79,20 +85,27 @@ function httpsGet(path) {
       }
     );
     req.on('error', reject);
-    req.setTimeout(9000, () => { req.destroy(); reject(new Error('timeout')); });
+    req.setTimeout(12000, () => { req.destroy(); reject(new Error('timeout')); });
   });
 }
 
 exports.handler = async (event) => {
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 204, headers: CORS, body: '' };
+  }
+
   const q = (event.queryStringParameters && event.queryStringParameters.q) || '';
   if (!q.trim()) {
-    return { statusCode: 400, body: JSON.stringify({ error: 'q parametresi gerekli' }) };
+    return { statusCode: 400, headers: { ...CORS, 'Content-Type': 'application/json' }, body: JSON.stringify({ error: 'q parametresi gerekli' }) };
   }
 
   const path = '/search-v2?q=' + encodeURIComponent(q) + '&country=tr&language=tr&page=1&limit=30&sort_by=BEST_MATCH&product_condition=ANY';
 
   try {
-    const { body } = await httpsGet(path);
+    const { status, body } = await httpsGet(path);
+    if (status !== 200) {
+      return { statusCode: 502, headers: { ...CORS, 'Content-Type': 'application/json' }, body: JSON.stringify({ ok: false, error: 'API returned ' + status }) };
+    }
     const data = JSON.parse(body);
     const products = (data.data && data.data.products) || [];
 
@@ -105,7 +118,7 @@ exports.handler = async (event) => {
         image: (p.product_photos && p.product_photos[0]) || '',
         price: p.offer ? p.offer.price : '',
         listPrice: p.offer ? p.offer.list_price : '',
-        store: p.offer ? p.offer.store_name : '',
+        store: p.offer ? (p.offer.store_name || '').trim() : '',
         url: p.offer ? p.offer.offer_page_url : '',
         shipping: p.offer ? p.offer.shipping : ''
       }));
@@ -124,14 +137,16 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       headers: {
+        ...CORS,
         'Content-Type': 'application/json',
-        'Cache-Control': 'public, max-age=300, stale-while-revalidate=600'
+        'Cache-Control': 'public, max-age=600, stale-while-revalidate=1200'
       },
       body: JSON.stringify({ ok: true, products: deduped })
     };
   } catch (err) {
     return {
       statusCode: 500,
+      headers: { ...CORS, 'Content-Type': 'application/json' },
       body: JSON.stringify({ ok: false, error: err.message })
     };
   }
