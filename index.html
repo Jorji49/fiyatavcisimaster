@@ -81,7 +81,8 @@
                     <input type="text" id="queryInput" class="flex-grow bg-transparent border-none outline-none text-slate-900 dark:text-white text-lg md:text-2xl py-3 md:py-4 font-bold placeholder-gray-300 dark:placeholder-slate-500 min-w-0" placeholder="Ürün, Marka veya Model ara..." autocomplete="off" oninput="handleInput(this.value)" onkeydown="handleSuggestKey(event)"> 
                     <div id="clearBtn" onclick="clearSearch()" class="px-2 md:px-4 text-lg md:text-xl shrink-0 h-full" title="Temizle">
                         <i class="fa-solid fa-circle-xmark"></i>
-                    </div>                     
+                    </div>
+                    <button class="barcode-scan-btn" onclick="openBarcodeScanner()" title="Barkod Tara"><i class="fa-solid fa-barcode"></i></button>
                     <button id="searchBtn" onclick="runEngine()" style="color:#ffffff;background:#2563eb" class="hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 px-6 md:px-10 py-3 md:py-5 rounded-2xl font-bold transition-all shadow-lg flex items-center gap-2 md:gap-3 text-base md:text-lg shrink-0 justify-center active:scale-95 hover:shadow-xl ml-2">ARA</button>                     
                 </div>                 
                 <div id="suggestDropdown" class="suggest-dropdown hidden"></div>                 
@@ -96,7 +97,8 @@
             <div id="resultInfo" class="hidden mb-3 mt-1 animate-fade-in text-center"> 
                 <span style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.35rem 1rem;border-radius:999px;background:var(--bg-secondary);border:1px solid var(--border-color);font-size:0.78rem;font-weight:700;color:var(--text-secondary)"><i class="fa-solid fa-store" style="opacity:0.6"></i><span id="resultCount">0</span> mağaza bulundu<span id="priceBadge"></span></span> 
             </div>             
-            <div id="budgetHint" class="hidden budget-hint mb-2"></div>             
+            <div id="budgetHint" class="hidden budget-hint mb-2"></div>
+            <div id="buyOrWaitCard" class="hidden bow-card w-full max-w-4xl mx-auto mb-2"></div>
             <div id="shareBar" class="hidden share-bar mb-4"></div>             
             <div id="gridContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 pb-4 w-full"></div>             
             <!-- Sonuç altı reklamlar -->
@@ -142,8 +144,14 @@
                             <i class="fa-solid fa-blender cat-icon"></i>
                             <span class="cat-name">Mutfak</span>
                         </div>                         
-                    </div>                     
-                </div>                 
+                    </div>
+                </div>
+                <!-- Araçlar -->
+                <div class="tools-row mt-4">
+                    <button class="tool-btn" onclick="openBudgetPlanner()"><i class="fa-solid fa-wallet" style="color:#2563eb"></i> Bütçe Planlayıcısı</button>
+                    <button class="tool-btn" onclick="openBarcodeScanner()"><i class="fa-solid fa-barcode" style="color:#16a34a"></i> Barkod Tara</button>
+                    <a href="indirim-takvimi.html" class="tool-btn"><i class="fa-solid fa-calendar-days" style="color:#f59e0b"></i> İndirim Takvimi</a>
+                </div>
                 <!-- Reklam Banner -->
                 <div class="adsense-banner">
                     <script async data-cfasync="false" src="https://pl28788285.effectivegatecpm.com/ab0e800f0871546e062d998f2129d9ff/invoke.js"></script>
@@ -1158,7 +1166,7 @@
         function clearHistory(){localStorage.removeItem('ph_hist');renderHistory();document.getElementById('gridContainer').innerHTML='';document.getElementById('resultInfo').classList.add('hidden');document.getElementById('initialContent').classList.remove('hidden')}
         function renderHistory(){const c=document.getElementById('historyArea');const h=JSON.parse(localStorage.getItem('ph_hist')||'[]');if(h.length===0){c.classList.add('hidden');return}c.innerHTML=`<span class="text-xs font-bold text-slate-300 self-center mr-1">SON:</span>`;h.forEach(i=>{const chip=document.createElement('div');chip.className='history-chip';chip.innerHTML=`<i class="fa-solid fa-clock-rotate-left text-[10px] text-slate-400"></i> ${i}`;chip.onclick=()=>{document.getElementById('queryInput').value=i;runEngine()};c.appendChild(chip)});const clearBtn=document.createElement('button');clearBtn.className='history-clear-btn';clearBtn.innerHTML='<i class="fa-solid fa-trash-can"></i>';clearBtn.title='Geçmişi Temizle';clearBtn.onclick=(e)=>{e.stopPropagation();clearHistory()};c.appendChild(clearBtn);c.classList.remove('hidden')}
         function toggleClearBtn(){const i=document.getElementById('queryInput'),b=document.getElementById('clearBtn');if(i.value.length>0)b.classList.add('visible');else b.classList.remove('visible')}
-        function clearSearch(){document.getElementById('queryInput').value='';document.getElementById('gridContainer').innerHTML='';document.getElementById('errorPanel').classList.add('hidden');document.getElementById('typoContainer').classList.add('hidden');document.getElementById('resultInfo').classList.add('hidden');document.getElementById('shareBar').classList.add('hidden');document.getElementById('budgetHint').classList.add('hidden');document.getElementById('adsenseResultsArea').classList.add('hidden');const pb=document.getElementById('priceBadge');if(pb)pb.innerHTML='';document.getElementById('initialContent').classList.remove('hidden');updateUrl('');toggleClearBtn();hideSuggest();document.getElementById('queryInput').focus()}
+        function clearSearch(){document.getElementById('queryInput').value='';document.getElementById('gridContainer').innerHTML='';document.getElementById('errorPanel').classList.add('hidden');document.getElementById('typoContainer').classList.add('hidden');document.getElementById('resultInfo').classList.add('hidden');document.getElementById('shareBar').classList.add('hidden');document.getElementById('budgetHint').classList.add('hidden');const _bow=document.getElementById('buyOrWaitCard');if(_bow)_bow.classList.add('hidden');document.getElementById('adsenseResultsArea').classList.add('hidden');const pb=document.getElementById('priceBadge');if(pb)pb.innerHTML='';document.getElementById('initialContent').classList.remove('hidden');updateUrl('');toggleClearBtn();hideSuggest();document.getElementById('queryInput').focus()}
 
         // ==================== ARAMA MOTORU ====================
 
@@ -1401,10 +1409,14 @@
                 ht=`<div class="badge bg-white/20 backdrop-blur-sm shadow-sm"><i class="fa-solid fa-certificate"></i> RESMİ MAĞAZA</div><div class="flex items-center gap-4 md:gap-5 w-full pl-1 md:pl-2"><div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/10 flex items-center justify-center text-2xl md:text-3xl text-white shrink-0"><i class="fa-brands ${i}"></i></div><div class="flex-grow"><div class="text-xl md:text-2xl font-black tracking-tight leading-none mb-1">${n}</div><div class="text-[10px] md:text-xs font-bold opacity-70 tracking-widest uppercase">ARACISIZ SATIŞ</div></div><div class="text-white/80 text-2xl md:text-3xl group-hover:translate-x-2 transition-transform shrink-0 pr-1 md:pr-2"><i class="fa-solid fa-arrow-right"></i></div></div>`;
             } else if(t==="highlight"){
                 cl+="recommended-card";c.style.setProperty('--theme-color',td.c);
-                ht=`${favHtml}<div class="badge shadow-sm"><i class="fa-solid fa-check-circle mr-1"></i> ÖNERİLEN</div><div class="logo-wrapper mb-auto mt-2 pl-1"><img src="${l}" class="${imgClass}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="fallback-text text-slate-800" style="color:${td.c}">${n}</span></div><div class="text-green-700 font-extrabold text-sm flex items-center justify-end gap-2 group-hover:gap-3 transition-all pr-1 mt-3">Fiyatı Gör <i class="fa-solid fa-chevron-right text-xs"></i></div>`;
+                const _th=TRUST_INDEX[n]||null;const _sh=SHIP_EST[n]||null;
+                const _thh=_th?`<div class="trust-row"><span class="trust-stars">${'★'.repeat(_th.s)+'☆'.repeat(5-_th.s)}</span><span class="trust-label">${_th.t}</span>${_sh?`<span class="ship-pill">${_sh}</span>`:''}</div>`:'';
+                ht=`${favHtml}<div class="badge shadow-sm"><i class="fa-solid fa-check-circle mr-1"></i> ÖNERİLEN</div><div class="logo-wrapper mb-auto mt-2 pl-1"><img src="${l}" class="${imgClass}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="fallback-text text-slate-800" style="color:${td.c}">${n}</span></div><div class="text-green-700 font-extrabold text-sm flex items-center justify-end gap-2 group-hover:gap-3 transition-all pr-1 mt-3">Fiyatı Gör <i class="fa-solid fa-chevron-right text-xs"></i></div>${_thh}`;
             } else {
                 cl+="link-card";c.style.setProperty('--theme-color',td.c);c.style.setProperty('--theme-shadow',td.s);
-                ht=`${favHtml}<div class="logo-wrapper my-auto pl-1"><img src="${l}" class="${imgClass}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="fallback-text text-slate-700" style="color:${td.c}">${n}</span></div><div class="absolute bottom-4 right-4 text-slate-300 group-hover:text-[color:var(--theme-color)] transition-colors text-lg"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>`;
+                const _tl=TRUST_INDEX[n]||null;const _sl=SHIP_EST[n]||null;
+                const _tlh=_tl?`<div class="trust-row" style="padding-bottom:1.5rem"><span class="trust-stars">${'★'.repeat(_tl.s)+'☆'.repeat(5-_tl.s)}</span><span class="trust-label">${_tl.t}</span>${_sl?`<span class="ship-pill">${_sl}</span>`:''}</div>`:'<div style="padding-bottom:1.25rem"></div>';
+                ht=`${favHtml}<div class="logo-wrapper my-auto pl-1"><img src="${l}" class="${imgClass}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="fallback-text text-slate-700" style="color:${td.c}">${n}</span></div>${_tlh}<div class="absolute bottom-4 right-4 text-slate-300 group-hover:text-[color:var(--theme-color)] transition-colors text-lg"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>`;
             }
             c.className=cl;c.innerHTML=ht;g.appendChild(c);
         }
@@ -1544,7 +1556,8 @@
                 const eur=Math.round(usd*(RATES.usd/RATES.eur));
                 h.innerHTML=`<i class="fa-solid fa-tag mr-1.5 text-blue-400"></i>Uluslararası fiyat: <strong>$${usd.toLocaleString('en-US')}</strong> &middot; <strong>€${eur.toLocaleString('en-US')}</strong> <span class="opacity-40 text-[10px] ml-1">(MSRP)</span>`;
                 h.classList.remove('hidden');
-            } else {h.classList.add('hidden');}
+                showBuyOrWait(q,entry);
+            } else {h.classList.add('hidden');showBuyOrWait(q,null);}
         }
 
         // ==================== FAVORİLER ====================
@@ -1650,10 +1663,153 @@
         }
         document.addEventListener('click',(e)=>{if(!e.target.closest('.w-full.max-w-4xl'))hideSuggest();});
 
+        // ==================== GÜVEN ENDEKSİ + KARGO ====================
+        const TRUST_INDEX={
+            'AMAZON':{s:5,t:'ETBİS Kaydı'},
+            'HEPSIBURADA':{s:5,t:'Halka Açık Şirket'},
+            'TRENDYOL':{s:5,t:'ETBİS Kaydı'},
+            'MEDIAMARKT':{s:5,t:'Uluslararası Zincir'},
+            'TEKNOSA':{s:5,t:'BİST Şiirketi'},
+            'VATAN':{s:5,t:'ETBİS Kaydı'},
+            'N11':{s:4,t:'ETBİS Kaydı'},
+            'INCEHESAP':{s:4,t:'ETBİS Kaydı'},
+            'ITOPYA':{s:4,t:'ETBİS Kaydı'},
+            'SINERJI':{s:4,t:'ETBİS Kaydı'},
+            'BOYNER':{s:5,t:'ETBİS Kaydı'},
+            'KOÇTAŞ':{s:5,t:'ETBİS Kaydı'},
+            'IKEA':{s:5,t:'Uluslararası Zincir'},
+            'SEPHORA':{s:5,t:'Uluslararası Zincir'},
+            'WATSONS':{s:5,t:'Uluslararası Zincir'},
+            'TROY':{s:4,t:'Apple Yetkili'},
+            'DECATHLON':{s:5,t:'Uluslararası Zincir'},
+            'INTERSPORT':{s:5,t:'Uluslararası Zincir'},
+            'D&R':{s:4,t:'ETBİS Kaydı'},
+            'GRATIS':{s:4,t:'ETBİS Kaydı'},
+            'ROSSMANN':{s:4,t:'Uluslararası Zincir'},
+            'BAUHAUS':{s:4,t:'Uluslararası Zincir'},
+            'SUPERSTEP':{s:4,t:'ETBİS Kaydı'},
+            'SNEAKS UP':{s:4,t:'ETBİS Kaydı'},
+            'SPORTIVE':{s:4,t:'ETBİS Kaydı'},
+            'KITAPYURDU':{s:4,t:'ETBİS Kaydı'},
+            'BKM KİTAP':{s:4,t:'ETBİS Kaydı'},
+            'İDEFX':{s:4,t:'ETBİS Kaydı'},
+            'PETİ':{s:4,t:'ETBİS Kaydı'},
+            'TOYZZ SHOP':{s:4,t:'ETBİS Kaydı'},
+            'ÇİÇEKSEPETİ':{s:5,t:'ETBİS Kaydı'},
+        };
+        const SHIP_EST={
+            'AMAZON':'Prime: Ücretsiz',
+            'HEPSIBURADA':'~₺39–59',
+            'TRENDYOL':'~₺25–39',
+            'N11':'~₺35–49',
+            'MEDIAMARKT':'Mağazada ücretsiz',
+            'TEKNOSA':'Mağazada ücretsiz',
+            'VATAN':'Mağazada ücretsiz',
+            'INCEHESAP':'~₺50–75',
+            'ITOPYA':'~₺50–75',
+            'SINERJI':'~₺50–75',
+        };
+
+        // ==================== SATIN AL MI? BEKLE Mİ? ====================
+        function showBuyOrWait(q,entry){
+            const card=document.getElementById('buyOrWaitCard');
+            if(!card)return;
+            if(!entry){card.classList.add('hidden');return;}
+            const ql=q.toLowerCase();
+            const isNew=NEW_GEN.some(k=>ql.includes(k));
+            const isOld=OLD_GEN.some(k=>ql.includes(k));
+            const usdHigh=RATES.usd&&RATES.usd>42;
+            let icon,cls,title,detail;
+            if(isNew){icon='⚡';cls='bow-buy';title='Yeni Nesil — Şimdi Alın';detail='Piyasaya yeni çıktı, yakın dönemde fiyat düşüşü beklenmiyor.';}
+            else if(isOld){icon='✅';cls='bow-buy';title='Alım İçin İyi Zaman';detail='Bir önceki nesil ürün, fiyatlar %15–30 gerilemiş durumda.';}
+            else if(usdHigh){icon='⚠️';cls='bow-wait';title='Döviz Yüksek — Bekleyebilirsiniz';detail=`Dolar ₺${RATES.usd.toFixed(1)} seviyesinde. Kur gerilemesi fiyatlara yansıyabilir.`;}
+            else{icon='📊';cls='bow-neutral';title='Fiyatları Karşılaştırın';detail='Farklı mağazalar arasında fiyat farkı var, tüm seçenekleri inceleyin.';}
+            const msrpTRY=RATES.usd?Math.round(entry.u*RATES.usd/100)*100:0;
+            card.innerHTML=`<div class="bow-icon">${icon}</div><div style="flex:1;min-width:0"><div class="font-black text-sm" style="color:var(--text-primary)">${title}</div><div class="text-xs mt-0.5 font-semibold" style="color:var(--text-secondary)">${detail}</div></div>${msrpTRY?`<div class="text-right flex-shrink-0"><div class="text-[10px] font-bold opacity-50 uppercase">MSRP ₺</div><div class="font-black" style="color:var(--text-primary);font-size:1rem">~₺${msrpTRY.toLocaleString('tr-TR')}</div></div>`:''}`;  
+            card.className=`bow-card w-full max-w-4xl mx-auto mb-2 ${cls}`;
+            card.classList.remove('hidden');
+        }
+
+        // ==================== BÜTÇE PLANLAYCISI ====================
+        function openBudgetPlanner(){
+            document.getElementById('bpOverlay').classList.remove('hidden');
+            document.getElementById('bpInput').value='';
+            document.getElementById('bpResults').innerHTML='<p class="text-sm font-medium text-center py-4" style="color:var(--text-muted)">Yukarıya bütçenizi girin...</p>';
+            setTimeout(()=>document.getElementById('bpInput').focus(),80);
+        }
+        function closeBudgetPlanner(){document.getElementById('bpOverlay').classList.add('hidden');}
+        function runBudgetPlanner(){
+            const raw=document.getElementById('bpInput').value;
+            const budget=parseFloat(raw.replace(/\./g,'').replace(',','.'));
+            const out=document.getElementById('bpResults');
+            if(!raw||isNaN(budget)||budget<500){out.innerHTML='<p class="text-sm font-bold text-center" style="color:var(--text-muted)">Geçerli bir bütçe girin (min ₺500)</p>';return;}
+            if(!RATES.usd){out.innerHTML='<p class="text-sm text-center py-2" style="color:var(--text-muted)">Döviz kuru yükleniyor...</p>';return;}
+            const results=PRICE_DB.map(p=>({...p,tryPrice:Math.round(p.u*RATES.usd/100)*100})).filter(p=>p.tryPrice<=budget).sort((a,b)=>b.tryPrice-a.tryPrice);
+            if(!results.length){out.innerHTML=`<p class="text-sm font-bold text-center py-4" style="color:var(--text-muted)">₺${budget.toLocaleString('tr-TR')} bütçeye uygun ürün katalogda bulunamadı.</p>`;return;}
+            out.innerHTML=`<div class="text-xs font-bold mb-2" style="color:var(--text-muted)">₺${budget.toLocaleString('tr-TR')} bütçeye uygun ürünler (${results.length} adet):</div>`+results.map(p=>{const nm=p.k[0].replace(/\b\w/g,c=>c.toUpperCase());return`<div class="bp-row" onclick="closeBudgetPlanner();document.getElementById('queryInput').value='${p.k[0]}';runEngine();"><span class="font-extrabold text-sm" style="color:var(--text-primary)">${nm}</span><span class="font-black text-sm" style="color:#16a34a">~₺${p.tryPrice.toLocaleString('tr-TR')}</span></div>`;}).join('');
+        }
+
+        // ==================== BARKOD TARAYICI ====================
+        let _bcStream=null,_bcDetector=null,_bcTimer=null;
+        function openBarcodeScanner(){
+            if(!('BarcodeDetector'in window)){
+                if(confirm('Barkod tarayıcı bu tarayıcıda desteklenmiyor (Chrome/Edge önerilir).\n\nGoogle Lens ile devam etmek ister misiniz?'))window.open('https://lens.google.com/','_blank');
+                return;
+            }
+            document.getElementById('bcOverlay').classList.remove('hidden');
+            document.getElementById('bcMsg').textContent='Kamera başlatılıyor...';
+            navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}).then(stream=>{
+                _bcStream=stream;
+                const v=document.getElementById('bcVideo');
+                v.srcObject=stream;
+                _bcDetector=new BarcodeDetector({formats:['ean_13','ean_8','qr_code','upc_a','upc_e','code_128','code_39']});
+                document.getElementById('bcMsg').textContent='Barkodu kameraya gösterin...';
+                _bcTimer=setInterval(async()=>{
+                    try{const bs=await _bcDetector.detect(v);if(bs.length>0){const val=bs[0].rawValue;closeBarcodeScanner();document.getElementById('queryInput').value=val;handleInput(val);runEngine();}}
+                    catch(e){}
+                },500);
+            }).catch(()=>{
+                document.getElementById('bcMsg').textContent='Kamera erişimi reddedildi veya mevcut değil.';
+            });
+        }
+        function closeBarcodeScanner(){
+            document.getElementById('bcOverlay').classList.add('hidden');
+            if(_bcTimer)clearInterval(_bcTimer);
+            if(_bcStream)_bcStream.getTracks().forEach(t=>t.stop());
+            _bcStream=null;_bcDetector=null;_bcTimer=null;
+        }
+
         initTheme();
         window.onload=()=>{document.getElementById('queryInput').focus();renderHistory();fetchRates();updateFavCount();setTimeout(initUrlSearch,100);registerSW();};
+
         document.getElementById('queryInput').addEventListener('keypress',(e)=>{if(e.key==='Enter')runEngine()});
         document.addEventListener('keydown',(e)=>{if(e.key==='/'&&document.activeElement!==document.getElementById('queryInput')){e.preventDefault();document.getElementById('queryInput').focus();}});
     </script>         
+    <!-- Bütçe Planlayıcı Modalı -->
+    <div id="bpOverlay" class="bp-overlay hidden" onclick="if(event.target===this)closeBudgetPlanner()">
+        <div class="bp-modal">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h2 class="text-xl font-black" style="color:var(--text-primary)"><i class="fa-solid fa-wallet text-blue-500 mr-2"></i>Bütçe Planlayıcısı</h2>
+                    <p class="text-xs font-semibold mt-0.5" style="color:var(--text-muted)">Bütçenizi girin, hangi ürünlere erişebileceğinizi görün</p>
+                </div>
+                <button onclick="closeBudgetPlanner()" class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style="background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-muted)"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <input id="bpInput" type="number" placeholder="Bütçeniz (₺)" class="bp-input mb-4" oninput="runBudgetPlanner()" min="500">
+            <div id="bpResults"><p class="text-sm font-medium text-center py-4" style="color:var(--text-muted)">Yukarıya bütçenizi girin...</p></div>
+            <p class="text-[10px] mt-3 text-center font-medium" style="color:var(--text-muted)">* MSRP bazlı tahmini TRY karşılığıdır; güncel kur ile hesaplanır. Ürüne tıklayarak fiyat karşılaştırması yapılabilir.</p>
+        </div>
+    </div>
+    <!-- Barkod Taratıcı Modalı -->
+    <div id="bcOverlay" class="bc-overlay hidden" onclick="if(event.target===this)closeBarcodeScanner()">
+        <div class="bc-modal">
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="text-sm font-black text-white"><i class="fa-solid fa-barcode mr-2 text-green-400"></i>Barkod Tara</h2>
+                <button onclick="closeBarcodeScanner()" class="w-8 h-8 rounded-full flex items-center justify-center" style="background:rgba(255,255,255,0.1);color:white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <video id="bcVideo" class="w-full rounded-xl mb-3" style="max-height:240px;background:#000" autoplay muted playsinline></video>
+            <p id="bcMsg" class="text-xs text-gray-400 font-semibold">Barkodu kameraya gösterin...</p>
+        </div>
+    </div>
     </body>     
 </html>
