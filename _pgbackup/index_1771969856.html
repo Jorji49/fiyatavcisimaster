@@ -1,257 +1,400 @@
-<!DOCTYPE html> 
-<html lang="tr"> 
-    <head> 
-        <meta charset="UTF-8"> 
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"> 
-        <meta name="google-site-verification" content="nMB3IKgjahJHMbF_t6raK7s-HcOJmxbRgOHiQde53ns"/> 
-        <meta name="description" content="FiyatAvcısı: En güvenilir teknoloji, moda, kozmetik ve kitap fiyat arama motoru."> 
-        <meta name="theme-color" content="#2563eb"> 
-        <title>FiyatAvcısı | Güvenli Alışveriş & Fiyat Arama Motoru</title>         
-        <link rel="icon" type="image/svg+xml" href="favicon.svg"> 
-        <link rel="icon" type="image/x-icon" href="favicon.ico"> 
-        <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png"> 
-        <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png"> 
-        <link rel="manifest" href="site.webmanifest"> 
-        <!-- Open Graph / Social Media -->         
-        <meta property="og:type" content="website"> 
-        <meta property="og:url" content="https://www.fiyatavcisi.com.tr/"> 
-        <meta property="og:title" content="FiyatAvcısı | Güvenli Alışveriş & Fiyat Arama Motoru"> 
-        <meta property="og:description" content="FiyatAvcısı ile en iyi fiyatları bulun. Teknoloji, moda, kozmetik ve daha fazlası için Türkiye'nin en güvenilir fiyat karşılaştırma sitesi."> 
-        <meta property="og:image" content="https://www.fiyatavcisi.com.tr/web-app-manifest-512x512.png"> 
-        <meta property="og:locale" content="tr_TR"> 
-        <meta name="twitter:card" content="summary_large_image"> 
-        <meta name="twitter:title" content="FiyatAvcısı | Güvenli Alışveriş & Fiyat Arama Motoru"> 
-        <meta name="twitter:description" content="FiyatAvcısı ile en iyi fiyatları bulun. Türkiye'nin en güvenilir fiyat karşılaştırma sitesi."> 
-        <meta name="twitter:image" content="https://www.fiyatavcisi.com.tr/web-app-manifest-512x512.png"> 
-        <meta name="robots" content="index, follow"> 
-        <meta name="author" content="FiyatAvcısı"> 
-        <link rel="canonical" href="https://www.fiyatavcisi.com.tr/"> 
-        <!-- Google Tag Manager / Analytics -->         
-        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17749261970"></script>         
-        <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-17749261970');</script>         
-        <!-- Google AdSense -->         
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3432912669665213" crossorigin="anonymous"></script>         
-        <link href="./style.css" rel="stylesheet"> 
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> 
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"> 
-        <style>:root { --bg-primary: #f8fafc; --bg-secondary: #ffffff; --bg-tertiary: #f1f5f9; --text-primary: #1e293b; --text-secondary: #64748b; --text-muted: #94a3b8; --border-color: #e2e8f0; --shadow-color: rgba(0,0,0,0.04); --card-bg: #ffffff; --footer-bg: #ffffff; } .dark { --bg-primary: #0f172a; --bg-secondary: #1e293b; --bg-tertiary: #334155; --text-primary: #f1f5f9; --text-secondary: #94a3b8; --text-muted: #64748b; --border-color: #334155; --shadow-color: rgba(0,0,0,0.3); --card-bg: #1e293b; --footer-bg: #1e293b; } body { background-color: var(--bg-primary); color: var(--text-primary); display: flex; flex-direction: column; min-height: 100dvh; -webkit-tap-highlight-color: transparent; overflow-x: hidden; transition: background-color 0.3s,color 0.3s; } .search-container { background: var(--bg-secondary); border: 1px solid var(--border-color); box-shadow: 0 10px 30px -10px var(--shadow-color); transition: all 0.3s cubic-bezier(0.25,0.8,0.25,1); } .search-container:focus-within { border-color: #3b82f6; box-shadow: 0 25px 50px -12px rgba(59,130,246,0.15); transform: translateY(-2px); } #clearBtn { opacity: 0; pointer-events: none; transition: all 0.2s ease; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; } #clearBtn.visible { opacity: 1; pointer-events: all; } #clearBtn:hover { color: var(--text-secondary); } .base-card { border-radius: 1.25rem; min-height: 120px; display: flex; flex-direction: column; justify-content: center; padding: 1.618rem; position: relative; transition: all 0.25s cubic-bezier(0.25,0.8,0.25,1); cursor: pointer; text-decoration: none; -webkit-user-select: none; user-select: none; } .link-card { background: var(--card-bg); border: 1px solid var(--border-color); } .link-card:hover { border-color: var(--theme-color); box-shadow: 0 16px 32px -8px var(--theme-shadow); transform: translateY(-3px); } .recommended-card { background: #f0fdf4; border: 2px solid #16a34a; box-shadow: 0 10px 20px -5px rgba(22,163,74,0.08); } .dark .recommended-card { background: #14532d; border-color: #22c55e; } .recommended-card:hover { transform: translateY(-3px); box-shadow: 0 20px 40px -10px rgba(22,163,74,0.2); } .amazon-aff-card { background: linear-gradient(135deg,#FF9900 0%,#FF6600 60%,#e65000 100%); color: #fff; border: none; display: flex; flex-direction: row; align-items: center; gap: 0; position: relative; overflow: hidden; } .amazon-aff-card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(135deg,rgba(255,255,255,0.12) 0%,transparent 60%); pointer-events: none; } .amazon-aff-card::after { content: ""; position: absolute; top: -60px; right: -60px; width: 180px; height: 180px; background: rgba(255,255,255,0.08); border-radius: 50%; pointer-events: none; } .amazon-aff-card:hover { transform: translateY(-4px); box-shadow: 0 30px 60px -10px rgba(255,100,0,0.55); } .dark .amazon-aff-card { background: linear-gradient(135deg,#FF9900 0%,#FF6600 60%,#e65000 100%); } @keyframes aff-pulse{ 0%, 100% {  box-shadow: 0 0 0 0 rgba(255,153,0,0.5); }  50% {  box-shadow: 0 0 0 10px rgba(255,153,0,0); } } .amazon-aff-card { animation: aff-pulse 2.5s ease-in-out infinite; } .official-card { background: #0f172a; color: white; border: none; display: flex; flex-direction: row; align-items: center; } .official-card:hover { transform: translateY(-3px); box-shadow: 0 25px 50px -12px rgba(15,23,42,0.4); } .badge { position: absolute; top: -1px; right: -1px; font-size: 0.65rem; font-weight: 800; padding: 6px 14px; border-bottom-left-radius: 1rem; border-top-right-radius: 1rem; color: white; background: #16a34a; z-index: 10; letter-spacing: 0.05em; } .logo-wrapper { height: 2.5rem; width: 100%; display: flex; align-items: center; overflow: hidden; } .logo-img { height: 100%; width: auto; max-width: 150px; object-fit: contain; object-position: left; opacity: 0.9; transition: 0.3s; mix-blend-mode: multiply; } .dark .logo-img { mix-blend-mode: normal; filter: brightness(1.1); } .dark .logo-img.dark-invert { filter: brightness(0) invert(1); } .link-card:hover .logo-img, .recommended-card:hover .logo-img { opacity: 1; transform: scale(1.05); } .fallback-text { display: none; font-weight: 800; font-size: 1.25rem; text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.1; } .link-card .fallback-text { color: var(--text-secondary); } .link-card:hover .fallback-text { color: var(--theme-color); } .history-chip { font-size: 0.75rem; font-weight: 600; padding: 6px 14px; border-radius: 999px; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-secondary); cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 6px; } .history-chip:hover { background: var(--bg-tertiary); color: var(--text-primary); border-color: var(--text-muted); transform: translateY(-1px); } .history-clear-btn { font-size: 0.7rem; padding: 6px 10px; border-radius: 999px; background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center; margin-left: 4px; } .history-clear-btn:hover { background: #fee2e2; border-color: #fca5a5; color: #dc2626; } .dark .history-clear-btn:hover { background: #7f1d1d; border-color: #991b1b; color: #fca5a5; } .typo-box { font-size: 0.9rem; color: #dc2626; margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem; animation: fadeIn 0.3s ease; flex-wrap: wrap; } .dark .typo-box { color: #f87171; } .typo-link { font-weight: 800; color: #2563eb; cursor: pointer; text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 4px; } .typo-link:hover { color: #1e40af; } .dark .typo-link { color: #60a5fa; } .dark .typo-link:hover { color: #93c5fd; } .cat-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 1rem; padding: 1.5rem; cursor: pointer; transition: all 0.2s; height: 100%; text-align: center; } .cat-btn:hover { border-color: #3b82f6; transform: translateY(-3px); box-shadow: 0 10px 20px -5px rgba(59,130,246,0.15); } .cat-icon { font-size: 1.5rem; color: #3b82f6; margin-bottom: 0.5rem; } .cat-name { font-weight: 700; color: var(--text-primary); font-size: 0.9rem; } .theme-toggle { position: fixed; top: 1rem; right: 1rem; z-index: 50; width: 44px; height: 44px; border-radius: 50%; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: all 0.3s; box-shadow: 0 4px 12px var(--shadow-color); } .theme-toggle:hover { transform: scale(1.1); box-shadow: 0 8px 24px var(--shadow-color); } @keyframes fadeIn{ from {  opacity: 0;  transform: translateY(16px); }  to {  opacity: 1;  transform: translateY(0); } } .btn-loading { pointer-events: none; opacity: 0.8; } .btn-loading i { display: none; } .btn-loading::after { content: ""; display: inline-block; width: 16px; height: 16px; border: 2px solid #fff; border-radius: 50%; border-top-color: transparent; animation: spin 0.8s linear infinite; margin-left: 8px; } @keyframes spin{ to {  transform: rotate(360deg); } } .dark .text-slate-900, .dark .text-slate-800, .dark .text-slate-700 { color: var(--text-primary)!important; } .dark .text-green-700 { color: #4ade80!important; } .dark .text-green-600 { color: #22c55e!important; } .dark .bg-red-50 { background: #450a0a!important; } .dark .border-red-100 { border-color: #7f1d1d!important; } .dark .text-red-700 { color: #fca5a5!important; } /* Amazon Affiliate Styles */.aff-section { margin-bottom: 3rem; } .aff-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1rem; max-width: 900px; margin: 0 auto; } @media (min-width:640px){ .aff-grid {  grid-template-columns: repeat(3,1fr); } } @media (min-width:1024px){ .aff-grid {  grid-template-columns: repeat(5,1fr); } } .aff-card { display: flex; flex-direction: column; align-items: center; text-align: center; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 1.25rem; padding: 1.2rem 0.8rem; text-decoration: none; transition: all 0.25s cubic-bezier(0.25,0.8,0.25,1); position: relative; overflow: hidden; } .aff-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -10px rgba(255,153,0,0.25); border-color: #FF9900; } .aff-card .aff-icon { font-size: 2rem; margin-bottom: 0.6rem; background: linear-gradient(135deg,#FF9900,#FF6600); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; } .aff-card .aff-name { font-size: 0.75rem; font-weight: 800; color: var(--text-primary); line-height: 1.3; margin-bottom: 0.5rem; } .aff-card .aff-badge { font-size: 0.6rem; font-weight: 700; background: #FF9900; color: #fff; padding: 3px 10px; border-radius: 999px; margin-top: auto; letter-spacing: 0.04em; } .aff-card .aff-hot { position: absolute; top: 8px; right: 8px; font-size: 0.6rem; font-weight: 800; background: #ef4444; color: #fff; padding: 2px 7px; border-radius: 999px; } .aff-deals-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg,#FF9900,#FF6600); color: #fff; font-weight: 800; font-size: 0.85rem; padding: 0.7rem 1.6rem; border-radius: 999px; text-decoration: none; transition: all 0.25s; box-shadow: 0 8px 20px -5px rgba(255,153,0,0.5); margin-top: 1.2rem; } .aff-deals-btn:hover { transform: translateY(-2px); box-shadow: 0 16px 30px -5px rgba(255,153,0,0.6); } .dark .aff-card { background: var(--card-bg); } /* AdSense banner */.adsense-banner { width: 100%; max-width: 900px; margin: 0 auto 2rem auto; min-height: 90px; border-radius: 0.75rem; overflow: hidden; background: var(--bg-tertiary); } /* Kur Bar */.kur-bar { display: inline-flex; align-items: center; justify-content: center; gap: 0; padding: 0.45rem 0.75rem; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 999px; font-size: 0.72rem; font-weight: 700; color: var(--text-secondary); margin: 0 auto 1.25rem auto; cursor: default; overflow: hidden; } .kur-item { display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; width: 6.5rem; padding: 0.1rem 0; } .kur-sym { font-weight: 700; opacity: 0.5; min-width: 0.75rem; text-align: center; } .kur-val { color: var(--text-primary); font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: 0.01em; } .kur-sep { width: 1px; height: 1.2em; background: var(--border-color); flex-shrink: 0; margin: 0 0.1rem; } /* Favoriler Toggle */.fav-toggle-btn { position: fixed; top: 1rem; left: 1rem; z-index: 50; width: 44px; height: 44px; border-radius: 50%; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: all 0.3s; box-shadow: 0 4px 12px var(--shadow-color); } .fav-toggle-btn:hover { transform: scale(1.1); color: #ef4444; } .fav-count { position: absolute; top: -5px; right: -5px; background: #ef4444; color: #fff; border-radius: 50%; font-size: 0.5rem; font-weight: 900; width: 17px; height: 17px; display: none; align-items: center; justify-content: center; } /* Favoriler Panel */.fav-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 199; opacity: 0; pointer-events: none; transition: opacity 0.3s; } .fav-overlay.open { opacity: 1; pointer-events: all; } .fav-panel { position: fixed; top: 0; right: -400px; width: 370px; max-width: 94vw; height: 100dvh; background: var(--bg-secondary); border-left: 1px solid var(--border-color); box-shadow: -10px 0 50px rgba(0,0,0,0.12); z-index: 200; transition: right 0.35s cubic-bezier(0.25,0.8,0.25,1); overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; } .fav-panel.open { right: 0; } .fav-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border-radius: 1rem; background: var(--bg-tertiary); border: 1px solid var(--border-color); text-decoration: none; transition: all 0.2s; } .fav-item:hover { transform: translateX(4px); border-color: #3b82f6; } .fav-item-logo { width: 44px; height: 32px; object-fit: contain; border-radius: 0.5rem; background: #fff; padding: 4px; flex-shrink: 0; } /* Favori Butonu (kart üstünde) */.fav-btn { position: absolute; top: 8px; left: 8px; width: 28px; height: 28px; border-radius: 50%; background: var(--bg-secondary); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; cursor: pointer; transition: all 0.2s; z-index: 20; color: var(--text-muted); } .fav-btn:hover { color: #ef4444; border-color: #fca5a5; transform: scale(1.15); } .fav-btn.active { color: #ef4444; border-color: #ef4444; background: #fff1f2; } .dark .fav-btn { background: var(--bg-tertiary); } .dark .fav-btn.active { background: #450a0a; } /* Paylaşım */.share-bar { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin-bottom: 0.75rem; animation: fadeIn 0.3s ease; } .share-btn { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.7rem; font-weight: 700; padding: 6px 13px; border-radius: 999px; cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-secondary); transition: all 0.2s; text-decoration: none; } .share-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px var(--shadow-color); } .share-btn.wa { background: #25D366; border-color: #25D366; color: #fff; } .share-btn.wa:hover { background: #1da853; } .share-btn.tw { background: #000; border-color: #000; color: #fff; } .share-btn.tw:hover { background: #333; } .share-btn.cp { background: var(--bg-tertiary); } /* Bütçe İpucu */.budget-hint { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-align: center; margin-bottom: 0.75rem; padding: 0.5rem 1rem; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 999px; max-width: fit-content; margin-left: auto; margin-right: auto; animation: fadeIn 0.3s ease; } .budget-hint strong { color: var(--text-secondary); } /* İndirim Takvimi Banner */.takvim-banner { display: flex; align-items: center; gap: 1.25rem; padding: 1.25rem 1.75rem; border-radius: 1.25rem; text-decoration: none; transition: all 0.25s; background: var(--bg-secondary); border: 1px solid var(--border-color); max-width: 700px; margin: 0 auto 2.5rem auto; } .takvim-banner:hover { box-shadow: 0 12px 32px -8px var(--shadow-color); transform: translateY(-2px); border-color: #2563eb; } .takvim-icon { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg,#2563eb,#4f46e5); display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 6px 16px rgba(37,99,235,0.3); font-size: 1.3rem; color: #fff; } .takvim-text { flex: 1; min-width: 0; } .takvim-title { font-weight: 900; font-size: 0.95rem; color: var(--text-primary); margin-bottom: 0.2rem; } .takvim-sub { font-size: 0.73rem; color: var(--text-secondary); font-weight: 600; } .takvim-arr { font-size: 1rem; color: var(--text-muted); flex-shrink: 0; transition: transform 0.2s; } .takvim-banner:hover .takvim-arr { transform: translateX(4px); color: #2563eb; } /* Arama Öneri Açılır Menüsü */.suggest-dropdown { position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 1.5rem; box-shadow: 0 20px 48px -8px var(--shadow-color); z-index: 50; overflow: hidden; animation: fadeIn 0.15s ease; } .suggest-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.25rem; font-size: 0.9rem; font-weight: 700; color: var(--text-primary); cursor: pointer; transition: background 0.12s; border-top: 1px solid var(--border-color); } .suggest-item:first-child { border-top: none; } .suggest-item:hover, .suggest-item.sg-active { background: var(--bg-tertiary); } .suggest-item i { color: var(--text-muted); font-size: 0.7rem; flex-shrink: 0; width: 14px; text-align: center; } /* Fiyat İyi Mi Rozeti */.price-badge { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.62rem; font-weight: 800; padding: 2px 8px; border-radius: 999px; vertical-align: middle; margin-left: 0.4rem; } .price-badge.low { background: #dcfce7; color: #15803d; } .dark .price-badge.low { background: #14532d; color: #4ade80; } .price-badge.mid { background: #fef9c3; color: #a16207; } .dark .price-badge.mid { background: #422006; color: #facc15; } .price-badge.high{background:#fee2e2;color:#b91c1c}.dark .price-badge.high{background:#450a0a;color:#f87171}
-        /* Satın Al/Bekle */
-        .bow-card{display:flex;align-items:center;gap:0.85rem;padding:0.8rem 1.1rem;border-radius:1.1rem;border:1.5px solid var(--border-color);background:var(--bg-secondary);animation:fadeIn 0.25s ease}
-        .bow-card.bow-buy{border-color:#16a34a}.bow-card.bow-wait{border-color:#d97706}
-        .bow-icon{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;background:var(--bg-tertiary)}
-        .bow-buy .bow-icon{background:#dcfce7}.dark .bow-buy .bow-icon{background:#14532d}
-        .bow-wait .bow-icon{background:#fef9c3}.dark .bow-wait .bow-icon{background:#422006}
-        /* Bütçe Planlayıcı */
-        .bp-overlay{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;padding:1rem;background:rgba(0,0,0,0.55);backdrop-filter:blur(5px)}
-        .bp-modal{background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:2rem;padding:1.75rem 2rem;width:100%;max-width:520px;max-height:85vh;overflow-y:auto;animation:fadeIn 0.2s ease;box-shadow:0 30px 80px -10px rgba(0,0,0,0.4)}
-        .bp-input{width:100%;padding:0.75rem 1rem;border-radius:1rem;border:2px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-weight:700;font-size:1rem;outline:none;transition:border-color 0.2s;font-family:inherit}
-        .bp-input:focus{border-color:#2563eb}
-        .bp-row{display:flex;align-items:center;justify-content:space-between;padding:0.55rem 0.8rem;border-radius:0.75rem;background:var(--bg-tertiary);margin-bottom:0.3rem;cursor:pointer;transition:background 0.12s;border:1px solid transparent}
-        .bp-row:hover{background:var(--bg-primary);border-color:var(--border-color)}
-        /* Barkod Modal */
-        .bc-overlay{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;padding:1rem;background:rgba(0,0,0,0.82);backdrop-filter:blur(4px)}
-        .bc-modal{background:#111827;border-radius:1.5rem;padding:1.5rem;width:100%;max-width:360px;text-align:center;animation:fadeIn 0.2s ease}
-        /* Araç Butonları */
-        .tool-btn{display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1.1rem;border-radius:999px;border:1.5px solid var(--border-color);background:var(--bg-secondary);color:var(--text-secondary);font-weight:700;font-size:0.78rem;cursor:pointer;transition:all 0.2s;font-family:inherit;text-decoration:none;white-space:nowrap}
-        .tool-btn:hover{border-color:#2563eb;color:#2563eb;transform:translateY(-1px);box-shadow:0 6px 20px -4px rgba(37,99,235,0.18)}
-        .tools-row{display:flex;justify-content:center;gap:0.65rem;flex-wrap:wrap;margin-bottom:2rem}
-        /* Barkod scan */
-        .barcode-scan-btn{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border:none;background:transparent;cursor:pointer;color:var(--text-muted);transition:color 0.2s;flex-shrink:0;border-radius:0.5rem}
-        .barcode-scan-btn:hover{color:#2563eb}
-        .bp-overlay.hidden,.bc-overlay.hidden{display:none!important}
-        /* Live Prices */
-        .lp-section{margin-bottom:1.5rem}.lp-header{font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem}.lp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:0.75rem}.lp-card{background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:1rem;padding:0.85rem;display:flex;flex-direction:column;gap:0.45rem;transition:transform 0.2s,box-shadow 0.2s;text-decoration:none;color:var(--text-primary)}.lp-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.12)}.lp-img{width:100%;aspect-ratio:1;object-fit:contain;border-radius:0.5rem;background:var(--bg-primary)}.lp-title{font-size:0.78rem;font-weight:600;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.lp-price{font-size:1.05rem;font-weight:800;color:#16a34a}.lp-listprice{font-size:0.7rem;text-decoration:line-through;opacity:0.55}.lp-store{font-size:0.68rem;font-weight:700;opacity:0.55;margin-top:auto}.lp-skeleton{border-radius:1rem;height:220px;background:linear-gradient(90deg,var(--bg-secondary) 25%,var(--border-color) 50%,var(--bg-secondary) 75%);background-size:200% 100%;animation:lp-shine 1.4s infinite}@keyframes lp-shine{0%{background-position:200% 0}100%{background-position:-200% 0}}
-        </style>         
-    </head>     
-    <body class="p-4 md:p-8"> 
-        <button class="theme-toggle" onclick="toggleTheme()" title="Tema Değiştir"> 
-            <i class="fa-solid fa-moon" id="themeIcon"></i> 
-        </button>         
-        <!-- Ana Sayfa Butonu -->         
-        <button onclick="clearSearch()" title="Ana Sayfa" style="position:fixed;top:4.5rem;right:1rem;z-index:50;width:44px;height:44px;border-radius:50%;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:all 0.3s;box-shadow:0 4px 12px var(--shadow-color)" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform=''">
-            <i class="fa-solid fa-house"></i>
-        </button>         
-        <!-- Favoriler Toggle -->         
-        <button class="fav-toggle-btn" onclick="openFavPanel()" title="Favorilerim" id="favToggleBtn"> 
-            <i class="fa-regular fa-heart"></i> 
-            <span class="fav-count" id="favCount">0</span> 
-        </button>         
-        <!-- Favoriler Panel -->         
-        <div class="fav-overlay" id="favOverlay" onclick="closeFavPanel()"></div>         
-        <div class="fav-panel" id="favPanel"> 
-            <div class="flex items-center justify-between mb-2"> 
-                <h2 class="text-lg font-black" style="color:var(--text-primary)"><i class="fa-solid fa-heart text-red-500 mr-2"></i>Favorilerim</h2> 
-                <button onclick="closeFavPanel()" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-red-50 transition-colors" style="border:1px solid var(--border-color);color:var(--text-muted)">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>                 
-            </div>             
-            <div id="favList" class="flex flex-col gap-2"></div>             
-        </div>         
-        <div class="w-full max-w-6xl flex-grow mx-auto flex flex-col"> 
-            <div class="text-center mb-0 mt-8 md:mt-16 animate-fade-in"> 
-                <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 mb-5"> 
-                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-[1.5rem] flex items-center justify-center shadow-2xl transform hover:scale-105 hover:rotate-3 transition-all duration-300 shrink-0" style="background:linear-gradient(135deg,#3b82f6 0%,#2563eb 50%,#4f46e5 100%);box-shadow:0 20px 40px -10px rgba(59,130,246,0.5)"> 
-                        <i class="fa-solid fa-crosshairs text-3xl md:text-4xl" style="color:#ffffff;text-shadow:0 2px 8px rgba(0,0,0,0.3)"></i> 
-                    </div>                     
-                    <h1 class="text-5xl md:text-7xl font-black tracking-tighter leading-none select-none"> <span class="text-slate-800 dark:text-white">Fiyat</span><span class="text-blue-600 dark:text-blue-400">Avcısı</span> </h1> 
-                </div>                 
-                <!-- Canlı Döviz Kuru -->                 
-                <div class="kur-bar mt-4 mb-4" id="kurBar"> 
-                    <span class="kur-item"><span class="opacity-50">$</span><span class="kur-val">yükleniyor...</span></span> 
-                </div>                 
-            </div>             
-            <div class="w-full max-w-4xl mx-auto mb-8 relative z-30 animate-fade-in" style="animation-delay:0.1s"> 
-                <div class="search-container rounded-3xl p-2 md:p-3 flex items-center w-full"> 
-                    <div style="color:var(--text-muted)" class="text-xl md:text-2xl ml-3 md:ml-4 mr-2 md:mr-4 shrink-0">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </div>                     
-                    <input type="text" id="queryInput" class="flex-grow bg-transparent border-none outline-none text-slate-900 dark:text-white text-lg md:text-2xl py-3 md:py-4 font-bold placeholder-gray-300 dark:placeholder-slate-500 min-w-0" placeholder="Ürün, Marka veya Model ara..." autocomplete="off" oninput="handleInput(this.value)" onkeydown="handleSuggestKey(event)"> 
-                    <div id="clearBtn" onclick="clearSearch()" class="px-2 md:px-4 text-lg md:text-xl shrink-0 h-full" title="Temizle">
-                        <i class="fa-solid fa-circle-xmark"></i>
-                    </div>
-                    <button class="barcode-scan-btn" onclick="openBarcodeScanner()" title="Barkod Tara"><i class="fa-solid fa-barcode"></i></button>
-                    <button id="searchBtn" onclick="runEngine()" style="color:#ffffff;background:#2563eb" class="hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 px-6 md:px-10 py-3 md:py-5 rounded-2xl font-bold transition-all shadow-lg flex items-center gap-2 md:gap-3 text-base md:text-lg shrink-0 justify-center active:scale-95 hover:shadow-xl ml-2">ARA</button>                     
-                </div>                 
-                <div id="suggestDropdown" class="suggest-dropdown hidden"></div>                 
-                <div id="typoContainer" class="hidden pl-4"></div>                 
-                <div id="historyArea" class="mt-3 px-2 flex flex-wrap gap-2 justify-center md:justify-start hidden"></div>                 
-            </div>             
-            <div id="errorPanel" class="hidden mb-10 mx-auto max-w-lg animate-fade-in w-full"> 
-                <div class="bg-red-50 border border-red-100 rounded-2xl p-4 flex items-center gap-4 justify-center text-red-700 font-bold text-sm shadow-sm"> 
-                    <i class="fa-solid fa-circle-exclamation text-lg shrink-0"></i> <span id="errorText"></span> 
-                </div>                 
-            </div>             
-            <div id="resultInfo" class="hidden mb-3 mt-1 animate-fade-in text-center"> 
-                <span style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.35rem 1rem;border-radius:999px;background:var(--bg-secondary);border:1px solid var(--border-color);font-size:0.78rem;font-weight:700;color:var(--text-secondary)"><i class="fa-solid fa-store" style="opacity:0.6"></i><span id="resultCount">0</span> mağaza bulundu<span id="priceBadge"></span></span> 
-            </div>             
-            <div id="budgetHint" class="hidden budget-hint mb-2"></div>
-            <div id="buyOrWaitCard" class="hidden bow-card w-full max-w-4xl mx-auto mb-2"></div>
-            <div id="shareBar" class="hidden share-bar mb-4"></div>             
-            <div id="livePricesSection" class="hidden w-full mb-2"></div>
-            <div id="gridContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 pb-4 w-full"></div>             
-            <!-- Sonuç altı reklamlar -->
-            <div id="adsenseResultsArea" class="w-full max-w-4xl mx-auto mb-8 hidden">
-                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3432912669665213" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <meta name="google-site-verification" content="nMB3IKgjahJHMbF_t6raK7s-HcOJmxbRgOHiQde53ns" />
+
+    <meta name="description" content="FiyatAvcısı: En güvenilir teknoloji, moda, kozmetik ve kitap fiyat arama motoru.">
+    <meta name="theme-color" content="#2563eb">
+    <title>FiyatAvcısı | Güvenli Alışveriş & Fiyat Arama Motoru</title>
+
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.fiyatavcisi.com.tr/">
+    <meta property="og:title" content="FiyatAvcısı | Güvenli Alışveriş & Fiyat Arama Motoru">
+    <meta property="og:description" content="FiyatAvcısı ile en iyi fiyatları bulun. Teknoloji, moda, kozmetik ve daha fazlası için Türkiye'nin en güvenilir fiyat karşılaştırma sitesi.">
+    <meta property="og:image" content="https://www.fiyatavcisi.com.tr/web-app-manifest-512x512.png">
+    <meta property="og:locale" content="tr_TR">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="FiyatAvcısı | Güvenli Alışveriş & Fiyat Arama Motoru">
+    <meta name="twitter:description" content="FiyatAvcısı ile en iyi fiyatları bulun. Türkiye'nin en güvenilir fiyat karşılaştırma sitesi.">
+    <meta name="twitter:image" content="https://www.fiyatavcisi.com.tr/web-app-manifest-512x512.png">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="FiyatAvcısı">
+    <link rel="canonical" href="https://www.fiyatavcisi.com.tr/">
+
+    <!-- Google Tag Manager / Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17749261970"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-17749261970');</script>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3432912669665213" crossorigin="anonymous"></script>
+
+    <link href="./style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root{--bg-primary:#f8fafc;--bg-secondary:#ffffff;--bg-tertiary:#f1f5f9;--text-primary:#1e293b;--text-secondary:#64748b;--text-muted:#94a3b8;--border-color:#e2e8f0;--shadow-color:rgba(0,0,0,0.04);--card-bg:#ffffff;--footer-bg:#ffffff}
+        .dark{--bg-primary:#0f172a;--bg-secondary:#1e293b;--bg-tertiary:#334155;--text-primary:#f1f5f9;--text-secondary:#94a3b8;--text-muted:#64748b;--border-color:#334155;--shadow-color:rgba(0,0,0,0.3);--card-bg:#1e293b;--footer-bg:#1e293b}
+        body{background-color:var(--bg-primary);color:var(--text-primary);display:flex;flex-direction:column;min-height:100dvh;-webkit-tap-highlight-color:transparent;overflow-x:hidden;transition:background-color 0.3s,color 0.3s}
+        .search-container{background:var(--bg-secondary);border:1px solid var(--border-color);box-shadow:0 10px 30px -10px var(--shadow-color);transition:all 0.3s cubic-bezier(0.25,0.8,0.25,1)}
+        .search-container:focus-within{border-color:#3b82f6;box-shadow:0 25px 50px -12px rgba(59,130,246,0.15);transform:translateY(-2px)}
+        #clearBtn{opacity:0;pointer-events:none;transition:all 0.2s ease;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center}
+        #clearBtn.visible{opacity:1;pointer-events:all}
+        #clearBtn:hover{color:var(--text-secondary)}
+        .base-card{border-radius:1.25rem;min-height:120px;display:flex;flex-direction:column;justify-content:center;padding:1.618rem;position:relative;transition:all 0.25s cubic-bezier(0.25,0.8,0.25,1);cursor:pointer;text-decoration:none;-webkit-user-select:none;user-select:none}
+        .link-card{background:var(--card-bg);border:1px solid var(--border-color)}
+        .link-card:hover{border-color:var(--theme-color);box-shadow:0 16px 32px -8px var(--theme-shadow);transform:translateY(-3px)}
+        .recommended-card{background:#f0fdf4;border:2px solid #16a34a;box-shadow:0 10px 20px -5px rgba(22,163,74,0.08)}
+        .dark .recommended-card{background:#14532d;border-color:#22c55e}
+        .recommended-card:hover{transform:translateY(-3px);box-shadow:0 20px 40px -10px rgba(22,163,74,0.2)}
+        .amazon-aff-card{background:linear-gradient(135deg,#FF9900 0%,#FF6600 60%,#e65000 100%);color:#fff;border:none;display:flex;flex-direction:row;align-items:center;gap:0;position:relative;overflow:hidden}
+        .amazon-aff-card::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.12) 0%,transparent 60%);pointer-events:none}
+        .amazon-aff-card::after{content:"";position:absolute;top:-60px;right:-60px;width:180px;height:180px;background:rgba(255,255,255,0.08);border-radius:50%;pointer-events:none}
+        .amazon-aff-card:hover{transform:translateY(-4px);box-shadow:0 30px 60px -10px rgba(255,100,0,0.55)}
+        .dark .amazon-aff-card{background:linear-gradient(135deg,#FF9900 0%,#FF6600 60%,#e65000 100%)}
+        @keyframes aff-pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,153,0,0.5)}50%{box-shadow:0 0 0 10px rgba(255,153,0,0)}}
+        .amazon-aff-card{animation:aff-pulse 2.5s ease-in-out infinite}
+        .official-card{background:#0f172a;color:white;border:none;display:flex;flex-direction:row;align-items:center}
+        .official-card:hover{transform:translateY(-3px);box-shadow:0 25px 50px -12px rgba(15,23,42,0.4)}
+        .badge{position:absolute;top:-1px;right:-1px;font-size:0.65rem;font-weight:800;padding:6px 14px;border-bottom-left-radius:1rem;border-top-right-radius:1rem;color:white;background:#16a34a;z-index:10;letter-spacing:0.05em}
+        .logo-wrapper{height:2.5rem;width:100%;display:flex;align-items:center;overflow:hidden}
+        .logo-img{height:100%;width:auto;max-width:150px;object-fit:contain;object-position:left;opacity:0.9;transition:0.3s;mix-blend-mode:multiply}
+        .dark .logo-img{mix-blend-mode:normal;filter:brightness(1.1)}
+        .dark .logo-img.dark-invert{filter:brightness(0) invert(1)}
+        .link-card:hover .logo-img,.recommended-card:hover .logo-img{opacity:1;transform:scale(1.05)}
+        .fallback-text{display:none;font-weight:800;font-size:1.25rem;text-transform:uppercase;letter-spacing:-0.02em;line-height:1.1}
+        .link-card .fallback-text{color:var(--text-secondary)}
+        .link-card:hover .fallback-text{color:var(--theme-color)}
+        .history-chip{font-size:0.75rem;font-weight:600;padding:6px 14px;border-radius:999px;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-secondary);cursor:pointer;transition:all 0.2s ease;display:inline-flex;align-items:center;gap:6px}
+        .history-chip:hover{background:var(--bg-tertiary);color:var(--text-primary);border-color:var(--text-muted);transform:translateY(-1px)}
+        .history-clear-btn{font-size:0.7rem;padding:6px 10px;border-radius:999px;background:transparent;border:1px solid var(--border-color);color:var(--text-muted);cursor:pointer;transition:all 0.2s ease;display:inline-flex;align-items:center;justify-content:center;margin-left:4px}
+        .history-clear-btn:hover{background:#fee2e2;border-color:#fca5a5;color:#dc2626}
+        .dark .history-clear-btn:hover{background:#7f1d1d;border-color:#991b1b;color:#fca5a5}
+        .typo-box{font-size:0.9rem;color:#dc2626;margin-top:0.5rem;display:flex;align-items:center;gap:0.5rem;animation:fadeIn 0.3s ease;flex-wrap:wrap}
+        .dark .typo-box{color:#f87171}
+        .typo-link{font-weight:800;color:#2563eb;cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:4px}
+        .typo-link:hover{color:#1e40af}
+        .dark .typo-link{color:#60a5fa}
+        .dark .typo-link:hover{color:#93c5fd}
+        .cat-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:1rem;padding:1.5rem;cursor:pointer;transition:all 0.2s;height:100%;text-align:center}
+        .cat-btn:hover{border-color:#3b82f6;transform:translateY(-3px);box-shadow:0 10px 20px -5px rgba(59,130,246,0.15)}
+        .cat-icon{font-size:1.5rem;color:#3b82f6;margin-bottom:0.5rem}
+        .cat-name{font-weight:700;color:var(--text-primary);font-size:0.9rem}
+        .theme-toggle{position:fixed;top:1rem;right:1rem;z-index:50;width:44px;height:44px;border-radius:50%;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.2rem;transition:all 0.3s;box-shadow:0 4px 12px var(--shadow-color)}
+        .theme-toggle:hover{transform:scale(1.1);box-shadow:0 8px 24px var(--shadow-color)}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+        .btn-loading{pointer-events:none;opacity:0.8}
+        .btn-loading i{display:none}
+        .btn-loading::after{content:"";display:inline-block;width:16px;height:16px;border:2px solid #fff;border-radius:50%;border-top-color:transparent;animation:spin 0.8s linear infinite;margin-left:8px}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .dark .text-slate-900,.dark .text-slate-800,.dark .text-slate-700{color:var(--text-primary)!important}
+        .dark .text-green-700{color:#4ade80!important}
+        .dark .text-green-600{color:#22c55e!important}
+        .dark .bg-red-50{background:#450a0a!important}
+        .dark .border-red-100{border-color:#7f1d1d!important}
+        .dark .text-red-700{color:#fca5a5!important}
+        /* Amazon Affiliate Styles */
+        .aff-section{margin-bottom:3rem}
+        .aff-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;max-width:900px;margin:0 auto}
+        @media(min-width:640px){.aff-grid{grid-template-columns:repeat(3,1fr)}}
+        @media(min-width:1024px){.aff-grid{grid-template-columns:repeat(5,1fr)}}
+        .aff-card{display:flex;flex-direction:column;align-items:center;text-align:center;background:var(--card-bg);border:1px solid var(--border-color);border-radius:1.25rem;padding:1.2rem 0.8rem;text-decoration:none;transition:all 0.25s cubic-bezier(0.25,0.8,0.25,1);position:relative;overflow:hidden}
+        .aff-card:hover{transform:translateY(-4px);box-shadow:0 20px 40px -10px rgba(255,153,0,0.25);border-color:#FF9900}
+        .aff-card .aff-icon{font-size:2rem;margin-bottom:0.6rem;background:linear-gradient(135deg,#FF9900,#FF6600);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .aff-card .aff-name{font-size:0.75rem;font-weight:800;color:var(--text-primary);line-height:1.3;margin-bottom:0.5rem}
+        .aff-card .aff-badge{font-size:0.6rem;font-weight:700;background:#FF9900;color:#fff;padding:3px 10px;border-radius:999px;margin-top:auto;letter-spacing:0.04em}
+        .aff-card .aff-hot{position:absolute;top:8px;right:8px;font-size:0.6rem;font-weight:800;background:#ef4444;color:#fff;padding:2px 7px;border-radius:999px}
+        .aff-deals-btn{display:inline-flex;align-items:center;gap:0.5rem;background:linear-gradient(135deg,#FF9900,#FF6600);color:#fff;font-weight:800;font-size:0.85rem;padding:0.7rem 1.6rem;border-radius:999px;text-decoration:none;transition:all 0.25s;box-shadow:0 8px 20px -5px rgba(255,153,0,0.5);margin-top:1.2rem}
+        .aff-deals-btn:hover{transform:translateY(-2px);box-shadow:0 16px 30px -5px rgba(255,153,0,0.6)}
+        .dark .aff-card{background:var(--card-bg)}
+        /* AdSense banner */
+        .adsense-banner{width:100%;max-width:900px;margin:0 auto 2rem auto;min-height:90px;border-radius:0.75rem;overflow:hidden;background:var(--bg-tertiary)}
+        /* Kur Bar */
+        .kur-bar{display:inline-flex;align-items:center;justify-content:center;gap:0;padding:0.45rem 0.75rem;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:999px;font-size:0.72rem;font-weight:700;color:var(--text-secondary);margin:0 auto 1.25rem auto;cursor:default;overflow:hidden}
+        .kur-item{display:inline-flex;align-items:center;justify-content:center;gap:0.25rem;width:6.5rem;padding:0.1rem 0}
+        .kur-sym{font-weight:700;opacity:0.5;min-width:0.75rem;text-align:center}
+        .kur-val{color:var(--text-primary);font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:0.01em}
+        .kur-sep{width:1px;height:1.2em;background:var(--border-color);flex-shrink:0;margin:0 0.1rem}
+        /* Favoriler Toggle */
+        .fav-toggle-btn{position:fixed;top:1rem;left:1rem;z-index:50;width:44px;height:44px;border-radius:50%;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:all 0.3s;box-shadow:0 4px 12px var(--shadow-color)}
+        .fav-toggle-btn:hover{transform:scale(1.1);color:#ef4444}
+        .fav-count{position:absolute;top:-5px;right:-5px;background:#ef4444;color:#fff;border-radius:50%;font-size:0.5rem;font-weight:900;width:17px;height:17px;display:none;align-items:center;justify-content:center}
+        /* Favoriler Panel */
+        .fav-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:199;opacity:0;pointer-events:none;transition:opacity 0.3s}
+        .fav-overlay.open{opacity:1;pointer-events:all}
+        .fav-panel{position:fixed;top:0;right:-400px;width:370px;max-width:94vw;height:100dvh;background:var(--bg-secondary);border-left:1px solid var(--border-color);box-shadow:-10px 0 50px rgba(0,0,0,0.12);z-index:200;transition:right 0.35s cubic-bezier(0.25,0.8,0.25,1);overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:1rem}
+        .fav-panel.open{right:0}
+        .fav-item{display:flex;align-items:center;gap:0.75rem;padding:0.75rem;border-radius:1rem;background:var(--bg-tertiary);border:1px solid var(--border-color);text-decoration:none;transition:all 0.2s}
+        .fav-item:hover{transform:translateX(4px);border-color:#3b82f6}
+        .fav-item-logo{width:44px;height:32px;object-fit:contain;border-radius:0.5rem;background:#fff;padding:4px;flex-shrink:0}
+        /* Favori Butonu (kart üstünde) */
+        .fav-btn{position:absolute;top:8px;left:8px;width:28px;height:28px;border-radius:50%;background:var(--bg-secondary);border:1px solid var(--border-color);display:flex;align-items:center;justify-content:center;font-size:0.7rem;cursor:pointer;transition:all 0.2s;z-index:20;color:var(--text-muted)}
+        .fav-btn:hover{color:#ef4444;border-color:#fca5a5;transform:scale(1.15)}
+        .fav-btn.active{color:#ef4444;border-color:#ef4444;background:#fff1f2}
+        .dark .fav-btn{background:var(--bg-tertiary)}
+        .dark .fav-btn.active{background:#450a0a}
+        /* Paylaşım */
+        .share-bar{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:0.75rem;animation:fadeIn 0.3s ease}
+        .share-btn{display:inline-flex;align-items:center;gap:0.4rem;font-size:0.7rem;font-weight:700;padding:6px 13px;border-radius:999px;cursor:pointer;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-secondary);transition:all 0.2s;text-decoration:none}
+        .share-btn:hover{transform:translateY(-2px);box-shadow:0 4px 12px var(--shadow-color)}
+        .share-btn.wa{background:#25D366;border-color:#25D366;color:#fff}
+        .share-btn.wa:hover{background:#1da853}
+        .share-btn.tw{background:#000;border-color:#000;color:#fff}
+        .share-btn.tw:hover{background:#333}
+        .share-btn.cp{background:var(--bg-tertiary)}
+        /* Bütçe İpucu */
+        .budget-hint{font-size:0.72rem;font-weight:600;color:var(--text-muted);text-align:center;margin-bottom:0.75rem;padding:0.5rem 1rem;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:999px;max-width:fit-content;margin-left:auto;margin-right:auto;animation:fadeIn 0.3s ease}
+        .budget-hint strong{color:var(--text-secondary)}
+        /* İndirim Takvimi Banner */
+        .takvim-banner{display:flex;align-items:center;gap:1.25rem;padding:1.25rem 1.75rem;border-radius:1.25rem;text-decoration:none;transition:all 0.25s;background:var(--bg-secondary);border:1px solid var(--border-color);max-width:700px;margin:0 auto 2.5rem auto}
+        .takvim-banner:hover{box-shadow:0 12px 32px -8px var(--shadow-color);transform:translateY(-2px);border-color:#2563eb}
+        .takvim-icon{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#2563eb,#4f46e5);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 6px 16px rgba(37,99,235,0.3);font-size:1.3rem;color:#fff}
+        .takvim-text{flex:1;min-width:0}
+        .takvim-title{font-weight:900;font-size:0.95rem;color:var(--text-primary);margin-bottom:0.2rem}
+        .takvim-sub{font-size:0.73rem;color:var(--text-secondary);font-weight:600}
+        .takvim-arr{font-size:1rem;color:var(--text-muted);flex-shrink:0;transition:transform 0.2s}
+        .takvim-banner:hover .takvim-arr{transform:translateX(4px);color:#2563eb}
+        /* Arama Öneri Açılır Menüsü */
+        .suggest-dropdown{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:1.5rem;box-shadow:0 20px 48px -8px var(--shadow-color);z-index:50;overflow:hidden;animation:fadeIn 0.15s ease}
+        .suggest-item{display:flex;align-items:center;gap:0.75rem;padding:0.75rem 1.25rem;font-size:0.9rem;font-weight:700;color:var(--text-primary);cursor:pointer;transition:background 0.12s;border-top:1px solid var(--border-color)}
+        .suggest-item:first-child{border-top:none}
+        .suggest-item:hover,.suggest-item.sg-active{background:var(--bg-tertiary)}
+        .suggest-item i{color:var(--text-muted);font-size:0.7rem;flex-shrink:0;width:14px;text-align:center}
+        /* Fiyat İyi Mi Rozeti */
+        .price-badge{display:inline-flex;align-items:center;gap:0.3rem;font-size:0.62rem;font-weight:800;padding:2px 8px;border-radius:999px;vertical-align:middle;margin-left:0.4rem}
+        .price-badge.low{background:#dcfce7;color:#15803d}.dark .price-badge.low{background:#14532d;color:#4ade80}
+        .price-badge.mid{background:#fef9c3;color:#a16207}.dark .price-badge.mid{background:#422006;color:#facc15}
+        .price-badge.high{background:#fee2e2;color:#b91c1c}.dark .price-badge.high{background:#450a0a;color:#f87171}
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <button class="theme-toggle" onclick="toggleTheme()" title="Tema Değiştir">
+        <i class="fa-solid fa-moon" id="themeIcon"></i>
+    </button>
+    <!-- Ana Sayfa Butonu -->
+    <button onclick="clearSearch()" title="Ana Sayfa" style="position:fixed;top:4.5rem;right:1rem;z-index:50;width:44px;height:44px;border-radius:50%;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:all 0.3s;box-shadow:0 4px 12px var(--shadow-color)" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform=''"><i class="fa-solid fa-house"></i></button>
+    <!-- Favoriler Toggle -->
+    <button class="fav-toggle-btn" onclick="openFavPanel()" title="Favorilerim" id="favToggleBtn">
+        <i class="fa-regular fa-heart"></i>
+        <span class="fav-count" id="favCount">0</span>
+    </button>
+    <!-- Favoriler Panel -->
+    <div class="fav-overlay" id="favOverlay" onclick="closeFavPanel()"></div>
+    <div class="fav-panel" id="favPanel">
+        <div class="flex items-center justify-between mb-2">
+            <h2 class="text-lg font-black" style="color:var(--text-primary)"><i class="fa-solid fa-heart text-red-500 mr-2"></i>Favorilerim</h2>
+            <button onclick="closeFavPanel()" class="w-9 h-9 rounded-full flex items-center justify-center hover:bg-red-50 transition-colors" style="border:1px solid var(--border-color);color:var(--text-muted)"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div id="favList" class="flex flex-col gap-2"></div>
+    </div>
+    <div class="w-full max-w-6xl flex-grow mx-auto flex flex-col">
+
+        <div class="text-center mb-0 mt-8 md:mt-16 animate-fade-in">
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 mb-5">
+                <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-[1.5rem] flex items-center justify-center shadow-2xl transform hover:scale-105 hover:rotate-3 transition-all duration-300 shrink-0" style="background:linear-gradient(135deg,#3b82f6 0%,#2563eb 50%,#4f46e5 100%);box-shadow:0 20px 40px -10px rgba(59,130,246,0.5)">
+                    <i class="fa-solid fa-crosshairs text-3xl md:text-4xl" style="color:#ffffff;text-shadow:0 2px 8px rgba(0,0,0,0.3)"></i>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-black tracking-tighter leading-none select-none">
+                    <span class="text-slate-800 dark:text-white">Fiyat</span><span class="text-blue-600 dark:text-blue-400">Avcısı</span>
+                </h1>
+            </div>
+            <p class="text-slate-500 dark:text-slate-400 font-bold text-[10px] md:text-xs uppercase tracking-[0.3em] md:tracking-[0.4em] opacity-80 pl-1">Güvenli Alışveriş & Fiyat Motoru</p>
+            <!-- Canlı Döviz Kuru -->
+            <div class="kur-bar mt-4 mb-4" id="kurBar">
+                <span class="kur-item"><span class="opacity-50">$</span><span class="kur-val">yükleniyor...</span></span>
+            </div>
+        </div>
+
+        <div class="w-full max-w-4xl mx-auto mb-8 relative z-30 animate-fade-in" style="animation-delay:0.1s">
+            <div class="search-container rounded-3xl p-2 md:p-3 flex items-center w-full">
+                <div style="color:var(--text-muted)" class="text-xl md:text-2xl ml-3 md:ml-4 mr-2 md:mr-4 shrink-0"><i class="fa-solid fa-magnifying-glass"></i></div>
+                <input type="text" id="queryInput" class="flex-grow bg-transparent border-none outline-none text-slate-900 dark:text-white text-lg md:text-2xl py-3 md:py-4 font-bold placeholder-gray-300 dark:placeholder-slate-500 min-w-0" placeholder="Ürün, Marka veya Model ara..." autocomplete="off" oninput="handleInput(this.value)" onkeydown="handleSuggestKey(event)">
+                <div id="clearBtn" onclick="clearSearch()" class="px-2 md:px-4 text-lg md:text-xl shrink-0 h-full" title="Temizle"><i class="fa-solid fa-circle-xmark"></i></div>
+                <button id="searchBtn" onclick="runEngine()" style="color:#ffffff;background:#2563eb" class="hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 px-6 md:px-10 py-3 md:py-5 rounded-2xl font-bold transition-all shadow-lg flex items-center gap-2 md:gap-3 text-base md:text-lg shrink-0 justify-center active:scale-95 hover:shadow-xl ml-2">ARA</button>
+            </div>
+            <div id="suggestDropdown" class="suggest-dropdown hidden"></div>
+            <div id="typoContainer" class="hidden pl-4"></div>
+            <div id="historyArea" class="mt-3 px-2 flex flex-wrap gap-2 justify-center md:justify-start hidden"></div>
+        </div>
+
+        <div id="errorPanel" class="hidden mb-10 mx-auto max-w-lg animate-fade-in w-full">
+            <div class="bg-red-50 border border-red-100 rounded-2xl p-4 flex items-center gap-4 justify-center text-red-700 font-bold text-sm shadow-sm">
+                <i class="fa-solid fa-circle-exclamation text-lg shrink-0"></i> <span id="errorText"></span>
+            </div>
+        </div>
+
+        <div id="resultInfo" class="hidden mb-3 mt-1 animate-fade-in text-center">
+            <span style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.35rem 1rem;border-radius:999px;background:var(--bg-secondary);border:1px solid var(--border-color);font-size:0.78rem;font-weight:700;color:var(--text-secondary)"><i class="fa-solid fa-store" style="opacity:0.6"></i><span id="resultCount">0</span> mağaza bulundu<span id="priceBadge"></span></span>
+        </div>
+        <div id="budgetHint" class="hidden budget-hint mb-2"></div>
+        <div id="shareBar" class="hidden share-bar mb-4"></div>
+        <div id="gridContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 pb-4 w-full"></div>
+
+        <!-- AdSense - Sonuç altı reklam -->
+        <div id="adsenseResultsArea" class="w-full max-w-4xl mx-auto mb-8 hidden">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-3432912669665213"
+                 data-ad-slot="auto"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+
+        <div id="initialContent" class="animate-fade-in" style="animation-delay:0.2s">
+            <div class="mb-12">
+                <h3 class="text-center font-bold text-xs tracking-widest uppercase mb-6" style="color:var(--text-muted)">Popüler Kategoriler</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                    <div class="cat-btn" onclick="quickSearch('iPhone 16 Pro')"><i class="fa-solid fa-mobile-screen-button cat-icon"></i><span class="cat-name">Telefon</span></div>
+                    <div class="cat-btn" onclick="quickSearch('Nike Air Max')"><i class="fa-solid fa-shoe-prints cat-icon"></i><span class="cat-name">Giyim</span></div>
+                    <div class="cat-btn" onclick="quickSearch('RTX 4070')"><i class="fa-solid fa-microchip cat-icon"></i><span class="cat-name">Donanım</span></div>
+                    <div class="cat-btn" onclick="quickSearch('Dyson V15')"><i class="fa-solid fa-broom cat-icon"></i><span class="cat-name">Ev</span></div>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mt-4">
+                    <div class="cat-btn" onclick="quickSearch('Macbook Air M3')"><i class="fa-solid fa-laptop cat-icon"></i><span class="cat-name">Laptop</span></div>
+                    <div class="cat-btn" onclick="quickSearch('Samsung Galaxy S25')"><i class="fa-brands fa-android cat-icon"></i><span class="cat-name">Android Telefon</span></div>
+                    <div class="cat-btn" onclick="quickSearch('PlayStation 5')"><i class="fa-solid fa-gamepad cat-icon"></i><span class="cat-name">Oyun Konsolu</span></div>
+                    <div class="cat-btn" onclick="quickSearch('Airfryer')"><i class="fa-solid fa-blender cat-icon"></i><span class="cat-name">Mutfak</span></div>
+                </div>
+            </div>
+
+            <!-- AdSense Banner -->
+            <div class="adsense-banner">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-3432912669665213"
+                     data-ad-slot="auto"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
                 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-            </div>             
-            <div id="initialContent" class="animate-fade-in" style="animation-delay:0.2s"> 
-                <div class="mb-12"> 
-                    <h3 class="text-center font-bold text-xs tracking-widest uppercase mb-6" style="color:var(--text-muted)">Popüler Kategoriler</h3> 
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto"> 
-                        <div class="cat-btn" onclick="quickSearch('iPhone 16 Pro')">
-                            <i class="fa-solid fa-mobile-screen-button cat-icon"></i>
-                            <span class="cat-name">Telefon</span>
-                        </div>                         
-                        <div class="cat-btn" onclick="quickSearch('Nike Air Max')">
-                            <i class="fa-solid fa-shoe-prints cat-icon"></i>
-                            <span class="cat-name">Giyim</span>
-                        </div>                         
-                        <div class="cat-btn" onclick="quickSearch('RTX 4070')">
-                            <i class="fa-solid fa-microchip cat-icon"></i>
-                            <span class="cat-name">Donanım</span>
-                        </div>                         
-                        <div class="cat-btn" onclick="quickSearch('Dyson V15')">
-                            <i class="fa-solid fa-broom cat-icon"></i>
-                            <span class="cat-name">Ev</span>
-                        </div>                         
-                    </div>                     
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mt-4"> 
-                        <div class="cat-btn" onclick="quickSearch('Macbook Air M3')">
-                            <i class="fa-solid fa-laptop cat-icon"></i>
-                            <span class="cat-name">Laptop</span>
-                        </div>                         
-                        <div class="cat-btn" onclick="quickSearch('Samsung Galaxy S25')">
-                            <i class="fa-brands fa-android cat-icon"></i>
-                            <span class="cat-name">Android Telefon</span>
-                        </div>                         
-                        <div class="cat-btn" onclick="quickSearch('PlayStation 5')">
-                            <i class="fa-solid fa-gamepad cat-icon"></i>
-                            <span class="cat-name">Oyun Konsolu</span>
-                        </div>                         
-                        <div class="cat-btn" onclick="quickSearch('Airfryer')">
-                            <i class="fa-solid fa-blender cat-icon"></i>
-                            <span class="cat-name">Mutfak</span>
-                        </div>                         
-                    </div>
+            </div>
+
+            <!-- Amazon Affiliate Ürünleri -->
+            <div class="aff-section">
+                <h3 class="text-center font-bold text-xs tracking-widest uppercase mb-2" style="color:var(--text-muted)"><i class="fa-brands fa-amazon" style="color:#FF9900"></i> Amazon'da Öne Çıkan Ürünler</h3>
+                <p class="text-center text-[10px] mb-5" style="color:var(--text-muted)">Reklam — Amazon Affiliate Ortaklık Programı kapsamındaki bağlantılar</p>
+                <div class="aff-grid">
+                    <a href="https://amzn.to/4qRMaz6" target="_blank" rel="noopener sponsored" class="aff-card">
+                        <span class="aff-hot">YENİ</span>
+                        <i class="fa-brands fa-apple aff-icon"></i>
+                        <span class="aff-name">iPhone 17</span>
+                        <span class="aff-badge">Amazon'da Gör</span>
+                    </a>
+                    <a href="https://amzn.to/4b86dEI" target="_blank" rel="noopener sponsored" class="aff-card">
+                        <span class="aff-hot">YENİ</span>
+                        <i class="fa-brands fa-apple aff-icon"></i>
+                        <span class="aff-name">iPhone Air</span>
+                        <span class="aff-badge">Amazon'da Gör</span>
+                    </a>
+                    <a href="https://amzn.to/3ZQ5din" target="_blank" rel="noopener sponsored" class="aff-card">
+                        <i class="fa-brands fa-apple aff-icon"></i>
+                        <span class="aff-name">iPhone 17 Pro</span>
+                        <span class="aff-badge">Amazon'da Gör</span>
+                    </a>
+                    <a href="https://amzn.to/3ZPXpx4" target="_blank" rel="noopener sponsored" class="aff-card">
+                        <i class="fa-brands fa-apple aff-icon"></i>
+                        <span class="aff-name">iPhone 17 Pro Max</span>
+                        <span class="aff-badge">Amazon'da Gör</span>
+                    </a>
+                    <a href="https://amzn.to/4rH21C4" target="_blank" rel="noopener sponsored" class="aff-card">
+                        <span class="aff-hot">🔥</span>
+                        <i class="fa-brands fa-android aff-icon"></i>
+                        <span class="aff-name">Samsung Galaxy S25+</span>
+                        <span class="aff-badge">Amazon'da Gör</span>
+                    </a>
+                    <a href="https://amzn.to/4aJSN0l" target="_blank" rel="noopener sponsored" class="aff-card">
+                        <i class="fa-brands fa-android aff-icon"></i>
+                        <span class="aff-name">Samsung Galaxy S25 Ultra</span>
+                        <span class="aff-badge">Amazon'da Gör</span>
+                    </a>
+                    <a href="https://amzn.to/3OJ0Q6d" target="_blank" rel="noopener sponsored" class="aff-card">
+                        <i class="fa-brands fa-apple aff-icon"></i>
+                        <span class="aff-name">iPhone 16e</span>
+                        <span class="aff-badge">Amazon'da Gör</span>
+                    </a>
+                    <a href="https://amzn.to/4kPRZf0" target="_blank" rel="noopener sponsored" class="aff-card">
+                        <i class="fa-brands fa-apple aff-icon"></i>
+                        <span class="aff-name">MacBook Air</span>
+                        <span class="aff-badge">Amazon'da Gör</span>
+                    </a>
+                    <a href="https://amzn.to/4qPuJ27" target="_blank" rel="noopener sponsored" class="aff-card">
+                        <i class="fa-brands fa-apple aff-icon"></i>
+                        <span class="aff-name">AirPods 4</span>
+                        <span class="aff-badge">Amazon'da Gör</span>
+                    </a>
+                    <a href="https://amzn.to/3P0CXqQ" target="_blank" rel="noopener sponsored" class="aff-card">
+                        <span class="aff-hot">%50</span>
+                        <i class="fa-solid fa-tags aff-icon"></i>
+                        <span class="aff-name">Günün Fırsatları</span>
+                        <span class="aff-badge">Tümünü Gör →</span>
+                    </a>
                 </div>
-                <!-- Araçlar -->
-                <div class="tools-row mt-4">
-                    <button class="tool-btn" onclick="openBudgetPlanner()"><i class="fa-solid fa-wallet" style="color:#2563eb"></i> Bütçe Planlayıcısı</button>
-                    <button class="tool-btn" onclick="openBarcodeScanner()"><i class="fa-solid fa-barcode" style="color:#16a34a"></i> Barkod Tara</button>
-                    <a href="indirim-takvimi.html" class="tool-btn"><i class="fa-solid fa-calendar-days" style="color:#f59e0b"></i> İndirim Takvimi</a>
+                <div class="text-center">
+                    <a href="https://amzn.to/3P0CXqQ" target="_blank" rel="noopener sponsored" class="aff-deals-btn">
+                        <i class="fa-brands fa-amazon"></i> Tüm Amazon Fırsatlarını Gör
+                    </a>
                 </div>
-                <!-- Reklam Banner -->
-                <div class="adsense-banner">
-                    <script async data-cfasync="false" src="https://pl28788285.effectivegatecpm.com/ab0e800f0871546e062d998f2129d9ff/invoke.js"></script>
-                    <div id="container-ab0e800f0871546e062d998f2129d9ff"></div>
-                </div>                 
-                <!-- Amazon Affiliate Ürünleri -->                 
-                <div class="aff-section"> 
-                    <h3 class="text-center font-bold text-xs tracking-widest uppercase mb-2" style="color:var(--text-muted)"><i class="fa-brands fa-amazon" style="color:#FF9900"></i> Amazon'da Öne Çıkan Ürünler</h3> 
-                    <p class="text-center text-[10px] mb-5" style="color:var(--text-muted)">Reklam — Amazon Affiliate Ortaklık Programı kapsamındaki bağlantılar</p> 
-                    <div class="aff-grid"> 
-                        <a href="https://amzn.to/4qRMaz6" target="_blank" rel="noopener sponsored" class="aff-card"> <i class="fa-brands fa-apple aff-icon"></i> <span class="aff-name">iPhone 17</span> <span class="aff-badge">Amazon'da Gör</span> </a> 
-                        <a href="https://amzn.to/4b86dEI" target="_blank" rel="noopener sponsored" class="aff-card"> <i class="fa-brands fa-apple aff-icon"></i> <span class="aff-name">iPhone Air</span> <span class="aff-badge">Amazon'da Gör</span> </a> 
-                        <a href="https://amzn.to/3ZQ5din" target="_blank" rel="noopener sponsored" class="aff-card"> <i class="fa-brands fa-apple aff-icon"></i> <span class="aff-name">iPhone 17 Pro</span> <span class="aff-badge">Amazon'da Gör</span> </a> 
-                        <a href="https://amzn.to/3ZPXpx4" target="_blank" rel="noopener sponsored" class="aff-card"> <i class="fa-brands fa-apple aff-icon"></i> <span class="aff-name">iPhone 17 Pro Max</span> <span class="aff-badge">Amazon'da Gör</span> </a> 
-                        <a href="https://amzn.to/4rH21C4" target="_blank" rel="noopener sponsored" class="aff-card"> <i class="fa-brands fa-android aff-icon"></i> <span class="aff-name">Samsung Galaxy S25+</span> <span class="aff-badge">Amazon'da Gör</span> </a> 
-                        <a href="https://amzn.to/4aJSN0l" target="_blank" rel="noopener sponsored" class="aff-card"> <i class="fa-brands fa-android aff-icon"></i> <span class="aff-name">Samsung Galaxy S25 Ultra</span> <span class="aff-badge">Amazon'da Gör</span> </a> 
-                        <a href="https://amzn.to/3OJ0Q6d" target="_blank" rel="noopener sponsored" class="aff-card"> <i class="fa-brands fa-apple aff-icon"></i> <span class="aff-name">iPhone 16e</span> <span class="aff-badge">Amazon'da Gör</span> </a> 
-                        <a href="https://amzn.to/4kPRZf0" target="_blank" rel="noopener sponsored" class="aff-card"> <i class="fa-brands fa-apple aff-icon"></i> <span class="aff-name">MacBook Air</span> <span class="aff-badge">Amazon'da Gör</span> </a> 
-                        <a href="https://amzn.to/4qPuJ27" target="_blank" rel="noopener sponsored" class="aff-card"> <i class="fa-brands fa-apple aff-icon"></i> <span class="aff-name">AirPods 4</span> <span class="aff-badge">Amazon'da Gör</span> </a> 
-                        <a href="https://amzn.to/3P0CXqQ" target="_blank" rel="noopener sponsored" class="aff-card"> <span class="aff-hot">%50</span> <i class="fa-solid fa-tags aff-icon"></i> <span class="aff-name">Günün Fırsatları</span> <span class="aff-badge">Tümünü Gör →</span> </a> 
-                    </div>                     
-                    <div class="text-center"> 
-                        <a href="https://amzn.to/3P0CXqQ" target="_blank" rel="noopener sponsored" class="aff-deals-btn"> <i class="fa-brands fa-amazon"></i> Tüm Amazon Fırsatlarını Gör
- </a> 
-                    </div>                     
-                </div>                 
-                <!-- İndirim Takvimi -->                 
-                <a href="indirim-takvimi.html" class="takvim-banner"> <div class="takvim-icon">
-                        <i class="fa-solid fa-calendar-days"></i>
-                    </div> <div class="takvim-text"> 
-                        <div class="takvim-title">
-                            <i class="fa-solid fa-bolt text-yellow-400 mr-1.5 text-sm"></i>&nbsp;&nbsp;<span style="font-size: 0.95rem;">İndirim Takvimi 2026</span>
-                        </div>                         
-                        <div class="takvim-sub">Black Friday, 11.11, Prime Day, Yılbaşı ve tüm büyük indirim dönemleri</div>                         
-                    </div> <div class="takvim-arr">
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </div> </a> 
-                <div class="mb-8"> 
-                    <h3 class="text-center font-bold text-xs tracking-widest uppercase mb-4" style="color:var(--text-muted)">Trend Ürünler</h3> 
-                    <div class="flex flex-wrap justify-center gap-2 max-w-3xl mx-auto"> 
-                        <span class="history-chip" onclick="quickSearch('Apple Watch')"><i class="fa-solid fa-fire text-orange-500"></i> Apple Watch</span> 
-                        <span class="history-chip" onclick="quickSearch('AirPods Pro')"><i class="fa-solid fa-fire text-orange-500"></i> AirPods Pro</span> 
-                        <span class="history-chip" onclick="quickSearch('Adidas Samba')"><i class="fa-solid fa-fire text-orange-500"></i> Adidas Samba</span> 
-                        <span class="history-chip" onclick="quickSearch('Lego Technic')"><i class="fa-solid fa-fire text-orange-500"></i> Lego Technic</span> 
-                        <span class="history-chip" onclick="quickSearch('Robot Süpürge')"><i class="fa-solid fa-fire text-orange-500"></i> Robot Süpürge</span> 
-                        <span class="history-chip" onclick="quickSearch('Parfüm Erkek')"><i class="fa-solid fa-fire text-orange-500"></i> Parfüm</span> 
-                        <span class="history-chip" onclick="quickSearch('iPhone 17')"><i class="fa-solid fa-fire text-orange-500"></i> iPhone 17</span> 
-                        <span class="history-chip" onclick="quickSearch('MacBook Air M3')"><i class="fa-solid fa-fire text-orange-500"></i> MacBook Air</span> 
-                        <span class="history-chip" onclick="quickSearch('Samsung Galaxy S25')"><i class="fa-solid fa-fire text-orange-500"></i> Galaxy S25</span> 
-                    </div>                     
-                </div>                 
-            </div>             
-        </div>         
-        <footer class="w-full border-t py-12 md:py-16 mt-auto relative z-10 -mx-4 md:-mx-8 px-4 md:px-8 w-[calc(100%+2rem)] md:w-[calc(100%+4rem)] transition-colors" style="background:var(--bg-secondary);border-color:var(--border-color)"> 
-            <div class="max-w-5xl mx-auto text-center"> 
-                <div class="mb-10"> 
-                    <a href="mailto:support@fiyatavcisi.com.tr" class="inline-flex items-center gap-2 font-bold transition-all px-6 py-3 rounded-full text-xs md:text-sm shadow-sm hover:shadow-lg hover:-translate-y-0.5" style="background:var(--bg-tertiary);color:var(--text-primary);border:1px solid var(--border-color)"> <i class="fa-solid fa-envelope text-blue-500"></i> <span>support@fiyatavcisi.com.tr</span> </a> 
-                </div>                 
-                <div class="flex justify-center gap-6 mb-8 text-xs font-bold" style="color:var(--text-secondary)"> 
-                    <a href="gizlilik.html" class="hover:text-blue-500 transition-colors">Gizlilik Politikası</a> 
-                    <a href="kullanim.html" class="hover:text-blue-500 transition-colors">Kullanım Koşulları</a> 
-                    <a href="cerez.html" class="hover:text-blue-500 transition-colors">Çerez Politikası</a> 
-                    <a href="indirim-takvimi.html" class="hover:text-blue-500 transition-colors">İndirim Takvimi</a> 
-                </div>                 
-                <div class="text-[10px] md:text-[11px] leading-relaxed space-y-3 border-t pt-8 max-w-3xl mx-auto opacity-80" style="color:var(--text-muted);border-color:var(--border-color)"> 
-                    <p><strong>YASAL UYARI:</strong> FiyatAvcısı, bir e-ticaret sitesi değildir. Kullanıcıları güvenilir satıcıların resmi sitelerine yönlendirir.</p> 
-                    <p><strong>AMAZON ORTAKLIK PROGRAMI:</strong> FiyatAvcısı, Amazon.com.tr Ortaklık Programı'na katılmaktadır. Bu sitedeki Amazon bağlantıları affiliate (ortaklık) linklerdir; bu linkler aracılığıyla yapılan alışverişlerden komisyon kazanabiliriz. Bu durum ürün fiyatlarını etkilemez.</p> 
-                    <p class="pt-6 opacity-60 font-mono font-medium text-[9px] uppercase tracking-widest">&copy; 2026 FiyatAvcısı Inc. Tüm hakları saklıdır.</p> 
-                </div>                 
-            </div>             
-        </footer>         
-        <script>
+            </div>
+
+            <!-- İndirim Takvimi -->
+            <a href="indirim-takvimi.html" class="takvim-banner">
+                <div class="takvim-icon"><i class="fa-solid fa-calendar-days"></i></div>
+                <div class="takvim-text">
+                    <div class="takvim-title"><i class="fa-solid fa-bolt text-yellow-400 mr-1.5 text-sm"></i>İndirim Takvimi 2026</div>
+                    <div class="takvim-sub">Black Friday, 11.11, Prime Day, Yılbaşı ve tüm büyük indirim dönemleri</div>
+                </div>
+                <div class="takvim-arr"><i class="fa-solid fa-chevron-right"></i></div>
+            </a>
+            <div class="mb-8">
+                <h3 class="text-center font-bold text-xs tracking-widest uppercase mb-4" style="color:var(--text-muted)">Trend Ürünler</h3>
+                <div class="flex flex-wrap justify-center gap-2 max-w-3xl mx-auto">
+                    <span class="history-chip" onclick="quickSearch('Apple Watch')"><i class="fa-solid fa-fire text-orange-500"></i> Apple Watch</span>
+                    <span class="history-chip" onclick="quickSearch('AirPods Pro')"><i class="fa-solid fa-fire text-orange-500"></i> AirPods Pro</span>
+                    <span class="history-chip" onclick="quickSearch('Adidas Samba')"><i class="fa-solid fa-fire text-orange-500"></i> Adidas Samba</span>
+                    <span class="history-chip" onclick="quickSearch('Lego Technic')"><i class="fa-solid fa-fire text-orange-500"></i> Lego Technic</span>
+                    <span class="history-chip" onclick="quickSearch('Robot Süpürge')"><i class="fa-solid fa-fire text-orange-500"></i> Robot Süpürge</span>
+                    <span class="history-chip" onclick="quickSearch('Parfüm Erkek')"><i class="fa-solid fa-fire text-orange-500"></i> Parfüm</span>
+                    <span class="history-chip" onclick="quickSearch('iPhone 17')"><i class="fa-solid fa-fire text-orange-500"></i> iPhone 17</span>
+                    <span class="history-chip" onclick="quickSearch('MacBook Air M3')"><i class="fa-solid fa-fire text-orange-500"></i> MacBook Air</span>
+                    <span class="history-chip" onclick="quickSearch('Samsung Galaxy S25')"><i class="fa-solid fa-fire text-orange-500"></i> Galaxy S25</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="w-full border-t py-12 md:py-16 mt-auto relative z-10 -mx-4 md:-mx-8 px-4 md:px-8 w-[calc(100%+2rem)] md:w-[calc(100%+4rem)] transition-colors" style="background:var(--bg-secondary);border-color:var(--border-color)">
+        <div class="max-w-5xl mx-auto text-center">
+            <div class="mb-10">
+                <a href="mailto:support@fiyatavcisi.com.tr" class="inline-flex items-center gap-2 font-bold transition-all px-6 py-3 rounded-full text-xs md:text-sm shadow-sm hover:shadow-lg hover:-translate-y-0.5" style="background:var(--bg-tertiary);color:var(--text-primary);border:1px solid var(--border-color)">
+                    <i class="fa-solid fa-envelope text-blue-500"></i>
+                    <span>support@fiyatavcisi.com.tr</span>
+                </a>
+            </div>
+            <div class="flex justify-center gap-6 mb-8 text-xs font-bold" style="color:var(--text-secondary)">
+                <a href="gizlilik.html" class="hover:text-blue-500 transition-colors">Gizlilik Politikası</a>
+                <a href="kullanim.html" class="hover:text-blue-500 transition-colors">Kullanım Koşulları</a>
+                <a href="cerez.html" class="hover:text-blue-500 transition-colors">Çerez Politikası</a>
+                <a href="indirim-takvimi.html" class="hover:text-blue-500 transition-colors">İndirim Takvimi</a>
+            </div>
+            <div class="text-[10px] md:text-[11px] leading-relaxed space-y-3 border-t pt-8 max-w-3xl mx-auto opacity-80" style="color:var(--text-muted);border-color:var(--border-color)">
+                <p><strong>YASAL UYARI:</strong> FiyatAvcısı, bir e-ticaret sitesi değildir. Kullanıcıları güvenilir satıcıların resmi sitelerine yönlendirir.</p>
+                <p><strong>AMAZON ORTAKLIK PROGRAMI:</strong> FiyatAvcısı, Amazon.com.tr Ortaklık Programı'na katılmaktadır. Bu sitedeki Amazon bağlantıları affiliate (ortaklık) linklerdir; bu linkler aracılığıyla yapılan alışverişlerden komisyon kazanabiliriz. Bu durum ürün fiyatlarını etkilemez.</p>
+                <p class="pt-6 opacity-60 font-mono font-medium text-[9px] uppercase tracking-widest">&copy; 2026 FiyatAvcısı Inc. Tüm hakları saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
         // ==================== VERİTABANI - ARALIK 2025 ====================
 
         // PC Donanım & Gaming (2 Aralık 2025 Güncel)
@@ -1194,7 +1337,7 @@
         function clearHistory(){localStorage.removeItem('ph_hist');renderHistory();document.getElementById('gridContainer').innerHTML='';document.getElementById('resultInfo').classList.add('hidden');document.getElementById('initialContent').classList.remove('hidden')}
         function renderHistory(){const c=document.getElementById('historyArea');const h=JSON.parse(localStorage.getItem('ph_hist')||'[]');if(h.length===0){c.classList.add('hidden');return}c.innerHTML=`<span class="text-xs font-bold text-slate-300 self-center mr-1">SON:</span>`;h.forEach(i=>{const chip=document.createElement('div');chip.className='history-chip';chip.innerHTML=`<i class="fa-solid fa-clock-rotate-left text-[10px] text-slate-400"></i> ${i}`;chip.onclick=()=>{document.getElementById('queryInput').value=i;runEngine()};c.appendChild(chip)});const clearBtn=document.createElement('button');clearBtn.className='history-clear-btn';clearBtn.innerHTML='<i class="fa-solid fa-trash-can"></i>';clearBtn.title='Geçmişi Temizle';clearBtn.onclick=(e)=>{e.stopPropagation();clearHistory()};c.appendChild(clearBtn);c.classList.remove('hidden')}
         function toggleClearBtn(){const i=document.getElementById('queryInput'),b=document.getElementById('clearBtn');if(i.value.length>0)b.classList.add('visible');else b.classList.remove('visible')}
-        function clearSearch(){document.getElementById('queryInput').value='';document.getElementById('gridContainer').innerHTML='';document.getElementById('errorPanel').classList.add('hidden');document.getElementById('typoContainer').classList.add('hidden');document.getElementById('resultInfo').classList.add('hidden');document.getElementById('shareBar').classList.add('hidden');document.getElementById('budgetHint').classList.add('hidden');const _bow=document.getElementById('buyOrWaitCard');if(_bow)_bow.classList.add('hidden');document.getElementById('adsenseResultsArea').classList.add('hidden');const pb=document.getElementById('priceBadge');if(pb)pb.innerHTML='';document.getElementById('initialContent').classList.remove('hidden');updateUrl('');toggleClearBtn();hideSuggest();document.getElementById('queryInput').focus()}
+        function clearSearch(){document.getElementById('queryInput').value='';document.getElementById('gridContainer').innerHTML='';document.getElementById('errorPanel').classList.add('hidden');document.getElementById('typoContainer').classList.add('hidden');document.getElementById('resultInfo').classList.add('hidden');document.getElementById('shareBar').classList.add('hidden');document.getElementById('budgetHint').classList.add('hidden');document.getElementById('adsenseResultsArea').classList.add('hidden');const pb=document.getElementById('priceBadge');if(pb)pb.innerHTML='';document.getElementById('initialContent').classList.remove('hidden');updateUrl('');toggleClearBtn();hideSuggest();document.getElementById('queryInput').focus()}
 
         // ==================== ARAMA MOTORU ====================
 
@@ -1210,7 +1353,6 @@
                 toggleClearBtn();
             }
             grid.innerHTML='';
-            const _lps=document.getElementById('livePricesSection');if(_lps){_lps.innerHTML='';_lps.classList.add('hidden');}
             err.classList.add('hidden');
             document.getElementById('typoContainer').classList.add('hidden');
             document.getElementById('resultInfo').classList.add('hidden');
@@ -1400,32 +1542,7 @@
                         }
                     },150);
                 }
-                // Gerçek zamanlı fiyatları paralelde çek
-                fetchLivePrices(q);
             },300);
-        }
-
-        async function fetchLivePrices(q){
-            const sec=document.getElementById('livePricesSection');
-            if(!sec)return;
-            const skels=Array(4).fill('<div class="lp-skeleton"></div>').join('');
-            sec.innerHTML='<div class="lp-section"><div class="lp-header"><i class="fa-solid fa-bolt" style="color:#f59e0b"></i> Gerçek Zamanlı Fiyatlar</div><div class="lp-grid">'+skels+'</div></div>';
-            sec.classList.remove('hidden');
-            try{
-                const res=await fetch('/.netlify/functions/search?q='+encodeURIComponent(q));
-                if(!res.ok)throw new Error('api');
-                const d=await res.json();
-                if(!d.ok||!d.products||d.products.length===0){sec.classList.add('hidden');return;}
-                const cards=d.products.map(function(p){
-                    const img=p.image?'<img class="lp-img" src="'+p.image+'" alt="" loading="lazy" onerror="this.style.display=\'none\'">':'<div style="height:80px"></div>';
-                    const lp=p.listPrice&&p.listPrice!==p.price?'<div class="lp-listprice">'+p.listPrice+'</div>':'';
-                    const sh=p.shipping?' &middot; '+p.shipping:'';
-                    return '<a class="lp-card animate-fade-in" href="'+p.url+'" target="_blank" rel="noopener noreferrer">'+img+'<div class="lp-title">'+p.title+'</div><div class="lp-price">'+(p.price||'')+'</div>'+lp+'<div class="lp-store">'+(p.store||'')+sh+'</div></a>';
-                }).join('');
-                sec.innerHTML='<div class="lp-section"><div class="lp-header"><i class="fa-solid fa-bolt" style="color:#f59e0b"></i> Gerçek Zamanlı Fiyatlar <span style="font-weight:500;opacity:0.6">&mdash; '+d.products.length+' ürün</span></div><div class="lp-grid">'+cards+'</div></div>';
-            }catch(e){
-                sec.classList.add('hidden');
-            }
         }
 
         function createCard(n,l,u,t,i,td){
@@ -1606,8 +1723,7 @@
                 const eur=Math.round(usd*(RATES.usd/RATES.eur));
                 h.innerHTML=`<i class="fa-solid fa-tag mr-1.5 text-blue-400"></i>Uluslararası fiyat: <strong>$${usd.toLocaleString('en-US')}</strong> &middot; <strong>€${eur.toLocaleString('en-US')}</strong> <span class="opacity-40 text-[10px] ml-1">(MSRP)</span>`;
                 h.classList.remove('hidden');
-                showBuyOrWait(q,entry);
-            } else {h.classList.add('hidden');showBuyOrWait(q,null);}
+            } else {h.classList.add('hidden');}
         }
 
         // ==================== FAVORİLER ====================
@@ -1713,153 +1829,10 @@
         }
         document.addEventListener('click',(e)=>{if(!e.target.closest('.w-full.max-w-4xl'))hideSuggest();});
 
-        // ==================== GÜVEN ENDEKSİ + KARGO ====================
-        const TRUST_INDEX={
-            'AMAZON':{s:5,t:'ETBİS Kaydı'},
-            'HEPSIBURADA':{s:5,t:'Halka Açık Şirket'},
-            'TRENDYOL':{s:5,t:'ETBİS Kaydı'},
-            'MEDIAMARKT':{s:5,t:'Uluslararası Zincir'},
-            'TEKNOSA':{s:5,t:'BİST Şiirketi'},
-            'VATAN':{s:5,t:'ETBİS Kaydı'},
-            'N11':{s:4,t:'ETBİS Kaydı'},
-            'INCEHESAP':{s:4,t:'ETBİS Kaydı'},
-            'ITOPYA':{s:4,t:'ETBİS Kaydı'},
-            'SINERJI':{s:4,t:'ETBİS Kaydı'},
-            'BOYNER':{s:5,t:'ETBİS Kaydı'},
-            'KOÇTAŞ':{s:5,t:'ETBİS Kaydı'},
-            'IKEA':{s:5,t:'Uluslararası Zincir'},
-            'SEPHORA':{s:5,t:'Uluslararası Zincir'},
-            'WATSONS':{s:5,t:'Uluslararası Zincir'},
-            'TROY':{s:4,t:'Apple Yetkili'},
-            'DECATHLON':{s:5,t:'Uluslararası Zincir'},
-            'INTERSPORT':{s:5,t:'Uluslararası Zincir'},
-            'D&R':{s:4,t:'ETBİS Kaydı'},
-            'GRATIS':{s:4,t:'ETBİS Kaydı'},
-            'ROSSMANN':{s:4,t:'Uluslararası Zincir'},
-            'BAUHAUS':{s:4,t:'Uluslararası Zincir'},
-            'SUPERSTEP':{s:4,t:'ETBİS Kaydı'},
-            'SNEAKS UP':{s:4,t:'ETBİS Kaydı'},
-            'SPORTIVE':{s:4,t:'ETBİS Kaydı'},
-            'KITAPYURDU':{s:4,t:'ETBİS Kaydı'},
-            'BKM KİTAP':{s:4,t:'ETBİS Kaydı'},
-            'İDEFX':{s:4,t:'ETBİS Kaydı'},
-            'PETİ':{s:4,t:'ETBİS Kaydı'},
-            'TOYZZ SHOP':{s:4,t:'ETBİS Kaydı'},
-            'ÇİÇEKSEPETİ':{s:5,t:'ETBİS Kaydı'},
-        };
-        const SHIP_EST={
-            'AMAZON':'Prime: Ücretsiz',
-            'HEPSIBURADA':'~₺39–59',
-            'TRENDYOL':'~₺25–39',
-            'N11':'~₺35–49',
-            'MEDIAMARKT':'Mağazada ücretsiz',
-            'TEKNOSA':'Mağazada ücretsiz',
-            'VATAN':'Mağazada ücretsiz',
-            'INCEHESAP':'~₺50–75',
-            'ITOPYA':'~₺50–75',
-            'SINERJI':'~₺50–75',
-        };
-
-        // ==================== SATIN AL MI? BEKLE Mİ? ====================
-        function showBuyOrWait(q,entry){
-            const card=document.getElementById('buyOrWaitCard');
-            if(!card)return;
-            if(!entry){card.classList.add('hidden');return;}
-            const ql=q.toLowerCase();
-            const isNew=NEW_GEN.some(k=>ql.includes(k));
-            const isOld=OLD_GEN.some(k=>ql.includes(k));
-            const usdHigh=RATES.usd&&RATES.usd>42;
-            let icon,cls,title,detail;
-            if(isNew){icon='⚡';cls='bow-buy';title='Yeni Nesil — Şimdi Alın';detail='Piyasaya yeni çıktı, yakın dönemde fiyat düşüşü beklenmiyor.';}
-            else if(isOld){icon='✅';cls='bow-buy';title='Alım İçin İyi Zaman';detail='Bir önceki nesil ürün, fiyatlar %15–30 gerilemiş durumda.';}
-            else if(usdHigh){icon='⚠️';cls='bow-wait';title='Döviz Yüksek — Bekleyebilirsiniz';detail=`Dolar ₺${RATES.usd.toFixed(1)} seviyesinde. Kur gerilemesi fiyatlara yansıyabilir.`;}
-            else{icon='📊';cls='bow-neutral';title='Fiyatları Karşılaştırın';detail='Farklı mağazalar arasında fiyat farkı var, tüm seçenekleri inceleyin.';}
-            const msrpTRY=RATES.usd?Math.round(entry.u*RATES.usd/100)*100:0;
-            card.innerHTML=`<div class="bow-icon">${icon}</div><div style="flex:1;min-width:0"><div class="font-black text-sm" style="color:var(--text-primary)">${title}</div><div class="text-xs mt-0.5 font-semibold" style="color:var(--text-secondary)">${detail}</div></div>${msrpTRY?`<div class="text-right flex-shrink-0"><div class="text-[10px] font-bold opacity-50 uppercase">MSRP ₺</div><div class="font-black" style="color:var(--text-primary);font-size:1rem">~₺${msrpTRY.toLocaleString('tr-TR')}</div></div>`:''}`;  
-            card.className=`bow-card w-full max-w-4xl mx-auto mb-2 ${cls}`;
-            card.classList.remove('hidden');
-        }
-
-        // ==================== BÜTÇE PLANLAYCISI ====================
-        function openBudgetPlanner(){
-            document.getElementById('bpOverlay').classList.remove('hidden');
-            document.getElementById('bpInput').value='';
-            document.getElementById('bpResults').innerHTML='<p class="text-sm font-medium text-center py-4" style="color:var(--text-muted)">Yukarıya bütçenizi girin...</p>';
-            setTimeout(()=>document.getElementById('bpInput').focus(),80);
-        }
-        function closeBudgetPlanner(){document.getElementById('bpOverlay').classList.add('hidden');}
-        function runBudgetPlanner(){
-            const raw=document.getElementById('bpInput').value;
-            const budget=parseFloat(raw.replace(/\./g,'').replace(',','.'));
-            const out=document.getElementById('bpResults');
-            if(!raw||isNaN(budget)||budget<500){out.innerHTML='<p class="text-sm font-bold text-center" style="color:var(--text-muted)">Geçerli bir bütçe girin (min ₺500)</p>';return;}
-            if(!RATES.usd){out.innerHTML='<p class="text-sm text-center py-2" style="color:var(--text-muted)">Döviz kuru yükleniyor...</p>';return;}
-            const results=PRICE_DB.map(p=>({...p,tryPrice:Math.round(p.u*RATES.usd/100)*100})).filter(p=>p.tryPrice<=budget).sort((a,b)=>b.tryPrice-a.tryPrice);
-            if(!results.length){out.innerHTML=`<p class="text-sm font-bold text-center py-4" style="color:var(--text-muted)">₺${budget.toLocaleString('tr-TR')} bütçeye uygun ürün katalogda bulunamadı.</p>`;return;}
-            out.innerHTML=`<div class="text-xs font-bold mb-2" style="color:var(--text-muted)">₺${budget.toLocaleString('tr-TR')} bütçeye uygun ürünler (${results.length} adet):</div>`+results.map(p=>{const nm=p.k[0].replace(/\b\w/g,c=>c.toUpperCase());return`<div class="bp-row" onclick="closeBudgetPlanner();document.getElementById('queryInput').value='${p.k[0]}';runEngine();"><span class="font-extrabold text-sm" style="color:var(--text-primary)">${nm}</span><span class="font-black text-sm" style="color:#16a34a">~₺${p.tryPrice.toLocaleString('tr-TR')}</span></div>`;}).join('');
-        }
-
-        // ==================== BARKOD TARAYICI ====================
-        let _bcStream=null,_bcDetector=null,_bcTimer=null;
-        function openBarcodeScanner(){
-            if(!('BarcodeDetector'in window)){
-                if(confirm('Barkod tarayıcı bu tarayıcıda desteklenmiyor (Chrome/Edge önerilir).\n\nGoogle Lens ile devam etmek ister misiniz?'))window.open('https://lens.google.com/','_blank');
-                return;
-            }
-            document.getElementById('bcOverlay').classList.remove('hidden');
-            document.getElementById('bcMsg').textContent='Kamera başlatılıyor...';
-            navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}).then(stream=>{
-                _bcStream=stream;
-                const v=document.getElementById('bcVideo');
-                v.srcObject=stream;
-                _bcDetector=new BarcodeDetector({formats:['ean_13','ean_8','qr_code','upc_a','upc_e','code_128','code_39']});
-                document.getElementById('bcMsg').textContent='Barkodu kameraya gösterin...';
-                _bcTimer=setInterval(async()=>{
-                    try{const bs=await _bcDetector.detect(v);if(bs.length>0){const val=bs[0].rawValue;closeBarcodeScanner();document.getElementById('queryInput').value=val;handleInput(val);runEngine();}}
-                    catch(e){}
-                },500);
-            }).catch(()=>{
-                document.getElementById('bcMsg').textContent='Kamera erişimi reddedildi veya mevcut değil.';
-            });
-        }
-        function closeBarcodeScanner(){
-            document.getElementById('bcOverlay').classList.add('hidden');
-            if(_bcTimer)clearInterval(_bcTimer);
-            if(_bcStream)_bcStream.getTracks().forEach(t=>t.stop());
-            _bcStream=null;_bcDetector=null;_bcTimer=null;
-        }
-
         initTheme();
         window.onload=()=>{document.getElementById('queryInput').focus();renderHistory();fetchRates();updateFavCount();setTimeout(initUrlSearch,100);registerSW();};
-
         document.getElementById('queryInput').addEventListener('keypress',(e)=>{if(e.key==='Enter')runEngine()});
         document.addEventListener('keydown',(e)=>{if(e.key==='/'&&document.activeElement!==document.getElementById('queryInput')){e.preventDefault();document.getElementById('queryInput').focus();}});
-    </script>         
-    <!-- Bütçe Planlayıcı Modalı -->
-    <div id="bpOverlay" class="bp-overlay hidden" onclick="if(event.target===this)closeBudgetPlanner()">
-        <div class="bp-modal">
-            <div class="flex items-center justify-between mb-4">
-                <div>
-                    <h2 class="text-xl font-black" style="color:var(--text-primary)"><i class="fa-solid fa-wallet text-blue-500 mr-2"></i>Bütçe Planlayıcısı</h2>
-                    <p class="text-xs font-semibold mt-0.5" style="color:var(--text-muted)">Bütçenizi girin, hangi ürünlere erişebileceğinizi görün</p>
-                </div>
-                <button onclick="closeBudgetPlanner()" class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style="background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-muted)"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <input id="bpInput" type="number" placeholder="Bütçeniz (₺)" class="bp-input mb-4" oninput="runBudgetPlanner()" min="500">
-            <div id="bpResults"><p class="text-sm font-medium text-center py-4" style="color:var(--text-muted)">Yukarıya bütçenizi girin...</p></div>
-            <p class="text-[10px] mt-3 text-center font-medium" style="color:var(--text-muted)">* MSRP bazlı tahmini TRY karşılığıdır; güncel kur ile hesaplanır. Ürüne tıklayarak fiyat karşılaştırması yapılabilir.</p>
-        </div>
-    </div>
-    <!-- Barkod Taratıcı Modalı -->
-    <div id="bcOverlay" class="bc-overlay hidden" onclick="if(event.target===this)closeBarcodeScanner()">
-        <div class="bc-modal">
-            <div class="flex items-center justify-between mb-3">
-                <h2 class="text-sm font-black text-white"><i class="fa-solid fa-barcode mr-2 text-green-400"></i>Barkod Tara</h2>
-                <button onclick="closeBarcodeScanner()" class="w-8 h-8 rounded-full flex items-center justify-center" style="background:rgba(255,255,255,0.1);color:white"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <video id="bcVideo" class="w-full rounded-xl mb-3" style="max-height:240px;background:#000" autoplay muted playsinline></video>
-            <p id="bcMsg" class="text-xs text-gray-400 font-semibold">Barkodu kameraya gösterin...</p>
-        </div>
-    </div>
-    </body>     
+    </script>
+</body>
 </html>
