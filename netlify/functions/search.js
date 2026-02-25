@@ -65,7 +65,7 @@ function httpsGet(path) {
       }
     );
     req.on('error', reject);
-    req.setTimeout(9000, () => { req.destroy(); reject(new Error('timeout')); });
+    req.setTimeout(7000, () => { req.destroy(); reject(new Error('timeout')); });
   });
 }
 

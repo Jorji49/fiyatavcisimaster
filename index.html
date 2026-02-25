@@ -1345,7 +1345,8 @@
                         let cardType=highlight?"highlight":"normal";
                         if(m.name==="AMAZON"){
                             const affUrl=getAffiliateUrl(q);
-                            if(affUrl){cardUrl=affUrl;cardType="affiliate";}
+                            cardUrl=affUrl||(m.url+encodeURIComponent(q));
+                            cardType="affiliate";
                         }
                         createCard(m.name,m.logo,cardUrl,cardType,null,m);
                     }
@@ -1405,9 +1406,12 @@
                 loadingEl.style.cssText='font-size:0.72rem;opacity:0.5;font-style:italic;text-align:center;margin-top:0.5rem';
                 grid.insertAdjacentElement('afterend',loadingEl);
             }
-            loadingEl.textContent='Canl\u0131 fiyatlar y\u00fckleniyor\u2026';
+            loadingEl.textContent='Canlı fiyatlar yükleniyor…';
+            const controller=new AbortController();
+            const _timer=setTimeout(()=>controller.abort(),14000);
             try{
-                const res=await fetch('/.netlify/functions/search?q='+encodeURIComponent(q));
+                const res=await fetch('/.netlify/functions/search?q='+encodeURIComponent(q),{signal:controller.signal});
+                clearTimeout(_timer);
                 if(!res.ok){loadingEl.textContent='';return;}
                 const d=await res.json();
                 if(!d.ok||!d.products||!d.products.length){loadingEl.textContent='';return;}
@@ -1435,6 +1439,7 @@
                 });
                 loadingEl.textContent='';
             }catch(e){
+                clearTimeout(_timer);
                 loadingEl.textContent='';
             }
         }
