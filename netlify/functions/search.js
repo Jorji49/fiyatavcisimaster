@@ -13,16 +13,28 @@ const TR_STORES = [
   'garantili','amazon','migros','peti'
 ];
 
-// Aksesuar / alakasız ürün kelimeleri
+// Aksesuar / alakasız ürün kelimeleri (tam kelime eşleşmesi yapılacaklar * ile işaretli)
 const EXCLUDE_WORDS = [
   'kılıf','case','cover','koruyucu','ekran koruyucu','ekran filmi',
   'temperli cam','cam filmi','silikon','arka kapak',
-  'şarj aleti','şarj kablosu','kablo','adaptör','adapter','charger','cable','usb',
-  'askı','strap','band','kayış','tutucu','mount','holder','stand',
+  'şarj aleti','şarj kablosu','adaptör','adapter','charger',
+  'askı','strap','kayış','tutucu','mount','holder',
   'kol bandı','bileklik','dock','hub',
   'temizleme','temizlik','cleaning',
   'mouse pad','mousepad'
 ];
+
+// Tam kelime sınırıyla eşleşmesi gereken kelimeler (kablo ama kablosuz değil, stand ama standard değil, band ama bandı farklı)
+const EXCLUDE_EXACT = ['kablo','cable','usb','stand','band'];
+
+function matchesExcludeExact(title) {
+  for (const w of EXCLUDE_EXACT) {
+    // Kelimenin kendisi geçmeli ama daha uzun bir kelimenin parçası olmamalı
+    const re = new RegExp('(^|[\\s,;.!?/\\-_()])' + w + '($|[\\s,;.!?/\\-_()sı])', 'i');
+    if (re.test(title)) return true;
+  }
+  return false;
+}
 
 // Model varyant kelimeleri (uzundan kısaya sıralı)
 const MODEL_VARIANTS = ['pro max','fan edition','pro','plus','max','ultra','air','edge','lite','fe'];
@@ -40,6 +52,8 @@ function isRelevant(title, query) {
   for (const w of EXCLUDE_WORDS) {
     if (t.includes(w)) return false;
   }
+
+  if (matchesExcludeExact(t)) return false;
 
   // Model kesinliği: sorgu rakam içeriyorsa sorguda olmayan varyantları engelle
   const hasNumber = /\d/.test(q);
@@ -65,7 +79,7 @@ function httpsGet(path) {
       }
     );
     req.on('error', reject);
-    req.setTimeout(7000, () => { req.destroy(); reject(new Error('timeout')); });
+    req.setTimeout(9000, () => { req.destroy(); reject(new Error('timeout')); });
   });
 }
 
@@ -75,7 +89,7 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: JSON.stringify({ error: 'q parametresi gerekli' }) };
   }
 
-  const path = '/search-v2?q=' + encodeURIComponent(q) + '&country=tr&language=tr&page=1&limit=40&sort_by=BEST_MATCH&product_condition=ANY';
+  const path = '/search-v2?q=' + encodeURIComponent(q) + '&country=tr&language=tr&page=1&limit=30&sort_by=BEST_MATCH&product_condition=ANY';
 
   try {
     const { body } = await httpsGet(path);
