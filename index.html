@@ -1390,24 +1390,28 @@
 
         function _restoreSlot(card,slot){
             if(card.classList.contains('recommended-card')){
-                slot.innerHTML='Fiyatı Gör <i class="fa-solid fa-chevron-right text-xs"></i>';
+                slot.innerHTML='Fiyat\u0131 G\u00f6r <i class="fa-solid fa-chevron-right text-xs"></i>';
             } else {
                 slot.innerHTML='';
             }
         }
         async function fetchAndInjectPrices(q){
-            // Yükleniyor göstergesi
-            const allCards=document.querySelectorAll('[data-store-key]');
-            allCards.forEach(function(card){
-                const slot=card.querySelector('.card-price-slot');
-                if(!slot)return;
-                slot.innerHTML='<span style="font-size:0.75rem;opacity:0.55;font-style:italic;animation:pulse 1s infinite">yükleniyor…</span>';
-            });
+            // K\u00fc\u00e7\u00fck y\u00fckleniyor etiketi
+            const grid=document.getElementById('gridContainer');
+            let loadingEl=document.getElementById('priceLoadingHint');
+            if(!loadingEl){
+                loadingEl=document.createElement('p');
+                loadingEl.id='priceLoadingHint';
+                loadingEl.style.cssText='font-size:0.72rem;opacity:0.5;font-style:italic;text-align:center;margin-top:0.5rem';
+                grid.insertAdjacentElement('afterend',loadingEl);
+            }
+            loadingEl.textContent='Canl\u0131 fiyatlar y\u00fckleniyor\u2026';
             try{
                 const res=await fetch('/.netlify/functions/search?q='+encodeURIComponent(q));
-                if(!res.ok){allCards.forEach(function(c){var s=c.querySelector('.card-price-slot');if(s)_restoreSlot(c,s);});return;}
+                if(!res.ok){loadingEl.textContent='';return;}
                 const d=await res.json();
-                if(!d.ok||!d.products||!d.products.length){allCards.forEach(function(c){var s=c.querySelector('.card-price-slot');if(s)_restoreSlot(c,s);});return;}
+                if(!d.ok||!d.products||!d.products.length){loadingEl.textContent='';return;}
+                const allCards=document.querySelectorAll('[data-store-key]');
                 const priceMap={};
                 d.products.forEach(function(p){
                     if(!p.price||!p.store)return;
@@ -1427,12 +1431,11 @@
                     if(info){
                         if(info.url)card.href=info.url;
                         slot.innerHTML='<span style="font-weight:900;color:#16a34a;font-size:0.95rem">'+info.price+'</span> <i class="fa-solid fa-chevron-right text-xs" style="color:#16a34a"></i>';
-                    } else {
-                        _restoreSlot(card,slot);
                     }
                 });
+                loadingEl.textContent='';
             }catch(e){
-                allCards.forEach(function(c){var s=c.querySelector('.card-price-slot');if(s)_restoreSlot(c,s);});
+                loadingEl.textContent='';
             }
         }
 

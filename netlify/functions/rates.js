@@ -16,14 +16,16 @@ const FALLBACK = { usd_try: 38.5, eur_try: 41.8, gbp_try: 49.2 };
 
 function httpsGet(url) {
   return new Promise((resolve, reject) => {
-    https.get(url, { headers: { 'Accept': 'application/json' } }, (res) => {
+    const req = https.get(url, { headers: { 'Accept': 'application/json' } }, (res) => {
       let data = '';
       res.on('data', (c) => (data += c));
       res.on('end', () => {
         try { resolve(JSON.parse(data)); }
         catch (e) { reject(new Error('JSON parse failed')); }
       });
-    }).on('error', reject);
+    });
+    req.on('error', reject);
+    req.setTimeout(4000, () => { req.destroy(); reject(new Error('timeout')); });
   });
 }
 
