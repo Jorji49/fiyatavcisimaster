@@ -154,7 +154,6 @@ https://www.google.com/search?q=iphone+17&tbm=shop&output=rss
 Kendi veritabanı kurulmadan **CamelCamelCamel API** kullanılabilir (Amazon ürünleri için):
 - https://camelcamelcamel.com/api — Ücretsiz, kayıt gerekiyor
 - Amazon ASIN ile fiyat geçmişi JSON olarak döner
-- Siteye halihazırda CamelCamelCamel bağlantısı var (Amazon kart üzerindeki "Fiyat Geçmişi" linki)
 
 ---
 

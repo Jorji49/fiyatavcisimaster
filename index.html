@@ -34,7 +34,7 @@
         <link href="./style.css" rel="stylesheet"> 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> 
         <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"> 
-        <style>:root { --bg-primary: #f8fafc; --bg-secondary: #ffffff; --bg-tertiary: #f1f5f9; --text-primary: #1e293b; --text-secondary: #64748b; --text-muted: #94a3b8; --border-color: #e2e8f0; --shadow-color: rgba(0,0,0,0.04); --card-bg: #ffffff; --footer-bg: #ffffff; } .dark { --bg-primary: #0f172a; --bg-secondary: #1e293b; --bg-tertiary: #334155; --text-primary: #f1f5f9; --text-secondary: #94a3b8; --text-muted: #64748b; --border-color: #334155; --shadow-color: rgba(0,0,0,0.3); --card-bg: #1e293b; --footer-bg: #1e293b; } body { background-color: var(--bg-primary); color: var(--text-primary); display: flex; flex-direction: column; min-height: 100dvh; -webkit-tap-highlight-color: transparent; overflow-x: hidden; transition: background-color 0.3s,color 0.3s; } .search-container { background: var(--bg-secondary); border: 1px solid var(--border-color); box-shadow: 0 10px 30px -10px var(--shadow-color); transition: all 0.3s cubic-bezier(0.25,0.8,0.25,1); } .search-container:focus-within { border-color: #3b82f6; box-shadow: 0 25px 50px -12px rgba(59,130,246,0.15); transform: translateY(-2px); } #clearBtn { opacity: 0; pointer-events: none; transition: all 0.2s ease; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; } #clearBtn.visible { opacity: 1; pointer-events: all; } #clearBtn:hover { color: var(--text-secondary); } .base-card { border-radius: 1.25rem; min-height: 120px; display: flex; flex-direction: column; justify-content: center; padding: 1.618rem; position: relative; transition: all 0.25s cubic-bezier(0.25,0.8,0.25,1); cursor: pointer; text-decoration: none; -webkit-user-select: none; user-select: none; } .link-card { background: var(--card-bg); border: 1px solid var(--border-color); } .link-card:hover { border-color: var(--theme-color); box-shadow: 0 16px 32px -8px var(--theme-shadow); transform: translateY(-3px); } .recommended-card { background: #f0fdf4; border: 2px solid #16a34a; box-shadow: 0 10px 20px -5px rgba(22,163,74,0.08); } .dark .recommended-card { background: #14532d; border-color: #22c55e; } .recommended-card:hover { transform: translateY(-3px); box-shadow: 0 20px 40px -10px rgba(22,163,74,0.2); } .amazon-aff-card { background: linear-gradient(135deg,#FF9900 0%,#FF6600 60%,#e65000 100%); color: #fff; border: none; display: flex; flex-direction: row; align-items: center; gap: 0; position: relative; overflow: hidden; } .amazon-aff-card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(135deg,rgba(255,255,255,0.12) 0%,transparent 60%); pointer-events: none; } .amazon-aff-card::after { content: ""; position: absolute; top: -60px; right: -60px; width: 180px; height: 180px; background: rgba(255,255,255,0.08); border-radius: 50%; pointer-events: none; } .amazon-aff-card:hover { transform: translateY(-4px); box-shadow: 0 30px 60px -10px rgba(255,100,0,0.55); } .dark .amazon-aff-card { background: linear-gradient(135deg,#FF9900 0%,#FF6600 60%,#e65000 100%); } @keyframes aff-pulse{ 0%, 100% {  box-shadow: 0 0 0 0 rgba(255,153,0,0.5); }  50% {  box-shadow: 0 0 0 10px rgba(255,153,0,0); } } .amazon-aff-card { animation: aff-pulse 2.5s ease-in-out infinite; } .official-card { background: #0f172a; color: white; border: none; display: flex; flex-direction: row; align-items: center; } .official-card:hover { transform: translateY(-3px); box-shadow: 0 25px 50px -12px rgba(15,23,42,0.4); } .badge { position: absolute; top: -1px; right: -1px; font-size: 0.65rem; font-weight: 800; padding: 6px 14px; border-bottom-left-radius: 1rem; border-top-right-radius: 1rem; color: white; background: #16a34a; z-index: 10; letter-spacing: 0.05em; } .logo-wrapper { height: 2.5rem; width: 100%; display: flex; align-items: center; overflow: hidden; } .logo-img { height: 100%; width: auto; max-width: 150px; object-fit: contain; object-position: left; opacity: 0.9; transition: 0.3s; mix-blend-mode: multiply; } .dark .logo-img { mix-blend-mode: normal; filter: brightness(1.1); } .dark .logo-img.dark-invert { filter: brightness(0) invert(1); } .link-card:hover .logo-img, .recommended-card:hover .logo-img { opacity: 1; transform: scale(1.05); } .fallback-text { display: none; font-weight: 800; font-size: 1.25rem; text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.1; } .link-card .fallback-text { color: var(--text-secondary); } .link-card:hover .fallback-text { color: var(--theme-color); } .history-chip { font-size: 0.75rem; font-weight: 600; padding: 6px 14px; border-radius: 999px; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-secondary); cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 6px; } .history-chip:hover { background: var(--bg-tertiary); color: var(--text-primary); border-color: var(--text-muted); transform: translateY(-1px); } .history-clear-btn { font-size: 0.7rem; padding: 6px 10px; border-radius: 999px; background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center; margin-left: 4px; } .history-clear-btn:hover { background: #fee2e2; border-color: #fca5a5; color: #dc2626; } .dark .history-clear-btn:hover { background: #7f1d1d; border-color: #991b1b; color: #fca5a5; } .typo-box { font-size: 0.9rem; color: #dc2626; margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem; animation: fadeIn 0.3s ease; flex-wrap: wrap; } .dark .typo-box { color: #f87171; } .typo-link { font-weight: 800; color: #2563eb; cursor: pointer; text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 4px; } .typo-link:hover { color: #1e40af; } .dark .typo-link { color: #60a5fa; } .dark .typo-link:hover { color: #93c5fd; } .cat-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 1rem; padding: 1.5rem; cursor: pointer; transition: all 0.2s; height: 100%; text-align: center; } .cat-btn:hover { border-color: #3b82f6; transform: translateY(-3px); box-shadow: 0 10px 20px -5px rgba(59,130,246,0.15); } .cat-icon { font-size: 1.5rem; color: #3b82f6; margin-bottom: 0.5rem; } .cat-name { font-weight: 700; color: var(--text-primary); font-size: 0.9rem; } .theme-toggle { position: fixed; top: 1rem; right: 1rem; z-index: 50; width: 44px; height: 44px; border-radius: 50%; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: all 0.3s; box-shadow: 0 4px 12px var(--shadow-color); } .theme-toggle:hover { transform: scale(1.1); box-shadow: 0 8px 24px var(--shadow-color); } @keyframes fadeIn{ from {  opacity: 0;  transform: translateY(16px); }  to {  opacity: 1;  transform: translateY(0); } } .btn-loading { pointer-events: none; opacity: 0.8; } .btn-loading i { display: none; } .btn-loading::after { content: ""; display: inline-block; width: 16px; height: 16px; border: 2px solid #fff; border-radius: 50%; border-top-color: transparent; animation: spin 0.8s linear infinite; margin-left: 8px; } @keyframes spin{ to {  transform: rotate(360deg); } } .dark .text-slate-900, .dark .text-slate-800, .dark .text-slate-700 { color: var(--text-primary)!important; } .dark .text-green-700 { color: #4ade80!important; } .dark .text-green-600 { color: #22c55e!important; } .dark .bg-red-50 { background: #450a0a!important; } .dark .border-red-100 { border-color: #7f1d1d!important; } .dark .text-red-700 { color: #fca5a5!important; } /* Amazon Affiliate Styles */.aff-section { margin-bottom: 3rem; } .aff-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1rem; max-width: 900px; margin: 0 auto; } @media (min-width:640px){ .aff-grid {  grid-template-columns: repeat(3,1fr); } } @media (min-width:1024px){ .aff-grid {  grid-template-columns: repeat(5,1fr); } } .aff-card { display: flex; flex-direction: column; align-items: center; text-align: center; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 1.25rem; padding: 1.2rem 0.8rem; text-decoration: none; transition: all 0.25s cubic-bezier(0.25,0.8,0.25,1); position: relative; overflow: hidden; } .aff-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -10px rgba(255,153,0,0.25); border-color: #FF9900; } .aff-card .aff-icon { font-size: 2rem; margin-bottom: 0.6rem; background: linear-gradient(135deg,#FF9900,#FF6600); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; } .aff-card .aff-name { font-size: 0.75rem; font-weight: 800; color: var(--text-primary); line-height: 1.3; margin-bottom: 0.5rem; } .aff-card .aff-badge { font-size: 0.6rem; font-weight: 700; background: #FF9900; color: #fff; padding: 3px 10px; border-radius: 999px; margin-top: auto; letter-spacing: 0.04em; } .aff-card .aff-hot { position: absolute; top: 8px; right: 8px; font-size: 0.6rem; font-weight: 800; background: #ef4444; color: #fff; padding: 2px 7px; border-radius: 999px; } .aff-deals-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg,#FF9900,#FF6600); color: #fff; font-weight: 800; font-size: 0.85rem; padding: 0.7rem 1.6rem; border-radius: 999px; text-decoration: none; transition: all 0.25s; box-shadow: 0 8px 20px -5px rgba(255,153,0,0.5); margin-top: 1.2rem; } .aff-deals-btn:hover { transform: translateY(-2px); box-shadow: 0 16px 30px -5px rgba(255,153,0,0.6); } .dark .aff-card { background: var(--card-bg); } /* AdSense banner */.adsense-banner { width: 100%; max-width: 900px; margin: 0 auto 2rem auto; min-height: 90px; border-radius: 0.75rem; overflow: hidden; background: var(--bg-tertiary); } /* Kur Bar */.kur-bar { display: inline-flex; align-items: center; justify-content: center; gap: 0; padding: 0.45rem 0.75rem; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 999px; font-size: 0.72rem; font-weight: 700; color: var(--text-secondary); margin: 0 auto 1.25rem auto; cursor: default; overflow: hidden; } .kur-item { display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; width: 6.5rem; padding: 0.1rem 0; } .kur-sym { font-weight: 700; opacity: 0.5; min-width: 0.75rem; text-align: center; } .kur-val { color: var(--text-primary); font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: 0.01em; } .kur-sep { width: 1px; height: 1.2em; background: var(--border-color); flex-shrink: 0; margin: 0 0.1rem; } /* Favoriler Toggle */.fav-toggle-btn { position: fixed; top: 1rem; left: 1rem; z-index: 50; width: 44px; height: 44px; border-radius: 50%; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: all 0.3s; box-shadow: 0 4px 12px var(--shadow-color); } .fav-toggle-btn:hover { transform: scale(1.1); color: #ef4444; } .fav-count { position: absolute; top: -5px; right: -5px; background: #ef4444; color: #fff; border-radius: 50%; font-size: 0.5rem; font-weight: 900; width: 17px; height: 17px; display: none; align-items: center; justify-content: center; } /* Favoriler Panel */.fav-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 199; opacity: 0; pointer-events: none; transition: opacity 0.3s; } .fav-overlay.open { opacity: 1; pointer-events: all; } .fav-panel { position: fixed; top: 0; right: -400px; width: 370px; max-width: 94vw; height: 100dvh; background: var(--bg-secondary); border-left: 1px solid var(--border-color); box-shadow: -10px 0 50px rgba(0,0,0,0.12); z-index: 200; transition: right 0.35s cubic-bezier(0.25,0.8,0.25,1); overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; } .fav-panel.open { right: 0; } .fav-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border-radius: 1rem; background: var(--bg-tertiary); border: 1px solid var(--border-color); text-decoration: none; transition: all 0.2s; } .fav-item:hover { transform: translateX(4px); border-color: #3b82f6; } .fav-item-logo { width: 44px; height: 32px; object-fit: contain; border-radius: 0.5rem; background: #fff; padding: 4px; flex-shrink: 0; } /* Favori Butonu (kart üstünde) */.fav-btn { position: absolute; top: 8px; left: 8px; width: 28px; height: 28px; border-radius: 50%; background: var(--bg-secondary); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; cursor: pointer; transition: all 0.2s; z-index: 20; color: var(--text-muted); } .fav-btn:hover { color: #ef4444; border-color: #fca5a5; transform: scale(1.15); } .fav-btn.active { color: #ef4444; border-color: #ef4444; background: #fff1f2; } .dark .fav-btn { background: var(--bg-tertiary); } .dark .fav-btn.active { background: #450a0a; } /* Paylaşım */.share-bar { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin-bottom: 0.75rem; animation: fadeIn 0.3s ease; } .share-btn { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.7rem; font-weight: 700; padding: 6px 13px; border-radius: 999px; cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-secondary); transition: all 0.2s; text-decoration: none; } .share-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px var(--shadow-color); } .share-btn.wa { background: #25D366; border-color: #25D366; color: #fff; } .share-btn.wa:hover { background: #1da853; } .share-btn.tw { background: #000; border-color: #000; color: #fff; } .share-btn.tw:hover { background: #333; } .share-btn.cp { background: var(--bg-tertiary); } /* Bütçe İpucu */.budget-hint { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-align: center; margin-bottom: 0.75rem; padding: 0.5rem 1rem; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 999px; max-width: fit-content; margin-left: auto; margin-right: auto; animation: fadeIn 0.3s ease; } .budget-hint strong { color: var(--text-secondary); } /* İndirim Takvimi Banner */.takvim-banner { display: flex; align-items: center; gap: 1.25rem; padding: 1.25rem 1.75rem; border-radius: 1.25rem; text-decoration: none; transition: all 0.25s; background: var(--bg-secondary); border: 1px solid var(--border-color); max-width: 700px; margin: 0 auto 2.5rem auto; } .takvim-banner:hover { box-shadow: 0 12px 32px -8px var(--shadow-color); transform: translateY(-2px); border-color: #2563eb; } .takvim-icon { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg,#2563eb,#4f46e5); display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 6px 16px rgba(37,99,235,0.3); font-size: 1.3rem; color: #fff; } .takvim-text { flex: 1; min-width: 0; } .takvim-title { font-weight: 900; font-size: 0.95rem; color: var(--text-primary); margin-bottom: 0.2rem; } .takvim-sub { font-size: 0.73rem; color: var(--text-secondary); font-weight: 600; } .takvim-arr { font-size: 1rem; color: var(--text-muted); flex-shrink: 0; transition: transform 0.2s; } .takvim-banner:hover .takvim-arr { transform: translateX(4px); color: #2563eb; } /* Arama Öneri Açılır Menüsü */.suggest-dropdown { position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 1.5rem; box-shadow: 0 20px 48px -8px var(--shadow-color); z-index: 50; overflow: hidden; animation: fadeIn 0.15s ease; } .suggest-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.25rem; font-size: 0.9rem; font-weight: 700; color: var(--text-primary); cursor: pointer; transition: background 0.12s; border-top: 1px solid var(--border-color); } .suggest-item:first-child { border-top: none; } .suggest-item:hover, .suggest-item.sg-active { background: var(--bg-tertiary); } .suggest-item i { color: var(--text-muted); font-size: 0.7rem; flex-shrink: 0; width: 14px; text-align: center; } /* Fiyat İyi Mi Rozeti */.price-badge { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.62rem; font-weight: 800; padding: 2px 8px; border-radius: 999px; vertical-align: middle; margin-left: 0.4rem; } .price-badge.low { background: #dcfce7; color: #15803d; } .dark .price-badge.low { background: #14532d; color: #4ade80; } .price-badge.mid { background: #fef9c3; color: #a16207; } .dark .price-badge.mid { background: #422006; color: #facc15; } .price-badge.high{background:#fee2e2;color:#b91c1c}.dark .price-badge.high{background:#450a0a;color:#f87171}
+        <style>:root { --bg-primary: #f8fafc; --bg-secondary: #ffffff; --bg-tertiary: #f1f5f9; --text-primary: #1e293b; --text-secondary: #64748b; --text-muted: #94a3b8; --border-color: #e2e8f0; --shadow-color: rgba(0,0,0,0.04); --card-bg: #ffffff; --footer-bg: #ffffff; } .dark { --bg-primary: #0f172a; --bg-secondary: #1e293b; --bg-tertiary: #334155; --text-primary: #f1f5f9; --text-secondary: #94a3b8; --text-muted: #64748b; --border-color: #334155; --shadow-color: rgba(0,0,0,0.3); --card-bg: #1e293b; --footer-bg: #1e293b; } body { background-color: var(--bg-primary); color: var(--text-primary); display: flex; flex-direction: column; min-height: 100dvh; -webkit-tap-highlight-color: transparent; overflow-x: hidden; transition: background-color 0.3s,color 0.3s; } .search-container { background: var(--bg-secondary); border: 1px solid var(--border-color); box-shadow: 0 10px 30px -10px var(--shadow-color); transition: all 0.3s cubic-bezier(0.25,0.8,0.25,1); } .search-container:focus-within { border-color: #3b82f6; box-shadow: 0 25px 50px -12px rgba(59,130,246,0.15); transform: translateY(-2px); } #clearBtn { opacity: 0; pointer-events: none; transition: all 0.2s ease; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; } #clearBtn.visible { opacity: 1; pointer-events: all; } #clearBtn:hover { color: var(--text-secondary); } .base-card { border-radius: 1.25rem; min-height: 120px; display: flex; flex-direction: column; justify-content: center; padding: 1.618rem; position: relative; transition: all 0.25s cubic-bezier(0.25,0.8,0.25,1); cursor: pointer; text-decoration: none; -webkit-user-select: none; user-select: none; } .link-card { background: var(--card-bg); border: 1px solid var(--border-color); } .link-card:hover { border-color: var(--theme-color); box-shadow: 0 16px 32px -8px var(--theme-shadow); transform: translateY(-3px); } .recommended-card { background: #f0fdf4; border: 2px solid #16a34a; box-shadow: 0 10px 20px -5px rgba(22,163,74,0.08); } .dark .recommended-card { background: #14532d; border-color: #22c55e; } .recommended-card:hover { transform: translateY(-3px); box-shadow: 0 20px 40px -10px rgba(22,163,74,0.2); } .amazon-aff-card { background: linear-gradient(135deg,#FF9900 0%,#FF6600 60%,#e65000 100%); color: #fff; border: none; display: flex; flex-direction: row; align-items: center; gap: 0; position: relative; overflow: hidden; } .amazon-aff-card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(135deg,rgba(255,255,255,0.12) 0%,transparent 60%); pointer-events: none; } .amazon-aff-card::after { content: ""; position: absolute; top: -60px; right: -60px; width: 180px; height: 180px; background: rgba(255,255,255,0.08); border-radius: 50%; pointer-events: none; } .amazon-aff-card:hover { transform: translateY(-4px); box-shadow: 0 30px 60px -10px rgba(255,100,0,0.55); } .dark .amazon-aff-card { background: linear-gradient(135deg,#FF9900 0%,#FF6600 60%,#e65000 100%); } @keyframes aff-pulse{ 0%, 100% {  box-shadow: 0 0 0 0 rgba(255,153,0,0.5); }  50% {  box-shadow: 0 0 0 10px rgba(255,153,0,0); } } .amazon-aff-card { animation: aff-pulse 2.5s ease-in-out infinite; } .official-card { background: #0f172a; color: white; border: none; display: flex; flex-direction: row; align-items: center; } .official-card:hover { transform: translateY(-3px); box-shadow: 0 25px 50px -12px rgba(15,23,42,0.4); } .badge { position: absolute; top: -1px; right: -1px; font-size: 0.65rem; font-weight: 800; padding: 6px 14px; border-bottom-left-radius: 1rem; border-top-right-radius: 1rem; color: white; background: #16a34a; z-index: 10; letter-spacing: 0.05em; } .logo-wrapper { height: 2.5rem; width: 100%; display: flex; align-items: center; overflow: hidden; } .logo-img { height: 100%; width: auto; max-width: 150px; object-fit: contain; object-position: left; opacity: 0.9; transition: 0.3s; mix-blend-mode: multiply; } .dark .logo-img { mix-blend-mode: normal; filter: brightness(1.1); } .dark .logo-img.dark-invert { filter: brightness(0) invert(1); } .link-card:hover .logo-img, .recommended-card:hover .logo-img { opacity: 1; transform: scale(1.05); } .fallback-text { display: none; font-weight: 800; font-size: 1.25rem; text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.1; } .link-card .fallback-text { color: var(--text-secondary); } .link-card:hover .fallback-text { color: var(--theme-color); } .history-chip { font-size: 0.75rem; font-weight: 600; padding: 6px 14px; border-radius: 999px; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-secondary); cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 6px; } .history-chip:hover { background: var(--bg-tertiary); color: var(--text-primary); border-color: var(--text-muted); transform: translateY(-1px); } .history-clear-btn { font-size: 0.7rem; padding: 6px 10px; border-radius: 999px; background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center; margin-left: 4px; } .history-clear-btn:hover { background: #fee2e2; border-color: #fca5a5; color: #dc2626; } .dark .history-clear-btn:hover { background: #7f1d1d; border-color: #991b1b; color: #fca5a5; } .typo-box { font-size: 0.9rem; color: #dc2626; margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem; animation: fadeIn 0.3s ease; flex-wrap: wrap; } .dark .typo-box { color: #f87171; } .typo-link { font-weight: 800; color: #2563eb; cursor: pointer; text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 4px; } .typo-link:hover { color: #1e40af; } .dark .typo-link { color: #60a5fa; } .dark .typo-link:hover { color: #93c5fd; } .cat-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 1rem; padding: 1.5rem; cursor: pointer; transition: all 0.2s; height: 100%; text-align: center; } .cat-btn:hover { border-color: #3b82f6; transform: translateY(-3px); box-shadow: 0 10px 20px -5px rgba(59,130,246,0.15); } .cat-icon { font-size: 1.5rem; color: #3b82f6; margin-bottom: 0.5rem; } .cat-name { font-weight: 700; color: var(--text-primary); font-size: 0.9rem; } .theme-toggle { position: fixed; top: 1rem; right: 1rem; z-index: 50; width: 44px; height: 44px; border-radius: 50%; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: all 0.3s; box-shadow: 0 4px 12px var(--shadow-color); } .theme-toggle:hover { transform: scale(1.1); box-shadow: 0 8px 24px var(--shadow-color); } @keyframes fadeIn{ from {  opacity: 0;  transform: translateY(16px); }  to {  opacity: 1;  transform: translateY(0); } } .btn-loading { pointer-events: none; opacity: 0.8; } .btn-loading i { display: none; } .btn-loading::after { content: ""; display: inline-block; width: 16px; height: 16px; border: 2px solid #fff; border-radius: 50%; border-top-color: transparent; animation: spin 0.8s linear infinite; margin-left: 8px; } @keyframes spin{ to {  transform: rotate(360deg); } } .dark .text-slate-900, .dark .text-slate-800, .dark .text-slate-700 { color: var(--text-primary)!important; } .dark .text-green-700 { color: #4ade80!important; } .dark .text-green-600 { color: #22c55e!important; } .dark .bg-red-50 { background: #450a0a!important; } .dark .border-red-100 { border-color: #7f1d1d!important; } .dark .text-red-700 { color: #fca5a5!important; } /* Amazon Affiliate Styles */.aff-section { margin-bottom: 3rem; } .aff-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1rem; max-width: 900px; margin: 0 auto; } @media (min-width:640px){ .aff-grid {  grid-template-columns: repeat(3,1fr); } } @media (min-width:1024px){ .aff-grid {  grid-template-columns: repeat(5,1fr); } } .aff-card { display: flex; flex-direction: column; align-items: center; text-align: center; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 1.25rem; padding: 1.2rem 0.8rem; text-decoration: none; transition: all 0.25s cubic-bezier(0.25,0.8,0.25,1); position: relative; overflow: hidden; } .aff-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -10px rgba(255,153,0,0.25); border-color: #FF9900; } .aff-card .aff-icon { font-size: 2rem; margin-bottom: 0.6rem; background: linear-gradient(135deg,#FF9900,#FF6600); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; } .aff-card .aff-name { font-size: 0.75rem; font-weight: 800; color: var(--text-primary); line-height: 1.3; margin-bottom: 0.5rem; } .aff-card .aff-badge { font-size: 0.6rem; font-weight: 700; background: #FF9900; color: #fff; padding: 3px 10px; border-radius: 999px; margin-top: auto; letter-spacing: 0.04em; } .aff-card .aff-hot { position: absolute; top: 8px; right: 8px; font-size: 0.6rem; font-weight: 800; background: #ef4444; color: #fff; padding: 2px 7px; border-radius: 999px; } .aff-deals-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: linear-gradient(135deg,#FF9900,#FF6600); color: #fff; font-weight: 800; font-size: 0.85rem; padding: 0.7rem 1.6rem; border-radius: 999px; text-decoration: none; transition: all 0.25s; box-shadow: 0 8px 20px -5px rgba(255,153,0,0.5); margin-top: 1.2rem; } .aff-deals-btn:hover { transform: translateY(-2px); box-shadow: 0 16px 30px -5px rgba(255,153,0,0.6); } .dark .aff-card { background: var(--card-bg); } /* AdSense banner */.adsense-banner { width: 100%; max-width: 900px; margin: 0 auto 2rem auto; min-height: 90px; border-radius: 0.75rem; overflow: hidden; background: var(--bg-tertiary); } /* Kur Bar */.kur-bar { display: inline-flex; align-items: center; justify-content: center; gap: 0; padding: 0.45rem 0.75rem; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 999px; font-size: 0.72rem; font-weight: 700; color: var(--text-secondary); margin: 0 auto 1.25rem auto; cursor: default; overflow: hidden; } .kur-item { display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem; width: 6.5rem; padding: 0.1rem 0; } .kur-sym { font-weight: 700; opacity: 0.5; min-width: 0.75rem; text-align: center; } .kur-val { color: var(--text-primary); font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: 0.01em; } .kur-sep { width: 1px; height: 1.2em; background: var(--border-color); flex-shrink: 0; margin: 0 0.1rem; } /* Favoriler Toggle */.fav-toggle-btn { position: fixed; top: 1rem; left: 1rem; z-index: 50; width: 44px; height: 44px; border-radius: 50%; background: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; transition: all 0.3s; box-shadow: 0 4px 12px var(--shadow-color); } .fav-toggle-btn:hover { transform: scale(1.1); color: #ef4444; } .fav-count { position: absolute; top: -5px; right: -5px; background: #ef4444; color: #fff; border-radius: 50%; font-size: 0.5rem; font-weight: 900; width: 17px; height: 17px; display: none; align-items: center; justify-content: center; } /* Favoriler Panel */.fav-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 199; opacity: 0; pointer-events: none; transition: opacity 0.3s; } .fav-overlay.open { opacity: 1; pointer-events: all; } .fav-panel { position: fixed; top: 0; right: -400px; width: 370px; max-width: 94vw; height: 100dvh; background: var(--bg-secondary); border-left: 1px solid var(--border-color); box-shadow: -10px 0 50px rgba(0,0,0,0.12); z-index: 200; transition: right 0.35s cubic-bezier(0.25,0.8,0.25,1); overflow-y: auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; } .fav-panel.open { right: 0; } .fav-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border-radius: 1rem; background: var(--bg-tertiary); border: 1px solid var(--border-color); text-decoration: none; transition: all 0.2s; } .fav-item:hover { transform: translateX(4px); border-color: #3b82f6; } .fav-item-logo { width: 44px; height: 32px; object-fit: contain; border-radius: 0.5rem; background: #fff; padding: 4px; flex-shrink: 0; } /* Favori Butonu (kart üstünde) */.fav-btn { position: absolute; top: 8px; left: 8px; width: 28px; height: 28px; border-radius: 50%; background: var(--bg-secondary); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; cursor: pointer; transition: all 0.2s; z-index: 20; color: var(--text-muted); } .fav-btn:hover { color: #ef4444; border-color: #fca5a5; transform: scale(1.15); } .fav-btn.active { color: #ef4444; border-color: #ef4444; background: #fff1f2; } .dark .fav-btn { background: var(--bg-tertiary); } .dark .fav-btn.active { background: #450a0a; } /* Paylaşım */.share-bar { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin-bottom: 0.75rem; animation: fadeIn 0.3s ease; } .share-btn { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.7rem; font-weight: 700; padding: 6px 13px; border-radius: 999px; cursor: pointer; border: 1px solid var(--border-color); background: var(--bg-secondary); color: var(--text-secondary); transition: all 0.2s; text-decoration: none; } .share-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px var(--shadow-color); } .share-btn.wa { background: #25D366; border-color: #25D366; color: #fff; } .share-btn.wa:hover { background: #1da853; } .share-btn.tw { background: #000; border-color: #000; color: #fff; } .share-btn.tw:hover { background: #333; } .share-btn.cp { background: var(--bg-tertiary); } /* İndirim Takvimi Banner */.takvim-banner { display: flex; align-items: center; gap: 1.25rem; padding: 1.25rem 1.75rem; border-radius: 1.25rem; text-decoration: none; transition: all 0.25s; background: var(--bg-secondary); border: 1px solid var(--border-color); max-width: 700px; margin: 0 auto 2.5rem auto; } .takvim-banner:hover { box-shadow: 0 12px 32px -8px var(--shadow-color); transform: translateY(-2px); border-color: #2563eb; } .takvim-icon { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg,#2563eb,#4f46e5); display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 6px 16px rgba(37,99,235,0.3); font-size: 1.3rem; color: #fff; } .takvim-text { flex: 1; min-width: 0; } .takvim-title { font-weight: 900; font-size: 0.95rem; color: var(--text-primary); margin-bottom: 0.2rem; } .takvim-sub { font-size: 0.73rem; color: var(--text-secondary); font-weight: 600; } .takvim-arr { font-size: 1rem; color: var(--text-muted); flex-shrink: 0; transition: transform 0.2s; } .takvim-banner:hover .takvim-arr { transform: translateX(4px); color: #2563eb; } /* Arama Öneri Açılır Menüsü */.suggest-dropdown { position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 1.5rem; box-shadow: 0 20px 48px -8px var(--shadow-color); z-index: 50; overflow: hidden; animation: fadeIn 0.15s ease; } .suggest-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.25rem; font-size: 0.9rem; font-weight: 700; color: var(--text-primary); cursor: pointer; transition: background 0.12s; border-top: 1px solid var(--border-color); } .suggest-item:first-child { border-top: none; } .suggest-item:hover, .suggest-item.sg-active { background: var(--bg-tertiary); } .suggest-item i { color: var(--text-muted); font-size: 0.7rem; flex-shrink: 0; width: 14px; text-align: center; } /* Fiyat İyi Mi Rozeti */.price-badge { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.62rem; font-weight: 800; padding: 2px 8px; border-radius: 999px; vertical-align: middle; margin-left: 0.4rem; } .price-badge.low { background: #dcfce7; color: #15803d; } .dark .price-badge.low { background: #14532d; color: #4ade80; } .price-badge.mid { background: #fef9c3; color: #a16207; } .dark .price-badge.mid { background: #422006; color: #facc15; } .price-badge.high{background:#fee2e2;color:#b91c1c}.dark .price-badge.high{background:#450a0a;color:#f87171}
         /* Barkod Modal */
         .bc-overlay{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;padding:1rem;background:rgba(0,0,0,0.82);backdrop-filter:blur(4px)}
         .bc-modal{background:#111827;border-radius:1.5rem;padding:1.5rem;width:100%;max-width:360px;text-align:center;animation:fadeIn 0.2s ease}
@@ -46,8 +46,6 @@
         .barcode-scan-btn{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border:none;background:transparent;cursor:pointer;color:var(--text-muted);transition:color 0.2s;flex-shrink:0;border-radius:0.5rem}
         .barcode-scan-btn:hover{color:#2563eb}
         .bc-overlay.hidden{display:none!important}
-        /* Live Prices */
-        .lp-section{margin-bottom:1.5rem}.lp-header{font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem}.lp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:0.75rem}.lp-card{background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:1rem;padding:0.85rem;display:flex;flex-direction:column;gap:0.45rem;transition:transform 0.2s,box-shadow 0.2s;text-decoration:none;color:var(--text-primary)}.lp-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.12)}.lp-img{width:100%;aspect-ratio:1;object-fit:contain;border-radius:0.5rem;background:var(--bg-primary)}.lp-title{font-size:0.78rem;font-weight:600;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.lp-price{font-size:1.05rem;font-weight:800;color:#16a34a}.lp-listprice{font-size:0.7rem;text-decoration:line-through;opacity:0.55}.lp-store{font-size:0.68rem;font-weight:700;opacity:0.55;margin-top:auto}.lp-skeleton{border-radius:1rem;height:220px;background:linear-gradient(90deg,var(--bg-secondary) 25%,var(--border-color) 50%,var(--bg-secondary) 75%);background-size:200% 100%;animation:lp-shine 1.4s infinite}@keyframes lp-shine{0%{background-position:200% 0}100%{background-position:-200% 0}}
         </style>         
     </head>     
     <body class="p-4 md:p-8"> 
@@ -111,7 +109,7 @@
             <div id="resultInfo" class="hidden mb-3 mt-1 animate-fade-in text-center"> 
                 <span style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.35rem 1rem;border-radius:999px;background:var(--bg-secondary);border:1px solid var(--border-color);font-size:0.78rem;font-weight:700;color:var(--text-secondary)"><i class="fa-solid fa-store" style="opacity:0.6"></i><span id="resultCount">0</span> mağaza bulundu<span id="priceBadge"></span></span> 
             </div>             
-            <div id="budgetHint" class="hidden budget-hint mb-2"></div>
+
             <div id="shareBar" class="hidden share-bar mb-4"></div>             
             <div id="gridContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 pb-4 w-full"></div>
             <!-- Sonuç altı reklamlar -->
@@ -236,7 +234,7 @@
             </div>             
         </footer>         
         <script>
-        // ==================== VERİTABANI - ARALIK 2025 ====================
+        // ==================== VERİTABANI ====================
 
         // PC Donanım & Gaming (2 Aralık 2025 Güncel)
         const D_HARDWARE=[
@@ -1037,7 +1035,7 @@
         // ==================== MARKA MAĞAZALARI ====================
         const BRANDS={
             // Teknoloji
-            "apple":{name:"Apple Store",k:["apple","macbook","ipad","iphone","airpods","watch","m4","m3","vision pro"],i:"fa-apple",u:q=>{
+            "apple":{name:"Apple Store",k:["apple","macbook","ipad","iphone","airpods","watch","m4","m3","vision pro"],i:"fa-brands fa-apple",u:q=>{
                 const ql=q.toLowerCase();
                 if(ql.includes("macbook")||ql.includes("mac mini")||ql.includes("mac studio")||ql.includes("imac")) return "https://www.apple.com/tr/shop/buy-mac";
                 if(ql.includes("ipad")) return "https://www.apple.com/tr/shop/buy-ipad";
@@ -1046,29 +1044,29 @@
                 if(ql.includes("vision")) return "https://www.apple.com/tr/shop/buy-vision";
                 return "https://www.apple.com/tr/shop/buy-iphone";
             },cat:"tech"},
-            "samsung":{name:"Samsung Shop",k:["samsung","galaxy","z flip","z fold","s25","s24","buds 3","neo qled","odyssey","watch 7","ring"],i:"fa-mobile-screen",u:q=>`https://www.samsung.com/tr/search/?searchvalue=${encodeURIComponent(q)}`,cat:"tech"},
-            "xiaomi":{name:"Xiaomi Store",k:["xiaomi","xiaomi 15","redmi note 14","poco","mi band 8","xiaomi robot","hyperos"],i:"fa-bolt",u:q=>`https://www.mi.com/tr/product/`,cat:"tech"},
-            "huawei":{name:"Huawei Store",k:["huawei","mate 70","matebook","watch gt 5","freebuds","pura 70","matepad"],i:"fa-mobile",u:q=>`https://consumer.huawei.com/tr/offer/`,cat:"tech"},
-            "logitech":{name:"Logitech",k:["logitech","g pro x superlight","gpx","mx master","streamcam","g502"],i:"fa-computer-mouse",u:q=>`https://www.logitech.com/tr-tr/search?text=${encodeURIComponent(q)}`,cat:"pc"},
+            "samsung":{name:"Samsung Shop",k:["samsung","galaxy","z flip","z fold","s25","s24","buds 3","neo qled","odyssey","watch 7","ring"],i:"fa-solid fa-mobile-screen",u:q=>`https://www.samsung.com/tr/search/?searchvalue=${encodeURIComponent(q)}`,cat:"tech"},
+            "xiaomi":{name:"Xiaomi Store",k:["xiaomi","xiaomi 15","redmi note 14","poco","mi band 8","xiaomi robot","hyperos"],i:"fa-solid fa-bolt",u:q=>`https://www.mi.com/tr/search?keyword=${encodeURIComponent(q)}`,cat:"tech"},
+            "huawei":{name:"Huawei Store",k:["huawei","mate 70","matebook","watch gt 5","freebuds","pura 70","matepad"],i:"fa-solid fa-mobile",u:q=>`https://consumer.huawei.com/tr/search/?keyword=${encodeURIComponent(q)}`,cat:"tech"},
+            "logitech":{name:"Logitech",k:["logitech","g pro x superlight","gpx","mx master","streamcam","g502"],i:"fa-solid fa-computer-mouse",u:q=>`https://www.logitech.com/tr-tr/search?text=${encodeURIComponent(q)}`,cat:"pc"},
 
             // Ev Elektroniği
-            "dyson":{name:"Dyson TR",k:["dyson","v16","v15","v12","airwrap","gen5","airstrait","supersonic","purifier","zone"],i:"fa-wind",u:q=>`https://www.dyson.com.tr/catalogsearch/result/?q=${encodeURIComponent(q)}`,cat:"home"},
-            "philips":{name:"Philips",k:["philips airfryer","philips ep","sonicare","hue","philips lumea"],i:"fa-blender",u:q=>`https://www.philips.com.tr/c-m`,cat:"home"},
+            "dyson":{name:"Dyson TR",k:["dyson","v16","v15","v12","airwrap","gen5","airstrait","supersonic","purifier","zone"],i:"fa-solid fa-wind",u:q=>`https://www.dyson.com.tr/catalogsearch/result/?q=${encodeURIComponent(q)}`,cat:"home"},
+            "philips":{name:"Philips",k:["philips airfryer","philips ep","sonicare","hue","philips lumea"],i:"fa-solid fa-blender",u:q=>`https://www.philips.com.tr/search#q=${encodeURIComponent(q)}`,cat:"home"},
 
             // Moda
-            "nike":{name:"Nike Store",k:["nike","jordan","air max","dunk","air force","blazer","pegasus 41","vapormax"],i:"fa-person-running",u:q=>`https://www.nike.com/tr/w?q=${encodeURIComponent(q)}`,cat:"fashion"},
-            "adidas":{name:"Adidas",k:["adidas","superstar","stan smith","ultraboost","samba","gazelle","campus","spezial"],i:"fa-shoe-prints",u:q=>`https://www.adidas.com.tr/`,cat:"fashion"},
-            "puma":{name:"Puma TR",k:["puma","suede","rs-x","speedcat","palermo","future"],i:"fa-cat",u:q=>`https://tr.puma.com/tr/`,cat:"fashion"},
-            "newbalance":{name:"New Balance",k:["new balance","nb 530","nb 574","nb 9060","2002r","1906r","nb 550"],i:"fa-n",u:q=>`https://www.newbalance.com.tr/arama?q=${encodeURIComponent(q)}`,cat:"fashion"},
-            "converse":{name:"Converse",k:["converse","chuck taylor","all star","chuck 70","run star"],i:"fa-star",u:q=>`https://www.converse.com.tr/tum-ayakkabilar/?q=${encodeURIComponent(q)}`,cat:"fashion"},
-            "vans":{name:"Vans",k:["vans","old skool","sk8 hi","authentic","era","knu skool"],i:"fa-v",u:q=>`https://www.vans.com.tr/tum-urunler?search=${encodeURIComponent(q)}`,cat:"fashion"},
+            "nike":{name:"Nike Store",k:["nike","jordan","air max","dunk","air force","blazer","pegasus 41","vapormax"],i:"fa-solid fa-person-running",u:q=>`https://www.nike.com/tr/w?q=${encodeURIComponent(q)}`,cat:"fashion"},
+            "adidas":{name:"Adidas",k:["adidas","superstar","stan smith","ultraboost","samba","gazelle","campus","spezial"],i:"fa-solid fa-shoe-prints",u:q=>`https://www.adidas.com.tr/search?q=${encodeURIComponent(q)}`,cat:"fashion"},
+            "puma":{name:"Puma TR",k:["puma","suede","rs-x","speedcat","palermo","future"],i:"fa-solid fa-cat",u:q=>`https://tr.puma.com/tr/search?q=${encodeURIComponent(q)}`,cat:"fashion"},
+            "newbalance":{name:"New Balance",k:["new balance","nb 530","nb 574","nb 9060","2002r","1906r","nb 550"],i:"fa-solid fa-n",u:q=>`https://www.newbalance.com.tr/arama?q=${encodeURIComponent(q)}`,cat:"fashion"},
+            "converse":{name:"Converse",k:["converse","chuck taylor","all star","chuck 70","run star"],i:"fa-solid fa-star",u:q=>`https://www.converse.com.tr/tum-ayakkabilar/?q=${encodeURIComponent(q)}`,cat:"fashion"},
+            "vans":{name:"Vans",k:["vans","old skool","sk8 hi","authentic","era","knu skool"],i:"fa-solid fa-v",u:q=>`https://www.vans.com.tr/tum-urunler?search=${encodeURIComponent(q)}`,cat:"fashion"},
 
             // Oyuncak
-            "lego":{name:"LEGO Store",k:["lego","duplo","technic","city","star wars lego","icons","ideas","botanical"],i:"fa-cubes",u:q=>`https://www.lego.tr/search?q=${encodeURIComponent(q)}`,cat:"toy"},
+            "lego":{name:"LEGO Store",k:["lego","duplo","technic","city","star wars lego","icons","ideas","botanical"],i:"fa-solid fa-cubes",u:q=>`https://www.lego.com/tr-tr/search?q=${encodeURIComponent(q)}`,cat:"toy"},
 
             // Bilgisayar
-            "monster":{name:"Monster Notebook",k:["monster","abra","tulpar","semruk","huma"],i:"fa-laptop",u:q=>`https://www.monsternotebook.com.tr/arama/?s=${encodeURIComponent(q)}`,cat:"pc"},
-            "msi":{name:"MSI Store",k:["msi","msi laptop","msi raider","msi stealth","msi claw"],i:"fa-dragon",u:q=>`https://tr.msi.com/`,cat:"pc"}
+            "monster":{name:"Monster Notebook",k:["monster","abra","tulpar","semruk","huma"],i:"fa-solid fa-laptop",u:q=>`https://www.monsternotebook.com.tr/arama/?s=${encodeURIComponent(q)}`,cat:"pc"},
+            "msi":{name:"MSI Store",k:["msi","msi laptop","msi raider","msi stealth","msi claw"],i:"fa-solid fa-dragon",u:q=>`https://tr.msi.com/`,cat:"pc"}
         };
 
         // ==================== MAĞAZALAR ====================
@@ -1126,7 +1124,7 @@
 
         function getEditDistance(a,b){if(a.length===0)return b.length;if(b.length===0)return a.length;const m=[];for(let i=0;i<=b.length;i++)m[i]=[i];for(let j=0;j<=a.length;j++)m[0][j]=j;for(let i=1;i<=b.length;i++){for(let j=1;j<=a.length;j++){if(b.charAt(i-1)==a.charAt(j-1))m[i][j]=m[i-1][j-1];else m[i][j]=Math.min(m[i-1][j-1]+1,Math.min(m[i][j-1]+1,m[i-1][j]+1))}}return m[b.length][a.length]}
 
-        const TURKISH_CHAR_MAP={'ı':'i','i':'ı','ö':'o','o':'ö','ü':'u','u':'ü','ş':'s','s':'ş','ç':'c','c':'ç','ğ':'g','g':'ğ'};
+
 
         function normalizeForSearch(str){return str.toLowerCase().replace(/[ıİ]/g,'i').replace(/[öÖ]/g,'o').replace(/[üÜ]/g,'u').replace(/[şŞ]/g,'s').replace(/[çÇ]/g,'c').replace(/[ğĞ]/g,'g')}
 
@@ -1301,7 +1299,7 @@
                     else if(cat==="COSMETIC"){
                         // Kozmetik
                         if(m.t.includes("cosmetic"))show=true;
-                        if(["WATSONS","GRATIS","SEPHORA","ROSSMANN","FLORMAR","BOYNER"].includes(m.name))highlight=true;
+                        if(["WATSONS","GRATIS","SEPHORA","ROSSMANN","BOYNER"].includes(m.name))highlight=true;
                         // Genel pazaryerleri
                         if(["HEPSIBURADA","TRENDYOL"].includes(m.name))show=true;
                     }
@@ -1319,7 +1317,7 @@
                     else if(cat==="PET_BABY"){
                         // Pet & Bebek
                         if(m.t.includes("pet"))show=true;
-                        if(["PETİ","ÇİÇEKSEPETİ"].includes(m.name))highlight=true;
+                        if(["PETİ"].includes(m.name))highlight=true;
                         if(["AMAZON","HEPSIBURADA","TRENDYOL","N11"].includes(m.name))show=true;
                     }
                     else if(cat==="HOME"){
@@ -1363,12 +1361,11 @@
                     if(adsenseResultsArea)adsenseResultsArea.classList.remove('hidden');
                     updateUrl(q);
                     showShareBar(q,cardCount);
-                    showBudgetHint(q,cardCount);
+                    updatePriceBadge(q);
                 }else{
                     resultInfo.classList.add('hidden');
                     if(adsenseResultsArea)adsenseResultsArea.classList.add('hidden');
                     document.getElementById('shareBar').classList.add('hidden');
-                    document.getElementById('budgetHint').classList.add('hidden');
                 }
 
                 // Sonuç bulunamadı
@@ -1384,66 +1381,7 @@
                         }
                     },150);
                 }
-                // Gerçek zamanlı fiyatları paralelde çek
-                fetchAndInjectPrices(q);
             },300);
-        }
-
-        var _fetchId=0;
-        async function fetchAndInjectPrices(q){
-            var myId=++_fetchId;
-            var loadingEl=document.getElementById('priceLoadingHint');
-            if(!loadingEl){
-                loadingEl=document.createElement('p');
-                loadingEl.id='priceLoadingHint';
-                loadingEl.style.cssText='font-size:0.72rem;opacity:0.5;font-style:italic;text-align:center;margin-top:0.5rem';
-                document.getElementById('gridContainer').insertAdjacentElement('afterend',loadingEl);
-            }
-            loadingEl.textContent='Canlı fiyatlar yükleniyor…';
-            var controller=new AbortController();
-            var _timer=setTimeout(function(){controller.abort()},14000);
-            try{
-                var res=await fetch('/.netlify/functions/search?q='+encodeURIComponent(q),{signal:controller.signal});
-                clearTimeout(_timer);
-                if(myId!==_fetchId){return;}
-                if(!res.ok){loadingEl.textContent='';return;}
-                var d=await res.json();
-                if(myId!==_fetchId){return;}
-                if(!d.ok||!d.products||!d.products.length){loadingEl.textContent='';return;}
-                var allCards=document.querySelectorAll('[data-store-key]');
-                var priceMap={};
-                var STORE_ALIASES={'amazoncomtr':'amazon','amazoncomtramazoncomtrpazaryeri':'amazon','mediamarktpazaryeri':'mediamarkt','mediamarkttrkiye':'mediamarkt','vatanbilgisayar':'vatan','n11com':'n11','trendyolcom':'trendyol','hepsiburadacom':'hepsiburada','dr':'d&r','drmcom':'d&r','bkmkitapcom':'bkmkitap','kitapyurducom':'kitapyurdu','idefixcom':'idefix','toyzzshopcom':'toyzzshop','peticomtr':'peti'};
-                d.products.forEach(function(p){
-                    if(!p.price||!p.store)return;
-                    var normStore=p.store.toLowerCase().replace(/[^a-z0-9]/g,'');
-                    var resolved=STORE_ALIASES[normStore]||normStore;
-                    allCards.forEach(function(card){
-                        var key=card.dataset.storeKey;
-                        if(priceMap[key])return;
-                        if(resolved===key||normStore.includes(key)||key.includes(resolved)){
-                            priceMap[key]={price:p.price};
-                        }
-                    });
-                });
-                allCards.forEach(function(card){
-                    var key=card.dataset.storeKey;
-                    var info=priceMap[key];
-                    var slot=card.querySelector('.card-price-slot');
-                    if(!slot)return;
-                    if(info){
-                        var isAff=card.classList.contains('amazon-aff-card');
-                        if(isAff){
-                            slot.innerHTML=info.price+' <i class="fa-solid fa-arrow-right ml-1"></i>';
-                        } else {
-                            slot.innerHTML='<span style="font-weight:900;color:#16a34a;font-size:0.95rem">'+info.price+'</span> <i class="fa-solid fa-chevron-right text-xs" style="color:#16a34a"></i>';
-                        }
-                    }
-                });
-                loadingEl.textContent='';
-            }catch(e){
-                clearTimeout(_timer);
-                if(myId===_fetchId)loadingEl.textContent='';
-            }
         }
 
         function createCard(n,l,u,t,i,td){
@@ -1467,7 +1405,7 @@
                         </div>
                     </div>
                     <div class="flex flex-col items-center gap-2 shrink-0 pr-1 md:pr-2">
-                        <div class="card-price-slot bg-white text-orange-600 font-black text-sm px-5 py-2.5 rounded-xl shadow-lg group-hover:scale-105 transition-transform whitespace-nowrap">Amazon'da Gör <i class="fa-solid fa-arrow-right ml-1"></i></div>
+                        <div class="bg-white text-orange-600 font-black text-sm px-5 py-2.5 rounded-xl shadow-lg group-hover:scale-105 transition-transform whitespace-nowrap">Amazon'da Gör <i class="fa-solid fa-arrow-right ml-1"></i></div>
                     </div>
                 </div>`;
             } else if(t==="official"){
@@ -1476,15 +1414,14 @@
                 else if(n.includes("Samsung"))c.style.background="linear-gradient(135deg,#034EA2 0%,#000000 100%)";
                 else if(n.includes("Xiaomi"))c.style.background="linear-gradient(135deg,#FF6900 0%,#E65100 100%)";
                 else if(n.includes("Dyson"))c.style.background="linear-gradient(135deg,#F06D9E 0%,#A31F50 100%)";
-                ht=`<div class="badge bg-white/20 backdrop-blur-sm shadow-sm"><i class="fa-solid fa-certificate"></i> RESMİ MAĞAZA</div><div class="flex items-center gap-4 md:gap-5 w-full pl-1 md:pl-2"><div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/10 flex items-center justify-center text-2xl md:text-3xl text-white shrink-0"><i class="fa-brands ${i}"></i></div><div class="flex-grow"><div class="text-xl md:text-2xl font-black tracking-tight leading-none mb-1">${n}</div><div class="text-[10px] md:text-xs font-bold opacity-70 tracking-widest uppercase">ARACISIZ SATIŞ</div></div><div class="text-white/80 text-2xl md:text-3xl group-hover:translate-x-2 transition-transform shrink-0 pr-1 md:pr-2"><i class="fa-solid fa-arrow-right"></i></div></div>`;
+                ht=`<div class="badge bg-white/20 backdrop-blur-sm shadow-sm"><i class="fa-solid fa-certificate"></i> RESMİ MAĞAZA</div><div class="flex items-center gap-4 md:gap-5 w-full pl-1 md:pl-2"><div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/10 flex items-center justify-center text-2xl md:text-3xl text-white shrink-0"><i class="${i}"></i></div><div class="flex-grow"><div class="text-xl md:text-2xl font-black tracking-tight leading-none mb-1">${n}</div><div class="text-[10px] md:text-xs font-bold opacity-70 tracking-widest uppercase">ARACISIZ SATIŞ</div></div><div class="text-white/80 text-2xl md:text-3xl group-hover:translate-x-2 transition-transform shrink-0 pr-1 md:pr-2"><i class="fa-solid fa-arrow-right"></i></div></div>`;
             } else if(t==="highlight"){
                 cl+="recommended-card";c.style.setProperty('--theme-color',td.c);
-                ht=`${favHtml}<div class="badge shadow-sm"><i class="fa-solid fa-check-circle mr-1"></i> ÖNERİLEN</div><div class="logo-wrapper mb-auto mt-2 pl-1"><img src="${l}" class="${imgClass}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="fallback-text text-slate-800" style="color:${td.c}">${n}</span></div><div class="card-price-slot text-green-700 font-extrabold text-sm flex items-center justify-end gap-2 group-hover:gap-3 transition-all pr-1 mt-3">Fiyatı Gör <i class="fa-solid fa-chevron-right text-xs"></i></div>`;
+                ht=`${favHtml}<div class="badge shadow-sm"><i class="fa-solid fa-check-circle mr-1"></i> ÖNERİLEN</div><div class="logo-wrapper mb-auto mt-2 pl-1"><img src="${l}" class="${imgClass}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="fallback-text text-slate-800" style="color:${td.c}">${n}</span></div><div class="text-green-700 font-extrabold text-sm flex items-center justify-end gap-2 group-hover:gap-3 transition-all pr-1 mt-3">Fiyatı Gör <i class="fa-solid fa-chevron-right text-xs"></i></div>`;
             } else {
                 cl+="link-card";c.style.setProperty('--theme-color',td.c);c.style.setProperty('--theme-shadow',td.s);
-                ht=`${favHtml}<div class="logo-wrapper my-auto pl-1"><img src="${l}" class="${imgClass}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="fallback-text text-slate-700" style="color:${td.c}">${n}</span></div><div class="card-price-slot text-xs font-black pl-1 mt-1" style="color:#16a34a;min-height:1rem"></div><div class="absolute bottom-4 right-4 text-slate-300 group-hover:text-[color:var(--theme-color)] transition-colors text-lg"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>`;
+                ht=`${favHtml}<div class="logo-wrapper my-auto pl-1"><img src="${l}" class="${imgClass}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="fallback-text text-slate-700" style="color:${td.c}">${n}</span></div><div class="absolute bottom-4 right-4 text-slate-300 group-hover:text-[color:var(--theme-color)] transition-colors text-lg"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>`;
             }
-            c.dataset.storeKey=n.toLowerCase().replace(/\s+/g,'');
             c.className=cl;c.innerHTML=ht;g.appendChild(c);
         }
         // ==================== DOĞAL DİL ARAMA ====================
@@ -1516,9 +1453,8 @@
             if(OLD_GEN.some(k=>ql.includes(k)))return'<span class="price-badge low">🟢 Fiyat Düştü</span>';
             return'';
         }
-        function updatePriceBadge(q,entry){
+        function updatePriceBadge(q){
             const el=document.getElementById('priceBadge');if(!el)return;
-            if(!entry){el.innerHTML='';return;}
             el.innerHTML=getPriceBadge(q.toLowerCase());
         }
 
@@ -1595,30 +1531,7 @@
             }).catch(()=>{const t=document.createElement('textarea');t.value=window.location.href;document.body.appendChild(t);t.select();document.execCommand('copy');document.body.removeChild(t);});
         }
 
-        // ==================== BÜTÇE İPUCU ====================
-        // USD bazlı resmi/MSRP fiyatlar — dolar sabit, euro cross-rate ile hesaplanır
-        const PRICE_DB=[
-            {k:['iphone 17 pro max'],u:1599},{k:['iphone 17 pro'],u:1199},
-            {k:['iphone air'],u:899},{k:['iphone 16e'],u:599},{k:['iphone 17'],u:799},
-            {k:['galaxy s25 ultra','s25 ultra'],u:1299},{k:['galaxy s25+','s25 plus','s25+'],u:999},{k:['galaxy s25'],u:799},
-            {k:['macbook air'],u:1099},{k:['macbook pro 16'],u:2499},{k:['macbook pro'],u:1599},
-            {k:['ipad pro'],u:999},{k:['ipad air'],u:599},{k:['ipad'],u:449},
-            {k:['airpods pro'],u:249},{k:['airpods 4'],u:179},{k:['airpods max'],u:549},
-            {k:['apple watch ultra'],u:799},{k:['apple watch'],u:399},
-            {k:['rtx 5090'],u:1999},{k:['rtx 5080'],u:1199},{k:['rtx 5070 ti'],u:749},{k:['rtx 5070'],u:549},{k:['rtx 5060 ti'],u:379},{k:['rtx 5060'],u:299},
-            {k:['rtx 4090'],u:1599},{k:['rtx 4080 super'],u:999},{k:['rtx 4080'],u:1199},{k:['rtx 4070 ti'],u:799},{k:['rtx 4070 super'],u:599},{k:['rtx 4070'],u:599},
-            {k:['ps5 pro'],u:699},{k:['ps5','playstation 5'],u:499},{k:['xbox series x'],u:499},{k:['xbox series s'],u:299},
-            {k:['dyson v16'],u:849},{k:['dyson v15'],u:749},{k:['dyson airwrap'],u:599},{k:['dyson supersonic'],u:429},
-            {k:['samsung qd-oled','odyssey oled'],u:799},{k:['lg oled'],u:1299},
-        ];
-        function showBudgetHint(q,count){
-            const h=document.getElementById('budgetHint');
-            if(h)h.classList.add('hidden');
-            const ql=q.toLowerCase();
-            let entry=null;
-            for(let p of PRICE_DB){if(p.k.some(k=>ql.includes(k))){entry=p;break;}}
-            updatePriceBadge(q,entry);
-        }
+
 
         // ==================== FAVORİLER ====================
         function getFavs(){return JSON.parse(localStorage.getItem('favs')||'[]');}
@@ -1723,52 +1636,7 @@
         }
         document.addEventListener('click',(e)=>{if(!e.target.closest('.w-full.max-w-4xl'))hideSuggest();});
 
-        // ==================== GÜVEN ENDEKSİ + KARGO ====================
-        const TRUST_INDEX={
-            'AMAZON':{s:5,t:'ETBİS Kaydı'},
-            'HEPSIBURADA':{s:5,t:'Halka Açık Şirket'},
-            'TRENDYOL':{s:5,t:'ETBİS Kaydı'},
-            'MEDIAMARKT':{s:5,t:'Uluslararası Zincir'},
-            'TEKNOSA':{s:5,t:'BİST Şirketi'},
-            'VATAN':{s:5,t:'ETBİS Kaydı'},
-            'N11':{s:4,t:'ETBİS Kaydı'},
-            'INCEHESAP':{s:4,t:'ETBİS Kaydı'},
-            'ITOPYA':{s:4,t:'ETBİS Kaydı'},
-            'SINERJI':{s:4,t:'ETBİS Kaydı'},
-            'BOYNER':{s:5,t:'ETBİS Kaydı'},
-            'KOÇTAŞ':{s:5,t:'ETBİS Kaydı'},
-            'IKEA':{s:5,t:'Uluslararası Zincir'},
-            'SEPHORA':{s:5,t:'Uluslararası Zincir'},
-            'WATSONS':{s:5,t:'Uluslararası Zincir'},
-            'TROY':{s:4,t:'Apple Yetkili'},
-            'DECATHLON':{s:5,t:'Uluslararası Zincir'},
-            'INTERSPORT':{s:5,t:'Uluslararası Zincir'},
-            'D&R':{s:4,t:'ETBİS Kaydı'},
-            'GRATIS':{s:4,t:'ETBİS Kaydı'},
-            'ROSSMANN':{s:4,t:'Uluslararası Zincir'},
-            'BAUHAUS':{s:4,t:'Uluslararası Zincir'},
-            'SUPERSTEP':{s:4,t:'ETBİS Kaydı'},
-            'SNEAKS UP':{s:4,t:'ETBİS Kaydı'},
-            'SPORTIVE':{s:4,t:'ETBİS Kaydı'},
-            'KITAPYURDU':{s:4,t:'ETBİS Kaydı'},
-            'BKM KİTAP':{s:4,t:'ETBİS Kaydı'},
-            'İDEFİX':{s:4,t:'ETBİS Kaydı'},
-            'PETİ':{s:4,t:'ETBİS Kaydı'},
-            'TOYZZ SHOP':{s:4,t:'ETBİS Kaydı'},
-            'ÇİÇEKSEPETİ':{s:5,t:'ETBİS Kaydı'},
-        };
-        const SHIP_EST={
-            'AMAZON':'Prime: Ücretsiz',
-            'HEPSIBURADA':'~₺39–59',
-            'TRENDYOL':'~₺25–39',
-            'N11':'~₺35–49',
-            'MEDIAMARKT':'Mağazada ücretsiz',
-            'TEKNOSA':'Mağazada ücretsiz',
-            'VATAN':'Mağazada ücretsiz',
-            'INCEHESAP':'~₺50–75',
-            'ITOPYA':'~₺50–75',
-            'SINERJI':'~₺50–75',
-        };
+
 
         // ==================== BARKOD TARAYICI ====================
         let _bcStream=null,_bcDetector=null,_bcTimer=null;
@@ -1806,7 +1674,7 @@
         document.getElementById('queryInput').addEventListener('keypress',(e)=>{if(e.key==='Enter')runEngine()});
         document.addEventListener('keydown',(e)=>{if(e.key==='/'&&document.activeElement!==document.getElementById('queryInput')){e.preventDefault();document.getElementById('queryInput').focus();}});
     </script>         
-    <!-- Barkod Taratıcı Modalı -->
+    <!-- Barkod Tarayıcı Modalı -->
     <div id="bcOverlay" class="bc-overlay hidden" onclick="if(event.target===this)closeBarcodeScanner()">
         <div class="bc-modal">
             <div class="flex items-center justify-between mb-3">
