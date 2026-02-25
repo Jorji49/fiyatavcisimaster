@@ -1396,52 +1396,60 @@
                 slot.innerHTML='';
             }
         }
+        var _fetchId=0;
         async function fetchAndInjectPrices(q){
-            // K\u00fc\u00e7\u00fck y\u00fckleniyor etiketi
-            const grid=document.getElementById('gridContainer');
-            let loadingEl=document.getElementById('priceLoadingHint');
+            var myId=++_fetchId;
+            var loadingEl=document.getElementById('priceLoadingHint');
             if(!loadingEl){
                 loadingEl=document.createElement('p');
                 loadingEl.id='priceLoadingHint';
                 loadingEl.style.cssText='font-size:0.72rem;opacity:0.5;font-style:italic;text-align:center;margin-top:0.5rem';
-                grid.insertAdjacentElement('afterend',loadingEl);
+                document.getElementById('gridContainer').insertAdjacentElement('afterend',loadingEl);
             }
             loadingEl.textContent='Canlı fiyatlar yükleniyor…';
-            const controller=new AbortController();
-            const _timer=setTimeout(()=>controller.abort(),14000);
+            var controller=new AbortController();
+            var _timer=setTimeout(function(){controller.abort()},14000);
             try{
-                const res=await fetch('/.netlify/functions/search?q='+encodeURIComponent(q),{signal:controller.signal});
+                var res=await fetch('/.netlify/functions/search?q='+encodeURIComponent(q),{signal:controller.signal});
                 clearTimeout(_timer);
+                if(myId!==_fetchId){return;}
                 if(!res.ok){loadingEl.textContent='';return;}
-                const d=await res.json();
+                var d=await res.json();
+                if(myId!==_fetchId){return;}
                 if(!d.ok||!d.products||!d.products.length){loadingEl.textContent='';return;}
-                const allCards=document.querySelectorAll('[data-store-key]');
-                const priceMap={};
+                var allCards=document.querySelectorAll('[data-store-key]');
+                var priceMap={};
+                var STORE_ALIASES={'amazoncomtr':'amazon','amazoncomtramazoncomtrpazaryeri':'amazon','mediamarktpazaryeri':'mediamarkt','mediamarkttrkiye':'mediamarkt','vatanbilgisayar':'vatan','n11com':'n11','garantiliteknoloji':'garantili','ciceksepeticom':'ciceksepeti','trendyolcom':'trendyol','hepsiburadacom':'hepsiburada'};
                 d.products.forEach(function(p){
                     if(!p.price||!p.store)return;
-                    var normStore=p.store.toLowerCase().replace(/[^a-z0-9çşğüöı]/g,'');
+                    var normStore=p.store.toLowerCase().replace(/[^a-z0-9]/g,'');
+                    var resolved=STORE_ALIASES[normStore]||normStore;
                     allCards.forEach(function(card){
                         var key=card.dataset.storeKey;
                         if(priceMap[key])return;
-                        var match=false;
-                        if(key.length<=3){match=normStore===key||normStore.startsWith(key+'.')||normStore.startsWith(key+'com');}
-                        else{match=normStore.includes(key)||key.includes(normStore);}
-                        if(match){priceMap[key]={price:p.price,url:p.url};}
+                        if(resolved===key||normStore.includes(key)||key.includes(resolved)){
+                            priceMap[key]={price:p.price};
+                        }
                     });
                 });
                 allCards.forEach(function(card){
-                    const key=card.dataset.storeKey;
-                    const info=priceMap[key];
-                    const slot=card.querySelector('.card-price-slot');
+                    var key=card.dataset.storeKey;
+                    var info=priceMap[key];
+                    var slot=card.querySelector('.card-price-slot');
                     if(!slot)return;
                     if(info){
-                        slot.innerHTML='<span style="font-weight:900;color:#16a34a;font-size:0.95rem">'+info.price+'</span> <i class="fa-solid fa-chevron-right text-xs" style="color:#16a34a"></i>';
+                        var isAff=card.classList.contains('amazon-aff-card');
+                        if(isAff){
+                            slot.innerHTML=info.price+' <i class="fa-solid fa-arrow-right ml-1"></i>';
+                        } else {
+                            slot.innerHTML='<span style="font-weight:900;color:#16a34a;font-size:0.95rem">'+info.price+'</span> <i class="fa-solid fa-chevron-right text-xs" style="color:#16a34a"></i>';
+                        }
                     }
                 });
                 loadingEl.textContent='';
             }catch(e){
                 clearTimeout(_timer);
-                loadingEl.textContent='';
+                if(myId===_fetchId)loadingEl.textContent='';
             }
         }
 
@@ -1467,7 +1475,7 @@
                         </div>
                     </div>
                     <div class="flex flex-col items-center gap-2 shrink-0 pr-1 md:pr-2">
-                        <div class="bg-white text-orange-600 font-black text-sm px-5 py-2.5 rounded-xl shadow-lg group-hover:scale-105 transition-transform whitespace-nowrap">Amazon'da Gör <i class="fa-solid fa-arrow-right ml-1"></i></div>
+                        <div class="card-price-slot bg-white text-orange-600 font-black text-sm px-5 py-2.5 rounded-xl shadow-lg group-hover:scale-105 transition-transform whitespace-nowrap">Amazon'da Gör <i class="fa-solid fa-arrow-right ml-1"></i></div>
                     </div>
                 </div>`;
             } else if(t==="official"){

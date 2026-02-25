@@ -100,7 +100,6 @@ exports.handler = async (event) => {
       .filter(p => p.offer && p.offer.offer_page_url)
       .filter(p => isTurkishStore(p.offer.store_name))
       .filter(p => isRelevant(p.product_title || '', q))
-      .slice(0, 20)
       .map(p => ({
         title: p.product_title || '',
         image: (p.product_photos && p.product_photos[0]) || '',
@@ -111,13 +110,24 @@ exports.handler = async (event) => {
         shipping: p.offer ? p.offer.shipping : ''
       }));
 
+    // Mağaza başına en ucuz sonucu seç (fazlasını at)
+    const byStore = {};
+    slim.forEach(p => {
+      const sk = p.store.toLowerCase().replace(/[^a-z0-9]/g, '');
+      const numPrice = parseFloat((p.price || '').replace(/[^0-9.,]/g, '').replace(/\./g, '').replace(',', '.')) || Infinity;
+      if (!byStore[sk] || numPrice < byStore[sk]._num) {
+        byStore[sk] = Object.assign({}, p, { _num: numPrice });
+      }
+    });
+    const deduped = Object.values(byStore).map(p => { delete p._num; return p; }).slice(0, 20);
+
     return {
       statusCode: 200,
       headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 'public, max-age=300, stale-while-revalidate=600'
       },
-      body: JSON.stringify({ ok: true, products: slim })
+      body: JSON.stringify({ ok: true, products: deduped })
     };
   } catch (err) {
     return {
