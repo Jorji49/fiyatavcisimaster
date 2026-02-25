@@ -1,7 +1,58 @@
-const https = require('https');
+﻿const https = require('https');
 
 const RAPIDAPI_KEY = 'cff20d59acmsh970aa2dcb009325p1b3b3djsn0e21ab811c7f';
 const HOST = 'real-time-product-search.p.rapidapi.com';
+
+// Kabul edilen Türk mağazaları
+const TR_STORES = [
+  'trendyol','hepsiburada','n11','mediamarkt','vatan','teknosa',
+  'itopya','incehesap','sinerji','troy','ciceksepeti','çiçeksepeti',
+  'morhipo','boyner','carrefoursa','a101','gratis','watsons','sephora',
+  'rossmann','kitapyurdu','idefix','d&r','bkm','toyzz','decathlon',
+  'intersport','sportive','superstep','sneaks','lcwaikiki','lcw',
+  'garantili','amazon','migros','peti'
+];
+
+// Aksesuar / alakasız ürün kelimeleri
+const EXCLUDE_WORDS = [
+  'kılıf','case','cover','koruyucu','ekran koruyucu','ekran filmi',
+  'temperli cam','cam filmi','silikon','arka kapak',
+  'şarj aleti','şarj kablosu','kablo','adaptör','adapter','charger','cable','usb',
+  'askı','strap','band','kayış','tutucu','mount','holder','stand',
+  'kol bandı','bileklik','dock','hub',
+  'temizleme','temizlik','cleaning',
+  'mouse pad','mousepad'
+];
+
+// Model varyant kelimeleri (uzundan kısaya sıralı)
+const MODEL_VARIANTS = ['pro max','pro','plus','max','ultra','air'];
+
+function isTurkishStore(storeName) {
+  if (!storeName) return false;
+  const s = storeName.toLowerCase();
+  return TR_STORES.some(ts => s.includes(ts));
+}
+
+function isRelevant(title, query) {
+  const t = title.toLowerCase();
+  const q = query.toLowerCase();
+
+  for (const w of EXCLUDE_WORDS) {
+    if (t.includes(w)) return false;
+  }
+
+  // Model kesinliği: sorgu rakam içeriyorsa sorguda olmayan varyantları engelle
+  const hasNumber = /\d/.test(q);
+  if (hasNumber) {
+    for (const v of MODEL_VARIANTS) {
+      const queryHasVariant = q.includes(v);
+      const titleHasVariant = t.includes(v);
+      if (!queryHasVariant && titleHasVariant) return false;
+    }
+  }
+
+  return true;
+}
 
 function httpsGet(path) {
   return new Promise((resolve, reject) => {
@@ -24,24 +75,27 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: JSON.stringify({ error: 'q parametresi gerekli' }) };
   }
 
-  const path = `/search-v2?q=${encodeURIComponent(q)}&country=tr&language=tr&page=1&limit=10&sort_by=BEST_MATCH&product_condition=ANY`;
+  const path = '/search-v2?q=' + encodeURIComponent(q) + '&country=tr&language=tr&page=1&limit=20&sort_by=BEST_MATCH&product_condition=ANY';
 
   try {
-    const { status, body } = await httpsGet(path);
+    const { body } = await httpsGet(path);
     const data = JSON.parse(body);
-
-    // Sadece gerekli alanları döndür (response boyutunu küçült)
     const products = (data.data && data.data.products) || [];
-    const slim = products.slice(0, 8).map(p => ({
-      title: p.product_title || '',
-      image: (p.product_photos && p.product_photos[0]) || '',
-      price: p.offer ? p.offer.price : (p.typical_price_range ? p.typical_price_range[0] : ''),
-      listPrice: p.offer ? p.offer.list_price : '',
-      store: p.offer ? p.offer.store_name : '',
-      url: p.offer ? p.offer.offer_page_url : '',
-      shipping: p.offer ? p.offer.shipping : '',
-      condition: p.offer ? p.offer.condition : 'NEW'
-    })).filter(p => p.url);
+
+    const slim = products
+      .filter(p => p.offer && p.offer.offer_page_url)
+      .filter(p => isTurkishStore(p.offer.store_name))
+      .filter(p => isRelevant(p.product_title || '', q))
+      .slice(0, 8)
+      .map(p => ({
+        title: p.product_title || '',
+        image: (p.product_photos && p.product_photos[0]) || '',
+        price: p.offer ? p.offer.price : '',
+        listPrice: p.offer ? p.offer.list_price : '',
+        store: p.offer ? p.offer.store_name : '',
+        url: p.offer ? p.offer.offer_page_url : '',
+        shipping: p.offer ? p.offer.shipping : ''
+      }));
 
     return {
       statusCode: 200,
