@@ -75,7 +75,7 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: JSON.stringify({ error: 'q parametresi gerekli' }) };
   }
 
-  const path = '/search-v2?q=' + encodeURIComponent(q) + '&country=tr&language=tr&page=1&limit=20&sort_by=BEST_MATCH&product_condition=ANY';
+  const path = '/search-v2?q=' + encodeURIComponent(q) + '&country=tr&language=tr&page=1&limit=40&sort_by=BEST_MATCH&product_condition=ANY';
 
   try {
     const { body } = await httpsGet(path);
@@ -86,7 +86,7 @@ exports.handler = async (event) => {
       .filter(p => p.offer && p.offer.offer_page_url)
       .filter(p => isTurkishStore(p.offer.store_name))
       .filter(p => isRelevant(p.product_title || '', q))
-      .slice(0, 8)
+      .slice(0, 20)
       .map(p => ({
         title: p.product_title || '',
         image: (p.product_photos && p.product_photos[0]) || '',

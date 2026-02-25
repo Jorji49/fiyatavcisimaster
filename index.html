@@ -1419,12 +1419,14 @@
                 const priceMap={};
                 d.products.forEach(function(p){
                     if(!p.price||!p.store)return;
-                    const normStore=p.store.toLowerCase().replace(/[^a-z0-9]/g,'');
+                    var normStore=p.store.toLowerCase().replace(/[^a-z0-9çşğüöı]/g,'');
                     allCards.forEach(function(card){
-                        const key=card.dataset.storeKey;
-                        if(normStore.includes(key)&&!priceMap[key]){
-                            priceMap[key]={price:p.price,url:p.url};
-                        }
+                        var key=card.dataset.storeKey;
+                        if(priceMap[key])return;
+                        var match=false;
+                        if(key.length<=3){match=normStore===key||normStore.startsWith(key+'.')||normStore.startsWith(key+'com');}
+                        else{match=normStore.includes(key)||key.includes(normStore);}
+                        if(match){priceMap[key]={price:p.price,url:p.url};}
                     });
                 });
                 allCards.forEach(function(card){
@@ -1463,7 +1465,6 @@
                         <div class="text-xl md:text-2xl font-black tracking-tight leading-tight">Amazon'da En İyi Fiyatı Gör</div>
                         <div class="flex items-center gap-2 mt-1.5 flex-wrap">
                             <span class="text-xs font-bold opacity-80">Hızlı Teslimat &bull; Prime &bull; Güvenli Alışveriş</span>
-                            <a href="https://tr.camelcamelcamel.com/search?sq=${searchQ}" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="text-[10px] font-bold px-2.5 py-1 rounded-lg bg-white/20 hover:bg-white/30 transition-colors whitespace-nowrap"><i class="fa-solid fa-chart-line mr-1"></i>Fiyat Geçmişi</a>
                         </div>
                     </div>
                     <div class="flex flex-col items-center gap-2 shrink-0 pr-1 md:pr-2">
