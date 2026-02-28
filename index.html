@@ -1480,7 +1480,7 @@
                         </div>
                     </div>
                     <div class="flex flex-col items-center gap-2 shrink-0 pr-1 md:pr-2">
-                        <div class="price-slot" data-price-for="AMAZON" style="margin:0;padding:0"><div class="price-loading" style="background:rgba(255,255,255,0.2)"></div></div>
+                        <div class="price-slot" data-price-for="Amazon" style="margin:0;padding:0"><div class="price-loading" style="background:rgba(255,255,255,0.2)"></div></div>
                         <div class="bg-white text-orange-600 font-black text-sm px-5 py-2.5 rounded-xl shadow-lg group-hover:scale-105 transition-transform whitespace-nowrap">Amazon'da Gör <i class="fa-solid fa-arrow-right ml-1"></i></div>
                     </div>
                 </div>`;
@@ -1771,46 +1771,53 @@
             }
             try{
                 const r=await fetch('/.netlify/functions/prices?q='+encodeURIComponent(q));
-                if(!r.ok)throw new Error('prices err');
+                if(!r.ok)throw new Error('prices status '+r.status);
                 const d=await r.json();
-                if(d.error||!d.results)throw new Error(d.error||'no results');
+                if(d.error&&!d.results){
+                    console.warn('SerpApi:',d.error);
+                    document.querySelectorAll('.price-loading').forEach(el=>el.remove());
+                    return;
+                }
                 const cacheEntry={data:d,t:Date.now()};
                 _priceCache[cacheKey]=cacheEntry;
                 try{localStorage.setItem('pc_'+cacheKey,JSON.stringify(cacheEntry))}catch(e){}
                 applyPrices(d);
             }catch(e){
-                // Sessiz hata — fiyat slotlarını kaldır
+                console.warn('fetchPrices error:',e);
                 document.querySelectorAll('.price-loading').forEach(el=>el.remove());
             }
         }
         function applyPrices(data){
-            if(!data||!data.results)return;
+            if(!data)return;
+            const allResults=data.storeResults||data.results||[];
+            if(allResults.length===0){
+                document.querySelectorAll('.price-loading').forEach(el=>el.remove());
+                return;
+            }
+            const lowest=data.lowest?data.lowest.price:null;
             const grid=document.getElementById('gridContainer');
             const cards=grid.querySelectorAll('[data-store]');
-            const lowest=data.lowest?data.lowest.price:null;
-            // Her mağaza kartına fiyat eşleştir
+            // Mağaza eşleştirme — case-insensitive
             cards.forEach(card=>{
-                const storeName=card.dataset.store;
+                const storeName=(card.dataset.store||'').toLowerCase();
                 const slot=card.querySelector('.price-slot');
                 if(!slot)return;
-                // SerpApi sonuçlarında bu mağazayı ara
-                const match=data.results.find(r=>r.store===storeName);
+                const match=allResults.find(r=>(r.store||'').toLowerCase()===storeName);
                 if(match){
-                    const isLowest=lowest&&match.price===lowest;
-                    slot.innerHTML=`<span class="price-tag">₺${match.priceFormatted.replace(' TL','')}</span>${isLowest?'<span class="price-low-badge">EN DÜŞÜK</span>':''}`;
+                    const isLowest=lowest&&match.price<=lowest;
+                    slot.innerHTML='<span class="price-tag">₺'+match.priceFormatted.replace(' TL','')+'</span>'+(isLowest?'<span class="price-low-badge">EN DÜŞÜK</span>':'');
                 }else{
-                    // Bu mağaza için fiyat bulunamadı — slotu gizle
                     slot.innerHTML='';
                 }
             });
             // Amazon affiliate kart
             const affSlot=document.querySelector('.amazon-aff-card .price-slot');
             if(affSlot){
-                const amazonMatch=data.results.find(r=>r.store==='AMAZON');
-                if(amazonMatch){
-                    affSlot.innerHTML=`<span style="font-size:1.1rem;font-weight:900;color:#fff">₺${amazonMatch.priceFormatted.replace(' TL','')}</span>`;
+                const amz=allResults.find(r=>(r.store||'').toLowerCase()==='amazon');
+                if(amz){
+                    affSlot.innerHTML='<span style="font-size:1.1rem;font-weight:900;color:#fff">₺'+amz.priceFormatted.replace(' TL','')+'</span>';
                 }else if(data.lowest){
-                    affSlot.innerHTML=`<span style="font-size:0.7rem;font-weight:700;color:rgba(255,255,255,0.8)">En düşük: ₺${data.lowest.priceFormatted.replace(' TL','')}</span>`;
+                    affSlot.innerHTML='<span style="font-size:0.7rem;font-weight:700;color:rgba(255,255,255,0.8)">En düşük: ₺'+data.lowest.priceFormatted.replace(' TL','')+'</span>';
                 }else{
                     affSlot.innerHTML='';
                 }
@@ -1883,6 +1890,7 @@
         });
         function showPWABanner(){
             if(localStorage.getItem('pwa_dismiss'))return;
+            if(document.getElementById('pwaBanner'))return;
             const init=document.getElementById('initialContent');
             if(!init)return;
             const banner=document.createElement('div');banner.className='pwa-banner';banner.id='pwaBanner';

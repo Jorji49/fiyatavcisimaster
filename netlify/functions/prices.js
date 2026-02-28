@@ -2,98 +2,116 @@
  * /.netlify/functions/prices
  * SerpApi Google Shopping proxy — Türkiye fiyatlarını çeker.
  *
- * ?q=iphone+17+pro  →  [{store,title,price,url,thumbnail}, ...]
+ * ?q=iphone+17+pro  →  {query, count, results:[{store,title,price,...}], lowest}
  *
  * API Key: Netlify dashboard → Site settings → Environment variables → SERPAPI_KEY
  */
 
 const https = require('https');
 
-function httpsGet(url) {
+// Redirect destekli HTTPS GET (SerpApi 301/302 yapabiliyor)
+function httpsGet(url, maxRedirects) {
+  if (maxRedirects === undefined) maxRedirects = 3;
   return new Promise((resolve, reject) => {
-    const req = https.get(url, {
-      headers: { 'Accept': 'application/json' },
-    }, (res) => {
+    const req = https.get(url, (res) => {
+      // Redirect kontrolü
+      if ((res.statusCode === 301 || res.statusCode === 302 || res.statusCode === 307) && res.headers.location) {
+        if (maxRedirects <= 0) return reject(new Error('too many redirects'));
+        return httpsGet(res.headers.location, maxRedirects - 1).then(resolve).catch(reject);
+      }
       let data = '';
       res.on('data', (c) => (data += c));
       res.on('end', () => {
         try { resolve(JSON.parse(data)); }
-        catch (e) { reject(new Error('JSON parse failed')); }
+        catch (e) { reject(new Error('JSON parse failed: ' + data.substring(0, 200))); }
       });
     });
     req.on('error', reject);
-    req.setTimeout(8000, () => { req.destroy(); reject(new Error('timeout')); });
+    req.setTimeout(10000, () => { req.destroy(); reject(new Error('timeout')); });
   });
 }
 
-// Mağaza adını normalize et (eşleştirme için)
+// Bilinen mağaza eşleştirme haritası — key: normalize edilmiş ad, value: sitemizde görünen ad
+const STORE_MAP = {
+  'amazon': 'Amazon',
+  'amazoncomtr': 'Amazon',
+  'amazontr': 'Amazon',
+  'amazontürkiye': 'Amazon',
+  'hepsiburada': 'Hepsiburada',
+  'hepsiburadacom': 'Hepsiburada',
+  'trendyol': 'Trendyol',
+  'trendyolcom': 'Trendyol',
+  'n11': 'N11',
+  'n11com': 'N11',
+  'mediamarkt': 'MediaMarkt',
+  'teknosa': 'Teknosa',
+  'vatan': 'Vatan',
+  'vatanbilgisayar': 'Vatan',
+  'itopya': 'Itopya',
+  'incehesap': 'incehesap',
+  'ciceksepeti': 'Çiçeksepeti',
+  'superstep': 'Superstep',
+  'sneaksup': 'Sneaks Up',
+  'sportive': 'Sportive',
+  'intersport': 'Intersport',
+  'decathlon': 'Decathlon',
+  'boyner': 'Boyner',
+  'dr': 'D&R',
+  'kitapyurdu': 'kitapyurdu',
+  'bkmkitap': 'BKM Kitap',
+  'watsons': 'Watsons',
+  'gratis': 'Gratis',
+  'rossmann': 'Rossmann',
+  'sephora': 'Sephora',
+  'koctas': 'Koçtaş',
+  'bauhaus': 'Bauhaus',
+  'ikea': 'IKEA',
+  'pttavm': 'PttAVM',
+  'morhipo': 'Morhipo',
+  'defacto': 'DeFacto',
+  'lcwaikiki': 'LC Waikiki',
+  'koton': 'Koton',
+  'apple': 'Apple',
+};
+
 function normalizeStore(name) {
   if (!name) return '';
   return name.toLowerCase()
     .replace(/\.com\.tr|\.com|\.tr/g, '')
-    .replace(/[^a-z0-9çğıöşüÇĞİÖŞÜ]/gi, '')
+    .replace(/[^a-z0-9]/gi, '')
     .trim();
 }
 
-// Bilinen mağaza eşleştirme haritası
-const STORE_MAP = {
-  'amazon': 'AMAZON',
-  'amazoncomtr': 'AMAZON',
-  'amazontr': 'AMAZON',
-  'hepsiburada': 'HEPSIBURADA',
-  'trendyol': 'TRENDYOL',
-  'n11': 'N11',
-  'mediamarkt': 'MEDIAMARKT',
-  'teknosa': 'TEKNOSA',
-  'vatan': 'VATAN',
-  'vatanbilgisayar': 'VATAN',
-  'itopya': 'ITOPYA',
-  'incehesap': 'INCEHESAP',
-  'sinerji': 'SINERJI',
-  'troy': 'TROY',
-  'troyestore': 'TROY',
-  'superstep': 'SUPERSTEP',
-  'sneaksup': 'SNEAKS UP',
-  'sportive': 'SPORTIVE',
-  'intersport': 'INTERSPORT',
-  'decathlon': 'DECATHLON',
-  'boyner': 'BOYNER',
-  'dr': 'D&R',
-  'kitapyurdu': 'KITAPYURDU',
-  'bkmkitap': 'BKM KİTAP',
-  'idefix': 'İDEFİX',
-  'watsons': 'WATSONS',
-  'gratis': 'GRATIS',
-  'rossmann': 'ROSSMANN',
-  'sephora': 'SEPHORA',
-  'koctas': 'KOÇTAŞ',
-  'bauhaus': 'BAUHAUS',
-  'ikea': 'IKEA',
-  'toyzzshop': 'TOYZZ SHOP',
-  'peti': 'PETİ',
-};
-
 function matchStore(source) {
   const norm = normalizeStore(source);
-  // Direkt eşleşme
   if (STORE_MAP[norm]) return STORE_MAP[norm];
-  // Kısmi eşleşme
   for (const [key, val] of Object.entries(STORE_MAP)) {
     if (norm.includes(key) || key.includes(norm)) return val;
   }
-  return null;
+  return source || null;
 }
 
-// TL fiyatı sayıya çevir
-function parseTRY(priceStr) {
-  if (!priceStr) return null;
-  // "12.499,00 TL" veya "₺12.499" veya "12499.00 TRY" formatlarını destekle
-  const cleaned = priceStr
-    .replace(/[^\d.,]/g, '')
-    .replace(/\.(\d{3})/g, '$1')  // binlik ayracı kaldır
-    .replace(',', '.');            // ondalık ayracı
+// Fiyatı sayıya çevir — SerpApi extracted_price sayı veya string olabilir
+function parsePrice(val) {
+  if (val == null) return null;
+  if (typeof val === 'number') return val > 0 ? val : null;
+  // String: "12.499,00 TL" veya "₺12.499" veya "12,499.00"
+  const s = String(val);
+  // Türk formatı: nokta binlik, virgül ondalık (12.499,00)
+  if (/\d{1,3}\.\d{3}/.test(s) && s.includes(',')) {
+    const cleaned = s.replace(/[^\d.,]/g, '').replace(/\./g, '').replace(',', '.');
+    const num = parseFloat(cleaned);
+    return (num > 0 && num < 10000000) ? num : null;
+  }
+  // US formatı veya sadece sayı
+  const cleaned = s.replace(/[^\d.]/g, '');
   const num = parseFloat(cleaned);
-  return (num && num > 0 && num < 10000000) ? num : null;
+  return (num > 0 && num < 10000000) ? num : null;
+}
+
+// TL formatlama
+function formatTRY(num) {
+  return new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 0 }).format(num) + ' TL';
 }
 
 exports.handler = async (event) => {
@@ -106,7 +124,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify([]),
+      body: JSON.stringify({ results: [] }),
     };
   }
 
@@ -115,7 +133,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ error: 'API key not configured' }),
+      body: JSON.stringify({ error: 'SERPAPI_KEY not configured', results: [] }),
     };
   }
 
@@ -126,60 +144,68 @@ exports.handler = async (event) => {
       location: 'Turkey',
       hl: 'tr',
       gl: 'tr',
-      num: '30',
+      num: '40',
       api_key: apiKey,
     });
 
-    const url = `https://serpapi.com/search.json?${params.toString()}`;
+    const url = 'https://serpapi.com/search.json?' + params.toString();
     const data = await httpsGet(url);
 
-    const results = [];
-    const seenStores = new Set();
+    // SerpApi hata kontrolü
+    if (data.error) {
+      return {
+        statusCode: 200,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+        body: JSON.stringify({ error: data.error, results: [] }),
+      };
+    }
 
-    // shopping_results ana sonuçları
+    const results = [];
+    const bestPerStore = {};
+
     const items = data.shopping_results || [];
     for (const item of items) {
-      const store = matchStore(item.source || '');
-      const price = parseTRY(item.extracted_price != null ? String(item.extracted_price) : item.price);
+      const storeName = matchStore(item.source || '');
+      const price = parsePrice(item.extracted_price) || parsePrice(item.price);
 
-      if (price) {
-        const entry = {
-          store: store,
-          storeName: item.source || '',
-          title: (item.title || '').substring(0, 120),
-          price: price,
-          priceFormatted: price.toLocaleString('tr-TR', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' TL',
-          url: item.link || '',
-          thumbnail: item.thumbnail || '',
-        };
+      if (!price) continue;
 
-        // Bilinen mağaza başına sadece en düşük fiyatı al
-        if (store) {
-          if (!seenStores.has(store) || results.find(r => r.store === store)?.price > price) {
-            results.push(entry);
-            seenStores.add(store);
-          }
-        } else {
-          results.push(entry);
+      const entry = {
+        store: storeName,
+        source: item.source || '',
+        title: (item.title || '').substring(0, 120),
+        price: price,
+        priceFormatted: formatTRY(price),
+        url: item.link || item.product_link || '',
+        thumbnail: item.thumbnail || '',
+      };
+
+      // Mağaza başına en düşük fiyatı tut
+      if (storeName) {
+        if (!bestPerStore[storeName] || bestPerStore[storeName].price > price) {
+          bestPerStore[storeName] = entry;
         }
       }
+      results.push(entry);
     }
 
     // Fiyata göre sırala
     results.sort((a, b) => a.price - b.price);
+    // Mağaza başına en iyileri de sırala
+    const storeResults = Object.values(bestPerStore).sort((a, b) => a.price - b.price);
 
     return {
       statusCode: 200,
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
-        // 30 dakika CDN cache + 2 saat stale-while-revalidate
         'Cache-Control': 'public, max-age=1800, stale-while-revalidate=7200',
       },
       body: JSON.stringify({
         query: q.trim(),
         count: results.length,
-        results: results.slice(0, 20),
+        results: results.slice(0, 25),
+        storeResults: storeResults,
         lowest: results.length > 0 ? results[0] : null,
         timestamp: Date.now(),
       }),
@@ -187,11 +213,8 @@ exports.handler = async (event) => {
   } catch (err) {
     return {
       statusCode: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-      },
-      body: JSON.stringify({ error: 'fetch_failed', results: [] }),
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ error: 'fetch_failed: ' + err.message, results: [] }),
     };
   }
 };
