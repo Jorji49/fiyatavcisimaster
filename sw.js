@@ -1,4 +1,4 @@
-/* FiyatAvcısı Service Worker — v1 */
+/* FiyatAvcısı Service Worker — v2 */
 const CACHE_NAME = 'fiyatavcisi-v2';
 const PRECACHE = [
   '/',

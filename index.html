@@ -65,15 +65,15 @@
         </script>
     </head>     
     <body> 
-        <button class="theme-toggle" onclick="toggleTheme()" title="Tema Değiştir"> 
-            <i class="fa-solid fa-moon" id="themeIcon"></i> 
+        <button class="theme-toggle" onclick="toggleTheme()" title="Tema Değiştir" aria-label="Tema Değiştir">
+            <i class="fa-solid fa-moon" id="themeIcon"></i>
         </button>         
         <!-- Ana Sayfa Butonu -->         
-        <button onclick="clearSearch()" title="Ana Sayfa" style="position:fixed;top:4.5rem;right:1rem;z-index:50;width:44px;height:44px;border-radius:50%;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:all 0.3s;box-shadow:0 4px 12px var(--shadow-color)" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform=''">
+        <button onclick="clearSearch()" title="Ana Sayfa" aria-label="Ana Sayfa" style="position:fixed;top:4.5rem;right:1rem;z-index:50;width:44px;height:44px;border-radius:50%;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;transition:all 0.3s;box-shadow:0 4px 12px var(--shadow-color)" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform=''">
             <i class="fa-solid fa-house"></i>
         </button>         
         <!-- Favoriler Toggle -->         
-        <button class="fav-toggle-btn" onclick="openFavPanel()" title="Favorilerim" id="favToggleBtn"> 
+        <button class="fav-toggle-btn" onclick="openFavPanel()" title="Favorilerim" aria-label="Favorilerim" id="favToggleBtn">
             <i class="fa-regular fa-heart"></i> 
             <span class="fav-count" id="favCount">0</span> 
         </button>         
@@ -107,10 +107,10 @@
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </div>                     
                     <input type="text" id="queryInput" aria-label="Ürün ara" class="flex-grow bg-transparent border-none outline-none text-slate-900 dark:text-white text-lg md:text-2xl py-3 md:py-4 font-bold placeholder-gray-300 dark:placeholder-slate-500 min-w-0" placeholder="Ürün, Marka veya Model ara..." autocomplete="off" oninput="handleInput(this.value)" onkeydown="handleSuggestKey(event)"> 
-                    <div id="clearBtn" onclick="clearSearch()" class="px-2 md:px-4 text-lg md:text-xl shrink-0 h-full" title="Temizle">
+                    <div id="clearBtn" onclick="clearSearch()" class="px-2 md:px-4 text-lg md:text-xl shrink-0 h-full" role="button" aria-label="Aramayı Temizle" title="Temizle">
                         <i class="fa-solid fa-circle-xmark"></i>
                     </div>
-                    <button class="barcode-scan-btn" onclick="openBarcodeScanner()" title="Barkod Tara"><i class="fa-solid fa-barcode"></i></button>
+                    <button class="barcode-scan-btn" onclick="openBarcodeScanner()" title="Barkod Tara" aria-label="Barkod Tara"><i class="fa-solid fa-barcode"></i></button>
                     <button id="searchBtn" onclick="runEngine()" style="color:#ffffff;background:#2563eb" class="hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 px-6 md:px-10 py-3 md:py-5 rounded-2xl font-bold transition-all shadow-lg flex items-center gap-2 md:gap-3 text-base md:text-lg shrink-0 justify-center active:scale-95 hover:shadow-xl ml-2">ARA</button>                     
                 </div>                 
                 <div id="suggestDropdown" class="suggest-dropdown hidden"></div>                 
@@ -137,7 +137,7 @@
                 <div class="mb-12"> 
                     <h3 class="text-center font-bold text-xs tracking-widest uppercase mb-6" style="color:var(--text-muted)">Popüler Kategoriler</h3> 
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto"> 
-                        <button class="cat-btn" onclick="quickSearch('iPhone 16 Pro')">
+                        <button class="cat-btn" onclick="quickSearch('iPhone 17 Pro')">
                             <i class="fa-solid fa-mobile-screen-button cat-icon"></i>
                             <span class="cat-name">Telefon</span>
                         </button>                         
@@ -1169,7 +1169,10 @@
             const c=document.getElementById('typoContainer');
             if(hasTypo&&sg!==q.toLowerCase()&&corrections.length>0){
                 const correctionText=corrections.map(c=>`<strong>${c.from}</strong> → <strong class="text-green-600">${c.to}</strong>`).join(', ');
-                c.innerHTML=`<div class="typo-box"><i class="fa-solid fa-wand-magic-sparkles text-blue-500"></i><span class="text-slate-500 font-medium">Şunu mu aramak istediniz:</span><span class="typo-link" onclick="applyCorrection('${sg}')">${sg}</span><span class="text-slate-300 text-xs ml-2">(${correctionText})</span></div>`;
+                const typoBox=document.createElement('div');typoBox.className='typo-box';
+                typoBox.innerHTML=`<i class="fa-solid fa-wand-magic-sparkles text-blue-500"></i><span class="text-slate-500 font-medium">Şunu mu aramak istediniz:</span><span class="typo-link" id="typoLink"></span><span class="text-slate-300 text-xs ml-2">(${correctionText})</span>`;
+                c.innerHTML='';c.appendChild(typoBox);
+                const typoLink=document.getElementById('typoLink');typoLink.textContent=sg;typoLink.onclick=()=>applyCorrection(sg);
                 c.classList.remove('hidden')
             }else{c.classList.add('hidden')}
         }
@@ -1192,7 +1195,7 @@
         function clearHistory(){localStorage.removeItem('ph_hist');renderHistory();document.getElementById('gridContainer').innerHTML='';document.getElementById('resultInfo').classList.add('hidden');document.getElementById('initialContent').classList.remove('hidden')}
         function renderHistory(){const c=document.getElementById('historyArea');const h=JSON.parse(localStorage.getItem('ph_hist')||'[]');if(h.length===0){c.classList.add('hidden');return}c.innerHTML=`<span class="text-xs font-bold text-slate-300 self-center mr-1">SON:</span>`;h.forEach(i=>{const chip=document.createElement('div');chip.className='history-chip';chip.innerHTML=`<i class="fa-solid fa-clock-rotate-left text-[10px] text-slate-400"></i> ${i}`;chip.onclick=()=>{document.getElementById('queryInput').value=i;runEngine()};c.appendChild(chip)});const clearBtn=document.createElement('button');clearBtn.className='history-clear-btn';clearBtn.innerHTML='<i class="fa-solid fa-trash-can"></i>';clearBtn.title='Geçmişi Temizle';clearBtn.onclick=(e)=>{e.stopPropagation();clearHistory()};c.appendChild(clearBtn);c.classList.remove('hidden')}
         function toggleClearBtn(){const i=document.getElementById('queryInput'),b=document.getElementById('clearBtn');if(i.value.length>0)b.classList.add('visible');else b.classList.remove('visible')}
-        function clearSearch(){document.getElementById('queryInput').value='';document.getElementById('gridContainer').innerHTML='';document.getElementById('adsenseResultsArea').classList.add('hidden');const pb=document.getElementById('priceBadge');if(pb)pb.innerHTML='';document.getElementById('initialContent').classList.remove('hidden');updateUrl('');toggleClearBtn();hideSuggest();document.getElementById('queryInput').focus()}
+        function clearSearch(){document.getElementById('queryInput').value='';document.getElementById('gridContainer').innerHTML='';document.getElementById('adsenseResultsArea').classList.add('hidden');document.getElementById('resultInfo').classList.add('hidden');document.getElementById('shareBar').classList.add('hidden');document.getElementById('errorPanel').classList.add('hidden');document.getElementById('typoContainer').classList.add('hidden');const pb=document.getElementById('priceBadge');if(pb)pb.innerHTML='';document.getElementById('initialContent').classList.remove('hidden');updateUrl('');toggleClearBtn();hideSuggest();document.getElementById('queryInput').focus()}
 
         // ==================== ARAMA MOTORU ====================
 
@@ -1347,7 +1350,7 @@
                     }
                     else {
                         // GENERAL - Tüm büyük pazaryerleri + ana kategoriler
-                        if(m.t.includes("market") || m.t.includes("tech") || m.t.includes("fashion") || m.t.includes("cosmetics") || m.t.includes("book"))show=true;
+                        if(m.t.includes("market") || m.t.includes("tech") || m.t.includes("fashion") || m.t.includes("cosmetic") || m.t.includes("book"))show=true;
                         if(["AMAZON","HEPSIBURADA","TRENDYOL","N11"].includes(m.name)){show=true;}
                         if(m.name==="AMAZON")highlight=true;
                     }
@@ -1450,7 +1453,7 @@
             const patterns=[
                 /(?:bütçem|bütçe|max|en fazla|maksimum)[:\s]+?([\d.,]+)\s*(?:tl|₺|lira)?\s*(.+)?/i,
                 /([\d.,]+)\s*(?:tl|₺|lira)\s+(?:altı|kadar|'[ae] kadar|ye kadar)\s*(.+)/i,
-                /^([\d.,]+)\s*(?:tl|₺)?\s+(.{4,})/i,
+                /^([\d.,]+)\s*(?:tl|₺)\s+(.{4,})/i,
             ];
             for(let re of patterns){
                 const m=q.match(re);
@@ -1591,15 +1594,22 @@
                 list.innerHTML=`<div class="text-center py-16" style="color:var(--text-muted)"><i class="fa-regular fa-heart text-4xl mb-4 block opacity-20"></i><p class="font-bold text-sm">Henüz favori yok</p><p class="text-xs mt-2 opacity-70">Arama sonucundaki ♥ butonuna basarak mağaza linklerini kaydet.</p></div>`;
                 return;
             }
-            list.innerHTML=favs.map(f=>`
-                <a href="${f.url}" target="_blank" rel="noopener" class="fav-item">
-                    ${f.logo?`<img src="${f.logo}" class="fav-item-logo" onerror="this.style.display='none'">`:`<div class="fav-item-logo flex items-center justify-center font-black text-blue-500" style="background:var(--bg-secondary)">${f.name.charAt(0)}</div>`}
-                    <div class="flex-grow min-w-0">
-                        <div class="font-bold text-sm truncate" style="color:var(--text-primary)">${f.name}</div>
-                        <div class="text-[10px] truncate opacity-50" style="color:var(--text-secondary)">${f.url.replace('https://','').substring(0,45)}</div>
-                    </div>
-                    <button onclick="event.preventDefault();event.stopPropagation();removeFav('${encodeURIComponent(f.url)}')" class="shrink-0 text-slate-300 hover:text-red-400 transition-colors text-sm px-1 py-1"><i class="fa-solid fa-xmark"></i></button>
-                </a>`).join('');
+            list.innerHTML='';
+            favs.forEach(f=>{
+                const a=document.createElement('a');a.href=f.url;a.target='_blank';a.rel='noopener';a.className='fav-item';
+                if(f.logo){
+                    const img=document.createElement('img');img.src=f.logo;img.className='fav-item-logo';img.onerror=function(){this.style.display='none'};a.appendChild(img);
+                }else{
+                    const d=document.createElement('div');d.className='fav-item-logo flex items-center justify-center font-black text-blue-500';d.style.background='var(--bg-secondary)';d.textContent=f.name.charAt(0);a.appendChild(d);
+                }
+                const info=document.createElement('div');info.className='flex-grow min-w-0';
+                const nameEl=document.createElement('div');nameEl.className='font-bold text-sm truncate';nameEl.style.color='var(--text-primary)';nameEl.textContent=f.name;
+                const urlEl=document.createElement('div');urlEl.className='text-[10px] truncate opacity-50';urlEl.style.color='var(--text-secondary)';urlEl.textContent=f.url.replace('https://','').substring(0,45);
+                info.appendChild(nameEl);info.appendChild(urlEl);a.appendChild(info);
+                const btn=document.createElement('button');btn.className='shrink-0 text-slate-300 hover:text-red-400 transition-colors text-sm px-1 py-1';btn.innerHTML='<i class="fa-solid fa-xmark"></i>';
+                btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();removeFav(encodeURIComponent(f.url))});
+                a.appendChild(btn);list.appendChild(a);
+            });
         }
         function removeFav(encodedUrl){
             const url=decodeURIComponent(encodedUrl);
@@ -1630,7 +1640,15 @@
             if(!box)return;
             if(!items||items.length===0){hideSuggest();return;}
             _sgIdx=-1;
-            box.innerHTML=items.map((s,i)=>`<div class="suggest-item" data-idx="${i}" onclick="pickSuggest('${s.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')"><i class="fa-solid fa-magnifying-glass"></i><span>${s}</span></div>`).join('');
+            box.innerHTML='';
+            items.forEach((s,i)=>{
+                const div=document.createElement('div');div.className='suggest-item';div.dataset.idx=i;
+                const icon=document.createElement('i');icon.className='fa-solid fa-magnifying-glass';
+                const span=document.createElement('span');span.textContent=s;
+                div.appendChild(icon);div.appendChild(span);
+                div.addEventListener('click',()=>pickSuggest(s));
+                box.appendChild(div);
+            });
             box.classList.remove('hidden');
         }
         function hideSuggest(){

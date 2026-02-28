@@ -1,7 +1,7 @@
 ﻿{
   "name": "FiyatAvcisi",
   "short_name": "FiyatAvcisi",
-  "description": "Turkiyenin en guvenilir fiyat karsilastirma ve alisveris motoru.",
+  "description": "Türkiye'nin en güvenilir fiyat karşılaştırma ve alışveriş motoru.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f8fafc",
