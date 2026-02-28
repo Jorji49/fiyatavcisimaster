@@ -72,6 +72,15 @@
         .pwa-banner{display:flex;align-items:center;gap:1rem;padding:1rem 1.5rem;border-radius:1.25rem;background:linear-gradient(135deg,#2563eb 0%,#4f46e5 100%);color:#fff;max-width:700px;margin:0 auto 1.5rem auto;animation:fadeIn 0.3s ease;cursor:pointer;transition:all 0.2s}
         .pwa-banner:hover{transform:translateY(-2px);box-shadow:0 16px 32px -8px rgba(37,99,235,0.4)}
         .pwa-banner.hidden{display:none!important}
+        /* Fiyat Slot (kart üzerinde) */
+        .price-slot{display:flex;align-items:center;gap:0.4rem;margin-top:auto;padding-top:0.5rem}
+        .price-tag{font-size:1.05rem;font-weight:900;color:#16a34a;letter-spacing:-0.02em;line-height:1}
+        .dark .price-tag{color:#4ade80}
+        .price-loading{width:5rem;height:0.9rem;border-radius:0.4rem;background:var(--bg-tertiary);position:relative;overflow:hidden}
+        .price-loading::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(148,163,184,0.1),transparent);animation:shimmer 1.5s infinite}
+        .price-src{font-size:0.55rem;font-weight:700;color:var(--text-muted);opacity:0.7}
+        .price-low-badge{font-size:0.55rem;font-weight:800;background:#dcfce7;color:#15803d;padding:1px 6px;border-radius:999px}
+        .dark .price-low-badge{background:#14532d;color:#4ade80}
         /* Global dark mode transitions */
         *, *::before, *::after{transition-property:background-color,border-color,color,box-shadow;transition-duration:0s}
         .cat-btn,.link-card,.recommended-card,.search-container,.kur-bar,.history-chip,.aff-card,.takvim-banner,.suggest-dropdown,.suggest-item,.fav-panel,.fav-item,.share-btn,.tool-btn,.filter-chip,.cookie-banner,.back-to-top,.theme-toggle,.fav-toggle-btn{transition:all 0.25s cubic-bezier(0.25,0.8,0.25,1)}
@@ -1437,6 +1446,8 @@
                     document.getElementById('errorText').innerHTML=`Bu arama için uygun sonuç bulunamadı.<br><span style="font-size:0.85rem;opacity:0.8;margin-top:0.5rem;display:block">Doğrudan aramayı deneyin:</span><div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.75rem;justify-content:center"><a href="https://www.amazon.com.tr/s?k=${eq}" target="_blank" rel="noopener" style="padding:6px 14px;border-radius:999px;background:#FF9900;color:#fff;font-weight:700;font-size:0.78rem;text-decoration:none">Amazon</a><a href="https://www.hepsiburada.com/ara?q=${eq}" target="_blank" rel="noopener" style="padding:6px 14px;border-radius:999px;background:#FF6000;color:#fff;font-weight:700;font-size:0.78rem;text-decoration:none">Hepsiburada</a><a href="https://www.trendyol.com/sr?q=${eq}" target="_blank" rel="noopener" style="padding:6px 14px;border-radius:999px;background:#f27a1a;color:#fff;font-weight:700;font-size:0.78rem;text-decoration:none">Trendyol</a></div>`;
                     err.classList.remove('hidden');
                 }else{
+                    // Fiyatları async çek
+                    fetchPrices(q);
                     // Sonuçlara scroll
                     setTimeout(()=>{
                         const rect=grid.getBoundingClientRect();
@@ -1469,6 +1480,7 @@
                         </div>
                     </div>
                     <div class="flex flex-col items-center gap-2 shrink-0 pr-1 md:pr-2">
+                        <div class="price-slot" data-price-for="AMAZON" style="margin:0;padding:0"><div class="price-loading" style="background:rgba(255,255,255,0.2)"></div></div>
                         <div class="bg-white text-orange-600 font-black text-sm px-5 py-2.5 rounded-xl shadow-lg group-hover:scale-105 transition-transform whitespace-nowrap">Amazon'da Gör <i class="fa-solid fa-arrow-right ml-1"></i></div>
                     </div>
                 </div>`;
@@ -1481,12 +1493,12 @@
                 ht=`<div class="badge bg-white/20 backdrop-blur-sm shadow-sm"><i class="fa-solid fa-certificate"></i> RESMİ MAĞAZA</div><div class="flex items-center gap-4 md:gap-5 w-full pl-1 md:pl-2"><div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/10 flex items-center justify-center text-2xl md:text-3xl text-white shrink-0"><i class="${i}"></i></div><div class="flex-grow"><div class="text-xl md:text-2xl font-black tracking-tight leading-none mb-1">${n}</div><div class="text-[10px] md:text-xs font-bold opacity-70 tracking-widest uppercase">ARACISIZ SATIŞ</div></div><div class="text-white/80 text-2xl md:text-3xl group-hover:translate-x-2 transition-transform shrink-0 pr-1 md:pr-2"><i class="fa-solid fa-arrow-right"></i></div></div>`;
             } else if(t==="highlight"){
                 cl+="recommended-card";c.style.setProperty('--theme-color',td.c);
-                ht=`${favHtml}<div class="badge shadow-sm"><i class="fa-solid fa-check-circle mr-1"></i> ÖNERİLEN</div><div class="logo-wrapper mb-auto mt-2 pl-1"><img src="${l}" class="${imgClass}" alt="${n}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="fallback-text text-slate-800" style="color:${td.c}">${n}</span></div><div class="text-green-700 font-extrabold text-sm flex items-center justify-end gap-2 group-hover:gap-3 transition-all pr-1 mt-3">Fiyatı Gör <i class="fa-solid fa-chevron-right text-xs"></i></div>`;
+                ht=`${favHtml}<div class="badge shadow-sm"><i class="fa-solid fa-check-circle mr-1"></i> ÖNERİLEN</div><div class="logo-wrapper mb-auto mt-2 pl-1"><img src="${l}" class="${imgClass}" alt="${n}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="fallback-text text-slate-800" style="color:${td.c}">${n}</span></div><div class="price-slot" data-price-for="${n}"><div class="price-loading"></div></div><div class="text-green-700 font-extrabold text-sm flex items-center justify-end gap-2 group-hover:gap-3 transition-all pr-1 mt-1">Fiyatı Gör <i class="fa-solid fa-chevron-right text-xs"></i></div>`;
             } else {
                 cl+="link-card";c.style.setProperty('--theme-color',td.c);c.style.setProperty('--theme-shadow',td.s);
-                ht=`${favHtml}<div class="logo-wrapper my-auto pl-1"><img src="${l}" class="${imgClass}" alt="${n}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="fallback-text text-slate-700" style="color:${td.c}">${n}</span></div><div class="absolute bottom-4 right-4 text-slate-300 group-hover:text-[color:var(--theme-color)] transition-colors text-lg"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>`;
+                ht=`${favHtml}<div class="logo-wrapper my-auto pl-1"><img src="${l}" class="${imgClass}" alt="${n}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="fallback-text text-slate-700" style="color:${td.c}">${n}</span></div><div class="price-slot" data-price-for="${n}"><div class="price-loading"></div></div><div class="absolute bottom-4 right-4 text-slate-300 group-hover:text-[color:var(--theme-color)] transition-colors text-lg"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>`;
             }
-            c.className=cl;c.innerHTML=ht;g.appendChild(c);
+            c.className=cl;c.dataset.store=n;c.innerHTML=ht;g.appendChild(c);
         }
         // ==================== DOĞAL DİL ARAMA ====================
         function parseNLQuery(q){
@@ -1745,6 +1757,64 @@
             if(_bcTimer)clearInterval(_bcTimer);
             if(_bcStream)_bcStream.getTracks().forEach(t=>t.stop());
             _bcStream=null;_bcDetector=null;_bcTimer=null;
+        }
+
+        // ==================== FİYAT ÇEKİCİ (SerpApi) ====================
+        const _priceCache={};
+        async function fetchPrices(q){
+            const cacheKey=q.toLowerCase().trim();
+            // localStorage cache — 30 dakika
+            const cached=_priceCache[cacheKey]||JSON.parse(localStorage.getItem('pc_'+cacheKey)||'null');
+            if(cached&&(Date.now()-cached.t)<1800000){
+                applyPrices(cached.data);
+                return;
+            }
+            try{
+                const r=await fetch('/.netlify/functions/prices?q='+encodeURIComponent(q));
+                if(!r.ok)throw new Error('prices err');
+                const d=await r.json();
+                if(d.error||!d.results)throw new Error(d.error||'no results');
+                const cacheEntry={data:d,t:Date.now()};
+                _priceCache[cacheKey]=cacheEntry;
+                try{localStorage.setItem('pc_'+cacheKey,JSON.stringify(cacheEntry))}catch(e){}
+                applyPrices(d);
+            }catch(e){
+                // Sessiz hata — fiyat slotlarını kaldır
+                document.querySelectorAll('.price-loading').forEach(el=>el.remove());
+            }
+        }
+        function applyPrices(data){
+            if(!data||!data.results)return;
+            const grid=document.getElementById('gridContainer');
+            const cards=grid.querySelectorAll('[data-store]');
+            const lowest=data.lowest?data.lowest.price:null;
+            // Her mağaza kartına fiyat eşleştir
+            cards.forEach(card=>{
+                const storeName=card.dataset.store;
+                const slot=card.querySelector('.price-slot');
+                if(!slot)return;
+                // SerpApi sonuçlarında bu mağazayı ara
+                const match=data.results.find(r=>r.store===storeName);
+                if(match){
+                    const isLowest=lowest&&match.price===lowest;
+                    slot.innerHTML=`<span class="price-tag">₺${match.priceFormatted.replace(' TL','')}</span>${isLowest?'<span class="price-low-badge">EN DÜŞÜK</span>':''}`;
+                }else{
+                    // Bu mağaza için fiyat bulunamadı — slotu gizle
+                    slot.innerHTML='';
+                }
+            });
+            // Amazon affiliate kart
+            const affSlot=document.querySelector('.amazon-aff-card .price-slot');
+            if(affSlot){
+                const amazonMatch=data.results.find(r=>r.store==='AMAZON');
+                if(amazonMatch){
+                    affSlot.innerHTML=`<span style="font-size:1.1rem;font-weight:900;color:#fff">₺${amazonMatch.priceFormatted.replace(' TL','')}</span>`;
+                }else if(data.lowest){
+                    affSlot.innerHTML=`<span style="font-size:0.7rem;font-weight:700;color:rgba(255,255,255,0.8)">En düşük: ₺${data.lowest.priceFormatted.replace(' TL','')}</span>`;
+                }else{
+                    affSlot.innerHTML='';
+                }
+            }
         }
 
         // ==================== FİLTRE ÇUBUĞU ====================
