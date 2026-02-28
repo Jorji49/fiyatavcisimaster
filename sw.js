@@ -1,5 +1,5 @@
-/* FiyatAvcısı Service Worker — v2 */
-const CACHE_NAME = 'fiyatavcisi-v2';
+/* FiyatAvcısı Service Worker — v3 */
+const CACHE_NAME = 'fiyatavcisi-v3';
 const PRECACHE = [
   '/',
   '/index.html',

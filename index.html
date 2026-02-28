@@ -46,6 +46,36 @@
         .barcode-scan-btn{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border:none;background:transparent;cursor:pointer;color:var(--text-muted);transition:color 0.2s;flex-shrink:0;border-radius:0.5rem}
         .barcode-scan-btn:hover{color:#2563eb}
         .bc-overlay.hidden{display:none!important}
+        /* Skeleton Loading */
+        .skeleton-card{border-radius:1.25rem;min-height:120px;background:var(--bg-secondary);border:1px solid var(--border-color);padding:1.618rem;position:relative;overflow:hidden}
+        .skeleton-card::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(148,163,184,0.08) 50%,transparent 100%);animation:shimmer 1.5s infinite}
+        @keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+        .skeleton-bar{height:1rem;border-radius:0.5rem;background:var(--bg-tertiary);margin-bottom:0.75rem}
+        .skeleton-bar.w60{width:60%}.skeleton-bar.w40{width:40%}.skeleton-bar.w80{width:80%}
+        /* Filter Bar */
+        .filter-bar{display:flex;align-items:center;justify-content:center;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.75rem;animation:fadeIn 0.3s ease}
+        .filter-chip{font-size:0.7rem;font-weight:700;padding:5px 14px;border-radius:999px;cursor:pointer;border:1px solid var(--border-color);background:var(--bg-secondary);color:var(--text-secondary);transition:all 0.2s}
+        .filter-chip:hover{border-color:#3b82f6;color:#3b82f6}
+        .filter-chip.active{background:#2563eb;border-color:#2563eb;color:#fff}
+        /* Cookie Consent */
+        .cookie-banner{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--bg-secondary);border-top:1px solid var(--border-color);box-shadow:0 -4px 24px rgba(0,0,0,0.08);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;font-size:0.78rem;font-weight:600;color:var(--text-secondary);animation:slideUp 0.4s ease}
+        @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+        .cookie-banner.hidden{display:none!important}
+        .cookie-btn{font-size:0.72rem;font-weight:800;padding:8px 20px;border-radius:999px;border:none;cursor:pointer;transition:all 0.2s;font-family:inherit}
+        .cookie-btn.accept{background:#2563eb;color:#fff}.cookie-btn.accept:hover{background:#1d4ed8}
+        .cookie-btn.reject{background:var(--bg-tertiary);color:var(--text-secondary);border:1px solid var(--border-color)}.cookie-btn.reject:hover{background:var(--bg-primary)}
+        /* Back to Top */
+        .back-to-top{position:fixed;bottom:1.5rem;right:1rem;z-index:50;width:42px;height:42px;border-radius:50%;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-primary);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;box-shadow:0 4px 16px var(--shadow-color);transition:all 0.3s;opacity:0;pointer-events:none;transform:translateY(10px)}
+        .back-to-top.visible{opacity:1;pointer-events:all;transform:translateY(0)}
+        .back-to-top:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--shadow-color)}
+        /* PWA Install */
+        .pwa-banner{display:flex;align-items:center;gap:1rem;padding:1rem 1.5rem;border-radius:1.25rem;background:linear-gradient(135deg,#2563eb 0%,#4f46e5 100%);color:#fff;max-width:700px;margin:0 auto 1.5rem auto;animation:fadeIn 0.3s ease;cursor:pointer;transition:all 0.2s}
+        .pwa-banner:hover{transform:translateY(-2px);box-shadow:0 16px 32px -8px rgba(37,99,235,0.4)}
+        .pwa-banner.hidden{display:none!important}
+        /* Global dark mode transitions */
+        *, *::before, *::after{transition-property:background-color,border-color,color,box-shadow;transition-duration:0s}
+        .cat-btn,.link-card,.recommended-card,.search-container,.kur-bar,.history-chip,.aff-card,.takvim-banner,.suggest-dropdown,.suggest-item,.fav-panel,.fav-item,.share-btn,.tool-btn,.filter-chip,.cookie-banner,.back-to-top,.theme-toggle,.fav-toggle-btn{transition:all 0.25s cubic-bezier(0.25,0.8,0.25,1)}
+        footer,footer *{transition:background-color 0.3s,border-color 0.3s,color 0.3s}
         </style>
         <!-- JSON-LD Structured Data -->
         <script type="application/ld+json">
@@ -126,7 +156,8 @@
                 <span style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.35rem 1rem;border-radius:999px;background:var(--bg-secondary);border:1px solid var(--border-color);font-size:0.78rem;font-weight:700;color:var(--text-secondary)"><i class="fa-solid fa-store" style="opacity:0.6"></i><span id="resultCount">0</span> mağaza bulundu<span id="priceBadge"></span></span> 
             </div>             
 
-            <div id="shareBar" class="hidden share-bar mb-4"></div>             
+            <div id="shareBar" class="hidden share-bar mb-4"></div>
+            <div id="filterBar" class="filter-bar hidden"></div>
             <div id="gridContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 pb-4 w-full"></div>
             <!-- Sonuç altı reklamlar -->
             <div id="adsenseResultsArea" class="w-full max-w-4xl mx-auto mb-8 hidden">
@@ -1015,6 +1046,9 @@
             ...D_AUDIO,...D_SMARTWATCH,...D_CAMERA,...D_HOME_ELECTRONICS,
             ...D_COSMETIC,...D_BOOK,...D_HOME,...D_FASHION,...D_TOY,...D_PET_BABY,...D_SPORTS
         ];
+        // Hızlı kelime arama için Set yapıları (O(1) lookup)
+        const ALL_WORDS_SET=new Set(ALL_WORDS);
+        const ALL_WORDS_NORM_SET=new Set(ALL_WORDS.map(w=>normalizeForSearch(w)));
 
         // Kategori Arama Optimizasyonu için Ön-derlenmiş Regexler
         const CATEGORY_CONFIG = [
@@ -1150,18 +1184,18 @@
             w.forEach(x=>{
                 if(x.length<3||!isNaN(x)){suggestions.push(x);return}
                 const normalizedX=normalizeForSearch(x);
-                if(ALL_WORDS.some(aw=>normalizeForSearch(aw)===normalizedX)){suggestions.push(x);return}
-                if(ALL_WORDS.includes(x)){suggestions.push(x);return}
+                // Set ile O(1) hızlı kontrol
+                if(ALL_WORDS_SET.has(x)||ALL_WORDS_NORM_SET.has(normalizedX)){suggestions.push(x);return}
                 let bestMatch=x,minDist=2,bestWord=null;
-                ALL_WORDS.forEach(d=>{
-                    const normalizedD=normalizeForSearch(d);
-                    const dist1=getEditDistance(x,d);
-                    const dist2=getEditDistance(normalizedX,normalizedD);
-                    const dist=Math.min(dist1,dist2);
+                // Sadece benzer uzunluktaki kelimelerle karşılaştır
+                for(const d of ALL_WORDS){
                     const lenDiff=Math.abs(d.length-x.length);
-                    if(dist<minDist&&lenDiff<=2){minDist=dist;bestMatch=d;bestWord=d;hasTypo=true}
+                    if(lenDiff>2)continue;
+                    const normalizedD=normalizeForSearch(d);
+                    const dist=Math.min(getEditDistance(x,d),getEditDistance(normalizedX,normalizedD));
+                    if(dist<minDist){minDist=dist;bestMatch=d;bestWord=d;hasTypo=true}
                     else if(dist===minDist&&d.startsWith(x.substring(0,2))){bestMatch=d;bestWord=d;hasTypo=true}
-                });
+                }
                 if(bestWord)corrections.push({from:x,to:bestWord});
                 suggestions.push(bestMatch)
             });
@@ -1195,7 +1229,7 @@
         function clearHistory(){localStorage.removeItem('ph_hist');renderHistory();document.getElementById('gridContainer').innerHTML='';document.getElementById('resultInfo').classList.add('hidden');document.getElementById('initialContent').classList.remove('hidden')}
         function renderHistory(){const c=document.getElementById('historyArea');const h=JSON.parse(localStorage.getItem('ph_hist')||'[]');if(h.length===0){c.classList.add('hidden');return}c.innerHTML=`<span class="text-xs font-bold text-slate-300 self-center mr-1">SON:</span>`;h.forEach(i=>{const chip=document.createElement('div');chip.className='history-chip';chip.innerHTML=`<i class="fa-solid fa-clock-rotate-left text-[10px] text-slate-400"></i> ${i}`;chip.onclick=()=>{document.getElementById('queryInput').value=i;runEngine()};c.appendChild(chip)});const clearBtn=document.createElement('button');clearBtn.className='history-clear-btn';clearBtn.innerHTML='<i class="fa-solid fa-trash-can"></i>';clearBtn.title='Geçmişi Temizle';clearBtn.onclick=(e)=>{e.stopPropagation();clearHistory()};c.appendChild(clearBtn);c.classList.remove('hidden')}
         function toggleClearBtn(){const i=document.getElementById('queryInput'),b=document.getElementById('clearBtn');if(i.value.length>0)b.classList.add('visible');else b.classList.remove('visible')}
-        function clearSearch(){document.getElementById('queryInput').value='';document.getElementById('gridContainer').innerHTML='';document.getElementById('adsenseResultsArea').classList.add('hidden');document.getElementById('resultInfo').classList.add('hidden');document.getElementById('shareBar').classList.add('hidden');document.getElementById('errorPanel').classList.add('hidden');document.getElementById('typoContainer').classList.add('hidden');const pb=document.getElementById('priceBadge');if(pb)pb.innerHTML='';document.getElementById('initialContent').classList.remove('hidden');updateUrl('');toggleClearBtn();hideSuggest();document.getElementById('queryInput').focus()}
+        function clearSearch(){document.getElementById('queryInput').value='';document.getElementById('gridContainer').innerHTML='';document.getElementById('adsenseResultsArea').classList.add('hidden');document.getElementById('resultInfo').classList.add('hidden');document.getElementById('shareBar').classList.add('hidden');document.getElementById('filterBar').classList.add('hidden');document.getElementById('errorPanel').classList.add('hidden');document.getElementById('typoContainer').classList.add('hidden');const pb=document.getElementById('priceBadge');if(pb)pb.innerHTML='';document.getElementById('initialContent').classList.remove('hidden');updateUrl('');toggleClearBtn();hideSuggest();document.getElementById('queryInput').focus()}
 
         // ==================== ARAMA MOTORU ====================
 
@@ -1217,12 +1251,16 @@
             document.getElementById('typoContainer').classList.add('hidden');
             document.getElementById('resultInfo').classList.add('hidden');
 
-            if(q.length===0){init.classList.remove('hidden');return}
+            if(q.length===0){init.classList.remove('hidden');document.getElementById('filterBar').classList.add('hidden');return}
             init.classList.add('hidden');
+            document.getElementById('filterBar').classList.add('hidden');
 
             btn.classList.add('btn-loading');btn.innerHTML='ARANIYOR...';
+            // Skeleton loading
+            grid.innerHTML=Array(6).fill('<div class="skeleton-card"><div class="skeleton-bar w60"></div><div class="skeleton-bar w40"></div></div>').join('');
 
             setTimeout(()=>{
+                grid.innerHTML='';
                 btn.classList.remove('btn-loading');btn.innerHTML='ARA';
                 const v=validateQuery(q);
                 if(!v.valid){if(!v.silent){document.getElementById('errorText').innerText=v.msg;err.classList.remove('hidden')}return}
@@ -1383,12 +1421,14 @@
                     if(adsenseResultsArea)adsenseResultsArea.classList.remove('hidden');
                     updateUrl(q);
                     showShareBar(q,cardCount);
+                    showFilterBar();
                     updatePriceBadge(q);
                     if(parsedBudget){const pb=document.getElementById('priceBadge');if(pb)pb.innerHTML+='<span class="price-badge mid">💰 Bütçe: ₺'+parsedBudget.toLocaleString('tr-TR')+'</span>';}
                 }else{
                     resultInfo.classList.add('hidden');
                     if(adsenseResultsArea)adsenseResultsArea.classList.add('hidden');
                     document.getElementById('shareBar').classList.add('hidden');
+                    document.getElementById('filterBar').classList.add('hidden');
                 }
 
                 // Sonuç bulunamadı
@@ -1441,10 +1481,10 @@
                 ht=`<div class="badge bg-white/20 backdrop-blur-sm shadow-sm"><i class="fa-solid fa-certificate"></i> RESMİ MAĞAZA</div><div class="flex items-center gap-4 md:gap-5 w-full pl-1 md:pl-2"><div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/10 flex items-center justify-center text-2xl md:text-3xl text-white shrink-0"><i class="${i}"></i></div><div class="flex-grow"><div class="text-xl md:text-2xl font-black tracking-tight leading-none mb-1">${n}</div><div class="text-[10px] md:text-xs font-bold opacity-70 tracking-widest uppercase">ARACISIZ SATIŞ</div></div><div class="text-white/80 text-2xl md:text-3xl group-hover:translate-x-2 transition-transform shrink-0 pr-1 md:pr-2"><i class="fa-solid fa-arrow-right"></i></div></div>`;
             } else if(t==="highlight"){
                 cl+="recommended-card";c.style.setProperty('--theme-color',td.c);
-                ht=`${favHtml}<div class="badge shadow-sm"><i class="fa-solid fa-check-circle mr-1"></i> ÖNERİLEN</div><div class="logo-wrapper mb-auto mt-2 pl-1"><img src="${l}" class="${imgClass}" alt="${n}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="fallback-text text-slate-800" style="color:${td.c}">${n}</span></div><div class="text-green-700 font-extrabold text-sm flex items-center justify-end gap-2 group-hover:gap-3 transition-all pr-1 mt-3">Fiyatı Gör <i class="fa-solid fa-chevron-right text-xs"></i></div>`;
+                ht=`${favHtml}<div class="badge shadow-sm"><i class="fa-solid fa-check-circle mr-1"></i> ÖNERİLEN</div><div class="logo-wrapper mb-auto mt-2 pl-1"><img src="${l}" class="${imgClass}" alt="${n}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="fallback-text text-slate-800" style="color:${td.c}">${n}</span></div><div class="text-green-700 font-extrabold text-sm flex items-center justify-end gap-2 group-hover:gap-3 transition-all pr-1 mt-3">Fiyatı Gör <i class="fa-solid fa-chevron-right text-xs"></i></div>`;
             } else {
                 cl+="link-card";c.style.setProperty('--theme-color',td.c);c.style.setProperty('--theme-shadow',td.s);
-                ht=`${favHtml}<div class="logo-wrapper my-auto pl-1"><img src="${l}" class="${imgClass}" alt="${n}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="fallback-text text-slate-700" style="color:${td.c}">${n}</span></div><div class="absolute bottom-4 right-4 text-slate-300 group-hover:text-[color:var(--theme-color)] transition-colors text-lg"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>`;
+                ht=`${favHtml}<div class="logo-wrapper my-auto pl-1"><img src="${l}" class="${imgClass}" alt="${n}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="fallback-text text-slate-700" style="color:${td.c}">${n}</span></div><div class="absolute bottom-4 right-4 text-slate-300 group-hover:text-[color:var(--theme-color)] transition-colors text-lg"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>`;
             }
             c.className=cl;c.innerHTML=ht;g.appendChild(c);
         }
@@ -1707,11 +1747,97 @@
             _bcStream=null;_bcDetector=null;_bcTimer=null;
         }
 
+        // ==================== FİLTRE ÇUBUĞU ====================
+        function showFilterBar(){
+            const bar=document.getElementById('filterBar');
+            const grid=document.getElementById('gridContainer');
+            const cards=grid.querySelectorAll('.base-card');
+            const hasRecommended=grid.querySelector('.recommended-card');
+            const hasOfficial=grid.querySelector('.official-card');
+            if(cards.length<3||(!hasRecommended&&!hasOfficial)){bar.classList.add('hidden');return;}
+            bar.innerHTML='';
+            const filters=[{label:'Tümü',type:'all'}];
+            if(hasRecommended)filters.push({label:'Önerilen',type:'recommended'});
+            if(hasOfficial)filters.push({label:'Resmi Mağaza',type:'official'});
+            filters.push({label:'Pazar Yeri',type:'normal'});
+            filters.forEach((f,i)=>{
+                const chip=document.createElement('button');chip.className='filter-chip'+(i===0?' active':'');chip.textContent=f.label;
+                chip.addEventListener('click',()=>{
+                    bar.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));chip.classList.add('active');
+                    cards.forEach(card=>{
+                        if(f.type==='all'){card.style.display='';return;}
+                        const isMatch=(f.type==='recommended'&&card.classList.contains('recommended-card'))||(f.type==='official'&&card.classList.contains('official-card'))||(f.type==='normal'&&card.classList.contains('link-card'));
+                        card.style.display=isMatch?'':'none';
+                    });
+                });
+                bar.appendChild(chip);
+            });
+            bar.classList.remove('hidden');
+        }
+
+        // ==================== COOKIE CONSENT (KVKK) ====================
+        function initCookieConsent(){
+            if(localStorage.getItem('cookie_consent'))return;
+            const banner=document.getElementById('cookieBanner');
+            if(banner)banner.classList.remove('hidden');
+        }
+        function acceptCookies(){
+            localStorage.setItem('cookie_consent','accepted');
+            document.getElementById('cookieBanner').classList.add('hidden');
+        }
+        function rejectCookies(){
+            localStorage.setItem('cookie_consent','rejected');
+            document.getElementById('cookieBanner').classList.add('hidden');
+            // Reklam ve analytics scriptlerini devre dışı bırak
+            if(window.gtag)window['ga-disable-AW-17749261970']=true;
+        }
+
+        // ==================== BACK TO TOP ====================
+        function initBackToTop(){
+            const btn=document.getElementById('backToTop');
+            if(!btn)return;
+            let ticking=false;
+            window.addEventListener('scroll',()=>{
+                if(!ticking){window.requestAnimationFrame(()=>{
+                    btn.classList.toggle('visible',window.scrollY>400);
+                    ticking=false;
+                });ticking=true;}
+            },{passive:true});
+        }
+
+        // ==================== PWA INSTALL PROMPT ====================
+        let _deferredPrompt=null;
+        window.addEventListener('beforeinstallprompt',(e)=>{
+            e.preventDefault();_deferredPrompt=e;
+            showPWABanner();
+        });
+        function showPWABanner(){
+            if(localStorage.getItem('pwa_dismiss'))return;
+            const init=document.getElementById('initialContent');
+            if(!init)return;
+            const banner=document.createElement('div');banner.className='pwa-banner';banner.id='pwaBanner';
+            banner.innerHTML='<div style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.2rem"><i class="fa-solid fa-download"></i></div><div style="flex:1"><div style="font-weight:900;font-size:0.9rem;margin-bottom:2px">Uygulamayı Yükle</div><div style="font-size:0.72rem;opacity:0.8">Ana ekranına ekle — hızlı erişim, offline destek</div></div><button onclick="event.stopPropagation();dismissPWA()" style="background:rgba(255,255,255,0.15);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.7rem;flex-shrink:0"><i class="fa-solid fa-xmark"></i></button>';
+            banner.addEventListener('click',installPWA);
+            init.insertBefore(banner,init.firstChild);
+        }
+        function installPWA(){
+            if(!_deferredPrompt)return;
+            _deferredPrompt.prompt();
+            _deferredPrompt.userChoice.then(r=>{
+                if(r.outcome==='accepted'){const b=document.getElementById('pwaBanner');if(b)b.remove();}
+                _deferredPrompt=null;
+            });
+        }
+        function dismissPWA(){localStorage.setItem('pwa_dismiss','1');const b=document.getElementById('pwaBanner');if(b)b.remove();}
+
         initTheme();
-        window.onload=()=>{document.getElementById('queryInput').focus();renderHistory();fetchRates();updateFavCount();setTimeout(initUrlSearch,100);registerSW();};
+        window.onload=()=>{document.getElementById('queryInput').focus();renderHistory();fetchRates();updateFavCount();setTimeout(initUrlSearch,100);registerSW();initCookieConsent();initBackToTop();};
 
         document.getElementById('queryInput').addEventListener('keypress',(e)=>{if(e.key==='Enter')runEngine()});
-        document.addEventListener('keydown',(e)=>{if(e.key==='/'&&document.activeElement!==document.getElementById('queryInput')){e.preventDefault();document.getElementById('queryInput').focus();}});
+        document.addEventListener('keydown',(e)=>{
+            if(e.key==='/'&&document.activeElement!==document.getElementById('queryInput')){e.preventDefault();document.getElementById('queryInput').focus();}
+            if(e.key==='Escape'){hideSuggest();document.getElementById('queryInput').blur();}
+        });
     </script>         
     <!-- Barkod Tarayıcı Modalı -->
     <div id="bcOverlay" class="bc-overlay hidden" onclick="if(event.target===this)closeBarcodeScanner()">
@@ -1724,5 +1850,15 @@
             <p id="bcMsg" class="text-xs text-gray-400 font-semibold">Barkodu kameraya gösterin...</p>
         </div>
     </div>
-    </body>     
+    <!-- Cookie Consent Banner -->
+    <div id="cookieBanner" class="cookie-banner hidden">
+        <span><i class="fa-solid fa-cookie-bite mr-1"></i> Bu site deneyiminizi iyileştirmek için çerez kullanır. <a href="cerez.html" style="color:#2563eb;text-decoration:underline">Detaylar</a></span>
+        <button class="cookie-btn accept" onclick="acceptCookies()">Kabul Et</button>
+        <button class="cookie-btn reject" onclick="rejectCookies()">Reddet</button>
+    </div>
+    <!-- Back to Top -->
+    <button id="backToTop" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Sayfa Başına Dön" title="Sayfa Başına Dön">
+        <i class="fa-solid fa-chevron-up"></i>
+    </button>
+    </body>
 </html>
