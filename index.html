@@ -1773,8 +1773,9 @@
                 const r=await fetch('/.netlify/functions/prices?q='+encodeURIComponent(q));
                 if(!r.ok)throw new Error('prices status '+r.status);
                 const d=await r.json();
-                if(d.error&&!d.results){
-                    console.warn('SerpApi:',d.error);
+                console.log('[FiyatAvcisi] Ham API yanıt:',JSON.stringify(d).substring(0,500));
+                if(d.error&&(!d.results||d.results.length===0)){
+                    console.warn('[FiyatAvcisi] API hata:',d.error);
                     document.querySelectorAll('.price-loading').forEach(el=>el.remove());
                     return;
                 }
@@ -1789,14 +1790,19 @@
         }
         function applyPrices(data){
             if(!data)return;
+            console.log('[FiyatAvcisi] API yanıt:',data.count,'sonuç,',data.totalFromApi,'ham sonuç');
+            if(data.sources)console.log('[FiyatAvcisi] Kaynaklar:',data.sources);
             const allResults=data.storeResults||data.results||[];
             if(allResults.length===0){
+                console.warn('[FiyatAvcisi] Hiç fiyat sonucu yok');
                 document.querySelectorAll('.price-loading').forEach(el=>el.remove());
                 return;
             }
+            console.log('[FiyatAvcisi] Eşleşecek sonuçlar:',allResults.map(r=>r.store+': ₺'+r.price));
             const lowest=data.lowest?data.lowest.price:null;
             const grid=document.getElementById('gridContainer');
             const cards=grid.querySelectorAll('[data-store]');
+            console.log('[FiyatAvcisi] Karttaki mağazalar:',Array.from(cards).map(c=>c.dataset.store));
             // Mağaza eşleştirme — case-insensitive
             cards.forEach(card=>{
                 const storeName=(card.dataset.store||'').toLowerCase();

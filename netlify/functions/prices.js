@@ -31,47 +31,46 @@ function httpsGet(url, maxRedirects) {
   });
 }
 
-// Bilinen mağaza eşleştirme haritası — key: normalize edilmiş ad, value: sitemizde görünen ad
+// Bilinen mağaza eşleştirme haritası — value: sitenin MARKETS dizisindeki name (BÜYÜK HARF)
 const STORE_MAP = {
-  'amazon': 'Amazon',
-  'amazoncomtr': 'Amazon',
-  'amazontr': 'Amazon',
-  'amazontürkiye': 'Amazon',
-  'hepsiburada': 'Hepsiburada',
-  'hepsiburadacom': 'Hepsiburada',
-  'trendyol': 'Trendyol',
-  'trendyolcom': 'Trendyol',
+  'amazon': 'AMAZON',
+  'amazoncomtr': 'AMAZON',
+  'amazontr': 'AMAZON',
+  'amazontrkiye': 'AMAZON',
+  'amazontürkiye': 'AMAZON',
+  'hepsiburada': 'HEPSIBURADA',
+  'hepsiburadacom': 'HEPSIBURADA',
+  'trendyol': 'TRENDYOL',
+  'trendyolcom': 'TRENDYOL',
   'n11': 'N11',
   'n11com': 'N11',
-  'mediamarkt': 'MediaMarkt',
-  'teknosa': 'Teknosa',
-  'vatan': 'Vatan',
-  'vatanbilgisayar': 'Vatan',
-  'itopya': 'Itopya',
-  'incehesap': 'incehesap',
-  'ciceksepeti': 'Çiçeksepeti',
-  'superstep': 'Superstep',
-  'sneaksup': 'Sneaks Up',
-  'sportive': 'Sportive',
-  'intersport': 'Intersport',
-  'decathlon': 'Decathlon',
-  'boyner': 'Boyner',
+  'mediamarkt': 'MEDIAMARKT',
+  'teknosa': 'TEKNOSA',
+  'vatan': 'VATAN',
+  'vatanbilgisayar': 'VATAN',
+  'itopya': 'ITOPYA',
+  'incehesap': 'INCEHESAP',
+  'ciceksepeti': 'ÇİÇEKSEPETİ',
+  'superstep': 'SUPERSTEP',
+  'sneaksup': 'SNEAKS UP',
+  'sportive': 'SPORTIVE',
+  'intersport': 'INTERSPORT',
+  'decathlon': 'DECATHLON',
+  'boyner': 'BOYNER',
   'dr': 'D&R',
-  'kitapyurdu': 'kitapyurdu',
-  'bkmkitap': 'BKM Kitap',
-  'watsons': 'Watsons',
-  'gratis': 'Gratis',
-  'rossmann': 'Rossmann',
-  'sephora': 'Sephora',
-  'koctas': 'Koçtaş',
-  'bauhaus': 'Bauhaus',
+  'kitapyurdu': 'KITAPYURDU',
+  'bkmkitap': 'BKM KİTAP',
+  'watsons': 'WATSONS',
+  'gratis': 'GRATIS',
+  'rossmann': 'ROSSMANN',
+  'sephora': 'SEPHORA',
+  'koctas': 'KOÇTAŞ',
+  'bauhaus': 'BAUHAUS',
   'ikea': 'IKEA',
-  'pttavm': 'PttAVM',
-  'morhipo': 'Morhipo',
-  'defacto': 'DeFacto',
-  'lcwaikiki': 'LC Waikiki',
-  'koton': 'Koton',
-  'apple': 'Apple',
+  'toyzzshop': 'TOYZZ SHOP',
+  'peti': 'PETİ',
+  'pttavm': 'PTTAVM',
+  'apple': 'APPLE',
 };
 
 function normalizeStore(name) {
@@ -83,12 +82,16 @@ function normalizeStore(name) {
 }
 
 function matchStore(source) {
+  if (!source) return null;
   const norm = normalizeStore(source);
+  // Direkt eşleşme
   if (STORE_MAP[norm]) return STORE_MAP[norm];
+  // Kısmi eşleşme
   for (const [key, val] of Object.entries(STORE_MAP)) {
-    if (norm.includes(key) || key.includes(norm)) return val;
+    if (norm.includes(key) || (key.length > 3 && key.includes(norm))) return val;
   }
-  return source || null;
+  // Eşleşemedi — ham kaynağı büyük harfle döndür
+  return source.toUpperCase();
 }
 
 // Fiyatı sayıya çevir — SerpApi extracted_price sayı veya string olabilir
@@ -162,12 +165,14 @@ exports.handler = async (event) => {
 
     const results = [];
     const bestPerStore = {};
+    const debugSources = [];
 
     const items = data.shopping_results || [];
     for (const item of items) {
       const storeName = matchStore(item.source || '');
       const price = parsePrice(item.extracted_price) || parsePrice(item.price);
 
+      debugSources.push({ src: item.source, mapped: storeName, rawPrice: item.extracted_price || item.price });
       if (!price) continue;
 
       const entry = {
@@ -204,9 +209,11 @@ exports.handler = async (event) => {
       body: JSON.stringify({
         query: q.trim(),
         count: results.length,
+        totalFromApi: items.length,
         results: results.slice(0, 25),
         storeResults: storeResults,
         lowest: results.length > 0 ? results[0] : null,
+        sources: debugSources.slice(0, 15),
         timestamp: Date.now(),
       }),
     };
