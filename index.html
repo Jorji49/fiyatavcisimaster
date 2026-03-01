@@ -1950,25 +1950,38 @@
                 : `<span class="analyze-ssl-badge analyze-ssl-bad"><i class="fa-solid fa-lock-open"></i>HTTP — Şifresiz</span>`;
             // Yorum çekme ozeti
             const hasReviews = yc.sayi > 0;
+            const hasAggOnly = !hasReviews && (yc.ort_puan || yc.toplam_sayi > 0);
             // Yorum çekme durum mesajını kullanıcı dostu yap
             function friendlyFetchMsg(hata, platform){
-                if(!hata) return `<i class="fa-solid fa-circle-info mr-1"></i>${platform||'Bu platform'} için yorum API'si henüz eklenmemiş; analiz URL güvenliğine göre yapıldı.`;
+                if(!hata) return `<i class="fa-solid fa-circle-info mr-1"></i>${platform||'Bu platform'} için yorum desteği henüz eklenmemiş; güvenlik analizi tamamlandı.`;
+                if(/özet.*gösteriliyor|puan özeti/i.test(hata))
+                    return `<i class="fa-solid fa-chart-simple mr-1" style="color:#f59e0b"></i>${platform||'Platform'} bireysel yorumları engelledi — aşağıda puan özeti gösteriliyor.`;
+                if(/bot koruması|bot engel/i.test(hata))
+                    return `<i class="fa-solid fa-shield-halved mr-1" style="color:#f59e0b"></i>${platform||'Platform'} sunucu isteklerini engelledi; puan özeti gösteriliyor.`;
+                if(/403|erişim kısıtladı/i.test(hata))
+                    return `<i class="fa-solid fa-ban mr-1" style="color:#ef4444"></i>${platform||'Platform'} sunucudan erişimi engelledi (403); güvenlik analizi tamamlandı.`;
                 if(/40[34]|429|captcha|bot|blocked|forbidden/i.test(hata))
-                    return `<i class="fa-solid fa-shield-halved mr-1"></i>${platform||'Platform'} bot engeli veya oturum açma gerektirdiği için yorumlar otomatik çekilemedi; güvenlik analizi URL üzerinden tamamlandı.`;
-                if(/timeout|ETIMEDOUT|ECONNRESET|network|abort/i.test(hata))
-                    return `<i class="fa-solid fa-clock mr-1"></i>Platform bağlantısı zaman aşımına uğradı; analiz URL üzerinden tamamlandı.`;
-                if(/ID bulunamadı|SKU bulunamadı|not found/i.test(hata))
+                    return `<i class="fa-solid fa-shield-halved mr-1"></i>${platform||'Platform'} bot engeli veya oturum açma gerektiriyor; güvenlik analizi tamamlandı.`;
+                if(/timeout|ETIMEDOUT|ECONNRESET|network|abort|bağlantı/i.test(hata))
+                    return `<i class="fa-solid fa-clock mr-1"></i>Platform bağlantısı zaman aşımına uğradı; güvenlik analizi tamamlandı.`;
+                if(/ID bulunamadı|SKU bulunamadı|not found|bulunamadı/i.test(hata))
                     return `<i class="fa-solid fa-circle-question mr-1"></i>Ürün sayfası tanımlanamadı; lütfen doğrudan ürün URL'sini girin.`;
-                return `<i class="fa-solid fa-circle-info mr-1"></i>Yorumlar çekilemedi; analiz URL güvenliğine göre yapıldı.`;
+                if(/döndürmedi|erişimi kısıtlı/i.test(hata))
+                    return `<i class="fa-solid fa-circle-info mr-1" style="color:#f59e0b"></i>${platform||'Platform'} yorum verisi döndürmedi; güvenlik analizi tamamlandı.`;
+                return `<i class="fa-solid fa-circle-info mr-1"></i>${hata}`;
             }
             const fetchInfo = hasReviews
                 ? `<span style="font-size:0.72rem;color:var(--text-muted);font-weight:700"><i class="fa-solid fa-comment-dots mr-1" style="color:#2563eb"></i><strong style="color:var(--text-primary)">${yc.sayi}</strong> yorum çekildi${yc.toplam_sayi&&yc.toplam_sayi>yc.sayi?` (toplam ~${yc.toplam_sayi})`:''} · Kaynak: <em>${yc.platform||'Web'}</em>${yc.ort_puan?` · ${starsHtml(yc.ort_puan)}`:''}</span>`
+                : hasAggOnly
+                ? `<span style="font-size:0.72rem;color:var(--text-muted);font-weight:700"><i class="fa-solid fa-chart-simple mr-1" style="color:#f59e0b"></i>Puan özeti: <em>${yc.platform}</em>${yc.ort_puan?` · ${starsHtml(yc.ort_puan)}`:''}${yc.toplam_sayi?` · <strong style="color:var(--text-primary)">${yc.toplam_sayi}</strong> değerlendirme`:''}</span>`
                 : `<span style="font-size:0.72rem;color:var(--text-muted);font-weight:700">${friendlyFetchMsg(yc.hata, yc.platform)}</span>`;
-            // Puan dağılımı
-            const puanDagilimi = (uy.puan_dagilimi&&uy.puan_dagilimi.length>0)
+            // Puan dağılımı — hem NLP sonucu hem de doğrudan platform verisi
+            const rawPuanDag = uy.puan_dagilimi || yc.puan_dagilimi_direkt;
+            const effectiveTotalYorum = totalYorum || (rawPuanDag ? rawPuanDag.reduce((a,p)=>a+(p.sayi||0),0) : 0);
+            const puanDagilimi = (rawPuanDag && rawPuanDag.length > 0)
                 ? `<div style="margin-top:0.5rem">
-                    ${uy.puan_dagilimi.map(p=>{
-                        const pct=totalYorum>0?Math.round(p.sayi/totalYorum*100):0;
+                    ${rawPuanDag.map(p=>{
+                        const pct=effectiveTotalYorum>0?Math.round(p.sayi/effectiveTotalYorum*100):0;
                         return `<div style="display:flex;align-items:center;gap:0.4rem;margin-bottom:3px">
                             <span style="font-size:0.62rem;font-weight:800;color:var(--text-muted);width:12px;text-align:right">${p.yildiz}</span>
                             <i class="fa-solid fa-star" style="color:#f59e0b;font-size:0.55rem"></i>
@@ -2008,10 +2021,10 @@
                     ${warnings.map(w=>`<div class="analyze-tag warn" style="display:flex;border-radius:0.5rem;padding:5px 9px;width:100%;margin:3px 0;box-sizing:border-box"><i class="fa-solid fa-circle-exclamation" style="margin-right:6px;margin-top:1px;flex-shrink:0"></i>${w}</div>`).join('')}
                 </div>`:''}
                 <!-- Duygu Analizi -->
-                ${hasReviews?`
+                ${(hasReviews||hasAggOnly)?`
                 <div>
-                    <div class="analyze-section-title"><i class="fa-solid fa-chart-pie" style="color:#2563eb"></i>Duygu Analizi · ${totalYorum} yorum</div>
-                    <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:0.6rem">
+                    <div class="analyze-section-title"><i class="fa-solid fa-chart-pie" style="color:#2563eb"></i>${hasReviews?`Duygu Analizi · ${totalYorum} yorum`:`Puan Özeti · ${yc.platform}`}</div>
+                    ${hasReviews?`<div style="display:flex;flex-direction:column;gap:5px;margin-bottom:0.6rem">
                         <div style="display:flex;align-items:center;gap:0.5rem">
                             <span style="font-size:0.65rem;font-weight:800;color:#22c55e;width:38px">+${pozYuzde}%</span>
                             <div class="analyze-bar-track"><div class="analyze-bar-fill" style="width:${pozYuzde}%;background:#22c55e"></div></div>
@@ -2027,8 +2040,8 @@
                             <div class="analyze-bar-track"><div class="analyze-bar-fill" style="width:${notrYuzde}%;background:#94a3b8"></div></div>
                             <span style="font-size:0.6rem;color:var(--text-muted);width:36px">Nötr</span>
                         </div>
-                    </div>
-                    ${uy.ortalama_puan!==null&&uy.ortalama_puan!==undefined?`<div style="margin-bottom:0.4rem">${starsHtml(uy.ortalama_puan)} <span style="font-size:0.65rem;color:var(--text-muted)">ortalama</span></div>`:''}
+                    </div>`:''}
+                    ${(uy.ortalama_puan||yc.ort_puan)?`<div style="margin-bottom:0.4rem">${starsHtml(uy.ortalama_puan||yc.ort_puan)} <span style="font-size:0.65rem;color:var(--text-muted)">ortalama${yc.toplam_sayi?` · ${yc.toplam_sayi} değerlendirme`:''}</span></div>`:''}
                     ${puanDagilimi}
                 </div>`:''}
                 <!-- Anahtar kelimeler -->

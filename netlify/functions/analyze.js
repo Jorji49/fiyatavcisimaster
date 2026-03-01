@@ -191,242 +191,347 @@ function platformLabel(key) {
   return map[key] || 'Web';
 }
 
-//  Trendyol 
-async function fetchTrendyolReviews(url) {
-  let contentId = null;
-  // Pattern 1: -p-12345678 veya /p-12345678
-  const pm1 = url.match(/[-\/]p-(\d{6,})/i);
-  if (pm1) contentId = pm1[1];
-  // Pattern 2: contentId= sorgu parametresi
-  if (!contentId) { const pm2 = url.match(/[?&]contentId=(\d{5,})/i); if (pm2) contentId = pm2[1]; }
-  // Pattern 3: URL'de 8+ haneli sayı segment
-  if (!contentId) { const pm3 = url.match(/\/([1-9]\d{6,})(?:[?#\/]|$)/); if (pm3) contentId = pm3[1]; }
-  // Pattern 4: HTML sayfasından çıkar
-  if (!contentId) {
-    try {
-      const hRes = await fetch(url, {
-        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36', 'Accept': 'text/html' },
-        signal: AbortSignal.timeout(6000)
-      });
-      if (hRes.ok) {
-        const html = await hRes.text();
-        const hm = html.match(/"contentId"\s*:\s*(\d+)/) || html.match(/"productContentId"\s*:\s*(\d+)/) || html.match(/"id"\s*:\s*(\d{7,})/g);
-        if (hm) contentId = Array.isArray(hm) ? hm[0].match(/(\d{7,})/)[1] : hm[1];
-      }
-    } catch {}
-  }
-  if (!contentId) return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'Trendyol', fetchError:'Ürün ID bulunamadı — doğrudan ürün sayfası URL\'sini girin' };
+// ─── Ortak tarayıcı başlıkları ───────────────────────────────────────────────
+const BROWSER_HEADERS = {
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+  'Accept-Language': 'tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7',
+  'Accept-Encoding': 'gzip, deflate, br',
+  'Cache-Control': 'no-cache',
+  'Pragma': 'no-cache',
+  'DNT': '1'
+};
 
-  const apiUrl = `https://public-mdc.trendyol.com/discovery-web-socialgw-service/api/review/product/${contentId}?storefrontId=1&culture=tr-TR&page=0&pageSize=30`;
-  let res;
-  try {
-    res = await fetch(apiUrl, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-        'Accept': 'application/json, text/plain, */*',
-        'Referer': 'https://www.trendyol.com/',
-        'Origin': 'https://www.trendyol.com'
-      },
-      signal: AbortSignal.timeout(7000)
-    });
-  } catch {
-    return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'Trendyol', fetchError:'Trendyol bağlantısı kurulamadı' };
-  }
-  if (!res.ok) return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'Trendyol', fetchError:`Trendyol API ${res.status}` };
-  const data = await res.json();
-  const result    = data?.result || data;
-  const reviews   = result?.productReviews?.content || result?.reviews || result?.content || [];
-  const avgRating = result?.ratingScore?.averageRating ?? result?.averageRating ?? null;
-  const totalCount= result?.productReviews?.totalElements ?? result?.totalCount ?? reviews.length;
-  return {
-    reviewItems: reviews.slice(0,30).map(r => ({
-      text:    (r.comment || r.commentText || '').trim(),
-      rating:  r.rate ?? r.rating ?? null,
-      date:    r.createdDate || null,
-      helpful: r.helpful ?? 0
-    })).filter(r => r.text.length > 3),
-    count: reviews.length, totalCount, avgRating, platform:'Trendyol'
-  };
-}
-
-//  Hepsiburada 
-async function fetchHepsiburadaReviews(url) {
-  let sku = null;
-  // Pattern 1: HB...[büyük harf+rakam] URL path içinde
-  const pm1 = url.match(/\b(HB[A-Z0-9]{6,})/i);
-  if (pm1) sku = pm1[1].toUpperCase();
-  // Pattern 2: -HB... veya /p-HB...
-  if (!sku) { const pm2 = url.match(/[-\/]p?-?(HB[^?&#\/\s]{5,})/i); if (pm2) sku = pm2[1].toUpperCase(); }
-  // Pattern 3: HTML'den çıkar
-  if (!sku) {
-    try {
-      const hRes = await fetch(url, {
-        headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html' },
-        signal: AbortSignal.timeout(6000)
-      });
-      if (hRes.ok) {
-        const html = await hRes.text();
-        const hm = html.match(/"sku"\s*:\s*"(HB[A-Z0-9]+)"/i) || html.match(/data-sku="(HB[A-Z0-9]+)"/i) || html.match(/"productCode"\s*:\s*"(HB[A-Z0-9]+)"/i);
-        if (hm) sku = hm[1].toUpperCase();
-      }
-    } catch {}
-  }
-  if (!sku) return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'Hepsiburada', fetchError:'Ürün SKU bulunamadı — doğrudan ürün sayfası URL\'sini girin' };
-
-  const apiUrl = `https://www.hepsiburada.com/product-reviews/sku/${sku}?size=25&page=0`;
-  let res;
-  try {
-    res = await fetch(apiUrl, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Accept': 'application/json',
-        'Referer': 'https://www.hepsiburada.com/'
-      },
-      signal: AbortSignal.timeout(7000)
-    });
-  } catch {
-    return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'Hepsiburada', fetchError:'Hepsiburada bağlantısı kurulamadı' };
-  }
-  if (!res.ok) return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'Hepsiburada', fetchError:`Hepsiburada API ${res.status}` };
-  const data = await res.json();
-  const reviews    = data?.reviews || data?.result || data?.data || [];
-  const avgRating  = data?.averageRating ?? null;
-  const totalCount = data?.totalCount ?? reviews.length;
-  return {
-    reviewItems: reviews.slice(0,30).map(r => ({
-      text:   (r.userText || r.text || r.comment || '').trim(),
-      rating: r.rating ?? r.rate ?? null,
-      date:   r.createdAt || null
-    })).filter(r => r.text.length > 3),
-    count: reviews.length, totalCount, avgRating, platform:'Hepsiburada'
-  };
-}
-
-//  n11 
-async function fetchN11Reviews(url) {
-  let productId = null;
-  // URL'den ID çıkarmayı dene
-  const pm = url.match(/\/([1-9]\d{6,})(?:[?#\/]|$)/) || url.match(/productId[=\/](\d+)/i);
-  if (pm) productId = pm[1];
-  // HTML'den çıkarmayı dene
-  if (!productId) {
-    try {
-      const hRes = await fetch(url, {
-        headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html' },
-        signal: AbortSignal.timeout(7000)
-      });
-      if (!hRes.ok) return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'n11' };
-      const html = await hRes.text();
-      const hm = html.match(/"productId"\s*:\s*"?(\d+)"?/) || html.match(/data-product-id="(\d+)"/i);
-      if (hm) productId = hm[1];
-      else return await fetchGenericReviews(url, 'n11');
-    } catch {
-      return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'n11' };
-    }
-  }
-  if (!productId) return await fetchGenericReviews(url, 'n11');
-  try {
-    const apiRes = await fetch(`https://www.n11.com/api/v1/product/comment/list?productId=${productId}&page=0&size=30`, {
-      headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json', 'Referer': 'https://www.n11.com/' },
-      signal: AbortSignal.timeout(6000)
-    });
-    if (apiRes.ok) {
-      const data = await apiRes.json();
-      const reviews = data?.data?.commentList || data?.result?.comments || data?.comments || [];
-      const avg   = data?.data?.averageScore ?? data?.averageScore ?? null;
-      const total = data?.data?.totalCount ?? data?.totalCount ?? reviews.length;
-      if (reviews.length > 0) return {
-        reviewItems: reviews.map(r => ({
-          text:   (r.comment || r.commentText || r.text || '').trim(),
-          rating: r.score ?? r.starCount ?? r.rating ?? null,
-          date:   r.createdDate || r.date || null
-        })).filter(r => r.text.length > 3),
-        count: reviews.length, totalCount: total, avgRating: avg, platform: 'n11'
-      };
-    }
-  } catch {}
-  return await fetchGenericReviews(url, 'n11');
-}
-
-//  ÇiçekSepeti 
-async function fetchCicekSepetiReviews(url) {
-  let productId = null;
-  let html = '';
-  try {
-    const hRes = await fetch(url, {
-      headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'text/html' },
-      signal: AbortSignal.timeout(8000)
-    });
-    if (!hRes.ok) return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'ÇiçekSepeti' };
-    html = await hRes.text();
-  } catch {
-    return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'ÇiçekSepeti' };
-  }
-  // JSON-LD'yi doğrudan dene
-  const jsonLd = await fetchGenericReviews(url, 'ÇiçekSepeti');
-  if (jsonLd.count > 0) return jsonLd;
-  // Sayfadan productId çıkar
-  const pidM = html.match(/"productCode"\s*:\s*"?(\w+)"?/) || html.match(/"ProductId"\s*:\s*"?(\d+)"?/) || html.match(/"productId"\s*:\s*"?(\d+)"?/);
-  if (pidM) productId = pidM[1];
-  if (!productId) return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'ÇiçekSepeti' };
-  try {
-    const apiRes = await fetch(`https://www.ciceksepeti.com/product-review/reviews?productId=${productId}&pageIndex=1&pageSize=20`, {
-      headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json', 'Referer': 'https://www.ciceksepeti.com/' },
-      signal: AbortSignal.timeout(6000)
-    });
-    if (apiRes.ok) {
-      const data = await apiRes.json();
-      const reviews = data?.data?.reviews || data?.reviews || [];
-      return {
-        reviewItems: reviews.map(r => ({
-          text:   (r.comment || r.review || r.text || '').trim(),
-          rating: r.starCount ?? r.rating ?? null,
-          date:   r.createdAt || null
-        })).filter(r => r.text.length > 3),
-        count: reviews.length, totalCount: data?.data?.totalCount ?? reviews.length, avgRating: data?.data?.averageRating ?? null, platform:'ÇiçekSepeti'
-      };
-    }
-  } catch {}
-  return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'ÇiçekSepeti' };
-}
-
-//  Generic JSON-LD / HTML 
-async function fetchGenericReviews(url, platformName) {
-  let res;
-  try {
-    res = await fetch(url, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Accept': 'text/html,application/xhtml+xml,*/*;q=0.8'
-      },
-      signal: AbortSignal.timeout(9000)
-    });
-  } catch {
-    return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform: platformName };
-  }
-  // 4xx/5xx → sessizce boş döndür
-  if (!res.ok) return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform: platformName };
-  const html  = await res.text();
+// Sayfadan JSON-LD verisi ve schema.org yorumlarını çek
+function parseJsonLd(html) {
   const items = [];
-  let avgRating = null;
-
-  const jsonLdRe = /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
+  let avgRating = null, totalCount = 0;
+  const re = /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
   let m;
-  while ((m = jsonLdRe.exec(html)) !== null) {
+  while ((m = re.exec(html)) !== null) {
     try {
       const d = JSON.parse(m[1]);
       const arr = Array.isArray(d) ? d : [d];
       for (const item of arr) {
-        if (item?.aggregateRating?.ratingValue) avgRating = parseFloat(item.aggregateRating.ratingValue);
+        if (item?.aggregateRating?.ratingValue) {
+          avgRating = parseFloat(item.aggregateRating.ratingValue);
+          totalCount = parseInt(item.aggregateRating.reviewCount || item.aggregateRating.ratingCount || 0, 10);
+        }
         const revs = item?.review || item?.reviews || [];
-        for (const r of (Array.isArray(revs)?revs:[revs])) {
+        for (const r of (Array.isArray(revs) ? revs : [revs])) {
           const txt = (r?.reviewBody || r?.description || '').trim();
-          if (txt.length > 5) items.push({ text: txt, rating: parseFloat(r?.reviewRating?.ratingValue)||null, date: r?.datePublished||null });
+          if (txt.length > 5) items.push({ text: txt, rating: parseFloat(r?.reviewRating?.ratingValue) || null, date: r?.datePublished || null });
         }
       }
     } catch {}
   }
-  return { reviewItems: items, count: items.length, totalCount: items.length, avgRating, platform: platformName };
+  return { items, avgRating, totalCount };
+}
+
+// Sayfadan window.STATE veya __NEXT_DATA__ gibi gömülü JSON objeleri çek
+function parseWindowState(html, ...keys) {
+  for (const key of keys) {
+    try {
+      const escaped = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const m = html.match(new RegExp(escaped + '\\s*=\\s*(\\{[\\s\\S]+?\\})\\s*(?:;|\\n|<\\/script>)', 's'));
+      if (m) return JSON.parse(m[1]);
+    } catch {}
+  }
+  return null;
+}
+
+function parseNextData(html) {
+  try {
+    const m = html.match(/<script id="__NEXT_DATA__"[^>]*>([\s\S]*?)<\/script>/i);
+    return m ? JSON.parse(m[1]) : null;
+  } catch { return null; }
+}
+
+// HTML sayfasını güvenli şekilde çek
+async function fetchPage(url, extraHeaders = {}, timeoutMs = 10000) {
+  try {
+    const res = await fetch(url, {
+      headers: { ...BROWSER_HEADERS, 'Accept': 'text/html,application/xhtml+xml,*/*;q=0.9', ...extraHeaders },
+      redirect: 'follow',
+      signal: AbortSignal.timeout(timeoutMs)
+    });
+    if (!res.ok) return { ok: false, status: res.status, html: '' };
+    return { ok: true, status: res.status, html: await res.text() };
+  } catch (e) {
+    return { ok: false, status: 0, html: '', error: e.message };
+  }
+}
+
+// JSON API'yi güvenli şekilde çek
+async function fetchApi(url, extraHeaders = {}, timeoutMs = 7000) {
+  try {
+    const res = await fetch(url, {
+      headers: { ...BROWSER_HEADERS, 'Accept': 'application/json, text/plain, */*', ...extraHeaders },
+      signal: AbortSignal.timeout(timeoutMs)
+    });
+    if (!res.ok) return { ok: false, status: res.status, data: null };
+    return { ok: true, data: await res.json() };
+  } catch {
+    return { ok: false, status: 0, data: null };
+  }
+}
+
+// ─── Trendyol ───────────────────────────────────────────────────────────────
+async function fetchTrendyolReviews(url) {
+  // Adım 1: contentId'yi URL'den çıkar
+  let contentId = null;
+  const pm = url.match(/[-\/]p-(\d{5,})/i) || url.match(/[?&]contentId=(\d{5,})/i);
+  if (pm) contentId = pm[1];
+
+  // Adım 2: Ürün HTML sayfasını çek — hem contentId'yi bulur hem de özet puanı alır
+  const page = await fetchPage(url, { 'Referer': 'https://www.trendyol.com/' });
+  let avgRating = null, totalCount = 0, puanDagilimi = null;
+
+  if (page.ok) {
+    const html = page.html;
+    // contentId'yi HTML'den bulmaya çalış
+    if (!contentId) {
+      const cm = html.match(/"contentId"\s*:\s*(\d+)/)
+        || html.match(/"productContentId"\s*:\s*(\d+)/)
+        || html.match(/["']contentId["']\s*:\s*(\d{6,})/);
+      if (cm) contentId = cm[1];
+    }
+    // Gömülü window state'ten özet puan verisi çek
+    const state = parseWindowState(html,
+      'window.__PRODUCT_DETAIL_APP_INITIAL_STATE__',
+      '__PRODUCT_DETAIL_APP_INITIAL_STATE__',
+      'window.__INITIAL_STATE__'
+    );
+    if (state) {
+      const rs = state?.product?.ratingScore || state?.ratingScore || state?.productDetail?.ratingScore;
+      if (rs) {
+        avgRating  = rs.averageRating ?? rs.score ?? null;
+        totalCount = rs.totalCount ?? rs.count ?? 0;
+        if (rs.ratingCounts && Array.isArray(rs.ratingCounts)) {
+          puanDagilimi = rs.ratingCounts.map(r => ({ yildiz: r.key || r.star || r.score, sayi: r.count || r.value || 0 })).reverse();
+        }
+      }
+    }
+    // JSON-LD fallback
+    if (!avgRating) {
+      const jld = parseJsonLd(html);
+      if (jld.avgRating) { avgRating = jld.avgRating; totalCount = totalCount || jld.totalCount; }
+    }
+  }
+
+  // Adım 3: contentId varsa yorum API'sini dene
+  if (contentId) {
+    const apiResult = await fetchApi(
+      `https://public-mdc.trendyol.com/discovery-web-socialgw-service/api/review/product/${contentId}?storefrontId=1&culture=tr-TR&page=0&pageSize=30`,
+      { 'Referer': 'https://www.trendyol.com/', 'Origin': 'https://www.trendyol.com' }
+    );
+    if (apiResult.ok && apiResult.data) {
+      const result = apiResult.data?.result || apiResult.data;
+      const reviews = result?.productReviews?.content || result?.reviews || result?.content || [];
+      const apiAvg  = result?.ratingScore?.averageRating || result?.averageRating || avgRating;
+      const apiTotal = result?.productReviews?.totalElements || result?.totalCount || totalCount;
+      if (reviews.length > 0) {
+        return {
+          reviewItems: reviews.slice(0, 30).map(r => ({
+            text: (r.comment || r.commentText || '').trim(),
+            rating: r.rate ?? r.rating ?? null,
+            date: r.createdDate || null
+          })).filter(r => r.text.length > 3),
+          count: reviews.length, totalCount: apiTotal, avgRating: apiAvg, platform: 'Trendyol'
+        };
+      }
+    }
+  }
+
+  // Adım 4: Bireysel yorumlar alınamadı ama özet veri var mı?
+  if (avgRating || totalCount > 0) {
+    return {
+      reviewItems: [], count: 0, totalCount, avgRating,
+      puanDagilimiDirect: puanDagilimi,
+      platform: 'Trendyol',
+      fetchError: 'Yorumlar Trendyol bot koruması nedeniyle çekilemedi; puan özeti gösteriliyor'
+    };
+  }
+
+  // Adım 5: Hiçbir veri yok
+  if (!page.ok) {
+    return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'Trendyol', fetchError: page.status === 403 ? 'Trendyol erişim kısıtladı (403)' : page.status ? `HTTP ${page.status}` : 'Bağlantı kurulamadı' };
+  }
+  return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'Trendyol', fetchError: contentId ? 'Trendyol API yorum döndürmedi' : 'Ürün ID bulunamadı — doğrudan ürün sayfası URL\'sini girin' };
+}
+
+// ─── Hepsiburada ────────────────────────────────────────────────────────────
+async function fetchHepsiburadaReviews(url) {
+  // Adım 1: Ürün sayfasını çek
+  const page = await fetchPage(url, { 'Referer': 'https://www.hepsiburada.com/' });
+  let sku = null, avgRating = null, totalCount = 0;
+
+  // URL'den SKU çıkar
+  const skuPm = url.match(/-p-(HB[A-Z0-9]+)/i) || url.match(/\/(HB[A-Z0-9]{8,})/i) || url.match(/[?&]productCode=(HB[A-Z0-9]+)/i);
+  if (skuPm) sku = skuPm[1].toUpperCase();
+
+  if (page.ok) {
+    const html = page.html;
+    // __NEXT_DATA__'dan oku
+    const nd = parseNextData(html);
+    if (nd) {
+      const pp  = nd?.props?.pageProps;
+      const prod = pp?.product || pp?.productDetail || pp?.data?.product;
+      if (!sku && prod?.sku)   sku = prod.sku;
+      if (!sku && prod?.id)    sku = prod.id;
+      if (prod?.averageRating) avgRating  = parseFloat(prod.averageRating);
+      if (prod?.ratingCount)   totalCount = parseInt(prod.ratingCount, 10);
+      // Yorumlar bazen __NEXT_DATA__'da gelir
+      const reviews = prod?.reviews || pp?.reviews || [];
+      if (reviews.length > 0) {
+        return {
+          reviewItems: reviews.map(r => ({
+            text:   (r.text || r.userText || r.comment || '').trim(),
+            rating: r.rating ?? r.starCount ?? null,
+            date:   r.createdAt || null
+          })).filter(r => r.text.length > 3),
+          count: reviews.length, totalCount: totalCount || reviews.length, avgRating, platform: 'Hepsiburada'
+        };
+      }
+    }
+    // HTML'den SKU çıkarmayı dene
+    if (!sku) {
+      const hm = html.match(/"sku"\s*:\s*"(HB[A-Z0-9]+)"/i)
+        || html.match(/data-sku="(HB[A-Z0-9]+)"/i)
+        || html.match(/"productCode"\s*:\s*"(HB[A-Z0-9]+)"/i)
+        || html.match(/-p-(HB[A-Z0-9]+)/i);
+      if (hm) sku = hm[1].toUpperCase();
+    }
+    // JSON-LD fallback
+    if (!avgRating) {
+      const jld = parseJsonLd(html);
+      if (jld.avgRating) { avgRating = jld.avgRating; totalCount = totalCount || jld.totalCount; }
+      if (jld.items.length > 0) return { reviewItems: jld.items, count: jld.items.length, totalCount, avgRating, platform: 'Hepsiburada' };
+    }
+  }
+
+  // Adım 2: SKU varsa review API'sini dene
+  if (sku) {
+    for (const endpoint of [
+      `https://www.hepsiburada.com/product-reviews/sku/${sku}?size=25&page=0`,
+      `https://www.hepsiburada.com/reviews/product/${sku}?size=20`
+    ]) {
+      const r = await fetchApi(endpoint, { 'Referer': 'https://www.hepsiburada.com/' });
+      if (r.ok && r.data) {
+        const reviews = r.data?.reviews || r.data?.result || r.data?.data || [];
+        if (reviews.length > 0) {
+          return {
+            reviewItems: reviews.slice(0, 30).map(x => ({
+              text:   (x.userText || x.text || x.comment || '').trim(),
+              rating: x.rating ?? x.starCount ?? null,
+              date:   x.createdAt || null
+            })).filter(x => x.text.length > 3),
+            count: reviews.length, totalCount: r.data?.totalCount || reviews.length,
+            avgRating: r.data?.averageRating || avgRating, platform: 'Hepsiburada'
+          };
+        }
+      }
+    }
+  }
+
+  // Adım 3: En azından özet veri var mı?
+  if (avgRating || totalCount > 0) {
+    return { reviewItems:[], count:0, totalCount, avgRating, platform:'Hepsiburada', fetchError: 'Bireysel yorumlar çekilemedi; puan özeti gösteriliyor' };
+  }
+
+  if (!page.ok) {
+    return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'Hepsiburada', fetchError: page.status ? `HTTP ${page.status}` : 'Bağlantı kurulamadı' };
+  }
+  return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'Hepsiburada', fetchError: sku ? 'Hepsiburada API yorum döndürmedi' : 'SKU bulunamadı — ürün sayfası URL\'sini girin' };
+}
+
+// ─── n11 ─────────────────────────────────────────────────────────────────────
+async function fetchN11Reviews(url) {
+  const page = await fetchPage(url, { 'Referer': 'https://www.n11.com/' });
+  if (!page.ok) return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'n11', fetchError: page.status ? `HTTP ${page.status}` : 'Bağlantı kurulamadı' };
+
+  const html = page.html;
+  // JSON-LD dene
+  const jld = parseJsonLd(html);
+  if (jld.items.length > 0) return { reviewItems: jld.items, count: jld.items.length, totalCount: jld.totalCount || jld.items.length, avgRating: jld.avgRating, platform:'n11' };
+
+  // productId'yi HTML'den çıkar
+  let productId = url.match(/\/([1-9]\d{5,})(?:[?#\/]|$)/)?.[1]
+    || html.match(/"productId"\s*:\s*"?(\d+)"?/)?.[1]
+    || html.match(/data-product-id="(\d+)"/i)?.[1]
+    || html.match(/"id"\s*:\s*(\d{6,})/)?.[1];
+
+  if (productId) {
+    for (const ep of [
+      `https://www.n11.com/api/v1/product/comment/list?productId=${productId}&page=0&size=30`,
+      `https://www.n11.com/reviews/${productId}`
+    ]) {
+      const r = await fetchApi(ep, { 'Referer': 'https://www.n11.com/' });
+      if (r.ok && r.data) {
+        const reviews = r.data?.data?.commentList || r.data?.result?.comments || r.data?.comments || r.data?.reviews || [];
+        if (reviews.length > 0) {
+          return {
+            reviewItems: reviews.map(x => ({ text: (x.comment || x.commentText || x.text || '').trim(), rating: x.score ?? x.starCount ?? null })).filter(x => x.text.length > 3),
+            count: reviews.length, totalCount: r.data?.data?.totalCount || reviews.length,
+            avgRating: r.data?.data?.averageScore ?? jld.avgRating, platform: 'n11'
+          };
+        }
+      }
+    }
+  }
+
+  // Özet veri varsa döndür
+  if (jld.avgRating) return { reviewItems:[], count:0, totalCount: jld.totalCount, avgRating: jld.avgRating, platform:'n11', fetchError:'Bireysel yorumlar çekilemedi; puan özeti gösteriliyor' };
+  return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'n11', fetchError:'n11 API erişimi kısıtlı' };
+}
+
+// ─── ÇiçekSepeti ─────────────────────────────────────────────────────────────
+async function fetchCicekSepetiReviews(url) {
+  const page = await fetchPage(url, { 'Referer': 'https://www.ciceksepeti.com/' });
+  if (!page.ok) return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'ÇiçekSepeti' };
+
+  const html = page.html;
+  // JSON-LD
+  const jld = parseJsonLd(html);
+  if (jld.items.length > 0) return { reviewItems: jld.items, count: jld.items.length, totalCount: jld.totalCount, avgRating: jld.avgRating, platform:'ÇiçekSepeti' };
+
+  // __NEXT_DATA__
+  const nd = parseNextData(html);
+  if (nd) {
+    const reviews = nd?.props?.pageProps?.product?.reviews || nd?.props?.pageProps?.reviews || [];
+    const avg = nd?.props?.pageProps?.product?.averageRating;
+    if (reviews.length > 0) return {
+      reviewItems: reviews.map(r => ({ text: (r.comment||r.review||'').trim(), rating: r.starCount ?? null })).filter(r => r.text.length > 3),
+      count: reviews.length, totalCount: reviews.length, avgRating: avg || jld.avgRating, platform:'ÇiçekSepeti'
+    };
+    if (avg) return { reviewItems:[], count:0, totalCount:0, avgRating: avg, platform:'ÇiçekSepeti', fetchError:'Puan özeti gösteriliyor' };
+  }
+
+  // productId'yi HTML'den çıkar
+  const pidM = html.match(/"productCode"\s*:\s*"?(\w+)"?/)
+    || html.match(/"ProductId"\s*:\s*"?(\d+)"?/)
+    || html.match(/"productId"\s*:\s*"?(\d+)"?/);
+  if (pidM) {
+    const r = await fetchApi(`https://www.ciceksepeti.com/product-review/reviews?productId=${pidM[1]}&pageIndex=1&pageSize=20`, { 'Referer': 'https://www.ciceksepeti.com/' });
+    if (r.ok && r.data) {
+      const reviews = r.data?.data?.reviews || r.data?.reviews || [];
+      if (reviews.length > 0) return {
+        reviewItems: reviews.map(x => ({ text: (x.comment||x.review||'').trim(), rating: x.starCount ?? null })).filter(x => x.text.length > 3),
+        count: reviews.length, totalCount: r.data?.data?.totalCount || reviews.length,
+        avgRating: r.data?.data?.averageRating || jld.avgRating, platform:'ÇiçekSepeti'
+      };
+    }
+  }
+
+  if (jld.avgRating) return { reviewItems:[], count:0, totalCount: jld.totalCount, avgRating: jld.avgRating, platform:'ÇiçekSepeti', fetchError:'Bireysel yorumlar çekilemedi' };
+  return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'ÇiçekSepeti', fetchError:'ÇiçekSepeti erişimi kısıtlı' };
+}
+
+// ─── Generic JSON-LD / HTML ──────────────────────────────────────────────────
+async function fetchGenericReviews(url, platformName) {
+  const page = await fetchPage(url, {}, 10000);
+  if (!page.ok) return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform: platformName, fetchError: page.status ? `HTTP ${page.status}` : 'Bağlantı kurulamadı' };
+  const jld = parseJsonLd(page.html);
+  return { reviewItems: jld.items, count: jld.items.length, totalCount: jld.totalCount || jld.items.length, avgRating: jld.avgRating, platform: platformName };
 }
 
 //  Dispatcher 
@@ -531,9 +636,9 @@ function analyzeUrl(rawUrl, resolvedFrom) {
 }
 
 //  NLP Analizi 
-function analyzeReviews(reviewItems) {
+function analyzeReviews(reviewItems, directAvgRating = null, directTotalCount = 0) {
   if (!reviewItems || reviewItems.length === 0) {
-    return { olumlu_odak:[], olumsuz_odak:[], konular:[], pozitif_yuzde:0, negatif_yuzde:0, notr_yuzde:0, kronik_sorun_var_mi:false, bot_yorum_suphesi:false, ortalama_puan:null, puan_dagilimi:null, kalite_skoru:0, toplam_yorum:0 };
+    return { olumlu_odak:[], olumsuz_odak:[], konular:[], pozitif_yuzde:0, negatif_yuzde:0, notr_yuzde:0, kronik_sorun_var_mi:false, bot_yorum_suphesi:false, ortalama_puan: directAvgRating, puan_dagilimi:null, kalite_skoru:0, ozgunluk_skoru:0, toplam_yorum: directTotalCount || 0 };
   }
 
   const lines = reviewItems.map(r => r.text).filter(t => t && t.trim().length > 2);
@@ -678,7 +783,7 @@ exports.handler = async (event) => {
     fetchReviewsFromURL(normalizedUrl).catch(() => ({ reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'Web' }))
   ]);
 
-  const reviewResult = analyzeReviews(reviewFetch.reviewItems || []);
+  const reviewResult = analyzeReviews(reviewFetch.reviewItems || [], reviewFetch.avgRating, reviewFetch.totalCount);
   const verdict      = buildVerdict(urlResult, reviewResult);
 
   return {
@@ -687,13 +792,14 @@ exports.handler = async (event) => {
     body: JSON.stringify({
       satici_analizi:       urlResult,
       yorum_cekme: {
-        platform:    reviewFetch.platform,
-        sayi:        reviewFetch.count,
-        toplam_sayi: reviewFetch.totalCount,
-        ort_puan:    reviewFetch.avgRating,
-        hata:        reviewFetch.fetchError || null,
-        onizleme:    (reviewFetch.reviewItems||[]).slice(0,5).map(r => ({
-          text:   r.text.length > 160 ? r.text.slice(0,160)+'' : r.text,
+        platform:        reviewFetch.platform,
+        sayi:            reviewFetch.count,
+        toplam_sayi:     reviewFetch.totalCount,
+        ort_puan:        reviewFetch.avgRating,
+        puan_dagilimi_direkt: reviewFetch.puanDagilimiDirect || null,
+        hata:            reviewFetch.fetchError || null,
+        onizleme:        (reviewFetch.reviewItems||[]).slice(0,5).map(r => ({
+          text:   r.text.length > 160 ? r.text.slice(0,160)+'...' : r.text,
           rating: r.rating,
           date:   r.date
         }))
