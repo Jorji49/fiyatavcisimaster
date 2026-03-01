@@ -1196,7 +1196,7 @@
 
         // ==================== ARAMA MOTORU ====================
 
-        async function runEngine(){
+        function runEngine(){
             hideSuggest();
             const inp=document.getElementById('queryInput'),grid=document.getElementById('gridContainer'),err=document.getElementById('errorPanel'),btn=document.getElementById('searchBtn'),init=document.getElementById('initialContent');
             let q=inp.value.trim();
@@ -1219,44 +1219,21 @@
 
             btn.classList.add('btn-loading');btn.innerHTML='ARANIYOR...';
 
-            const v=validateQuery(q);
-            if(!v.valid){
+            setTimeout(()=>{
                 btn.classList.remove('btn-loading');btn.innerHTML='ARA';
-                if(!v.silent){document.getElementById('errorText').innerText=v.msg;err.classList.remove('hidden')}
-                return;
-            }
+                const v=validateQuery(q);
+                if(!v.valid){if(!v.silent){document.getElementById('errorText').innerText=v.msg;err.classList.remove('hidden')}return}
 
-            checkTypos(q);
-            updateHistory(q);
+                checkTypos(q);
+                updateHistory(q);
 
-            // Google Analytics
-            if(typeof gtag==='function')try{gtag('event','conversion',{'send_to':'AW-17749261970/fVEYCL6UkscbEJL9wI9C'})}catch(e){}
+                // Google Analytics
+                if(typeof gtag==='function')try{gtag('event','conversion',{'send_to':'AW-17749261970/fVEYCL6UkscbEJL9wI9C'})}catch(e){}
 
-            const ql=q.toLowerCase();
-            const cat=detectCategory(ql);
+                const ql=q.toLowerCase();
+                const cat=detectCategory(ql);
 
-            // Fetch Live Prices via Backend
-            try {
-                const liveResp = await fetch('/.netlify/functions/search?q=' + encodeURIComponent(q));
-                if (liveResp.ok) {
-                    const data = await liveResp.json();
-                    if (data.results && data.results.length > 0) {
-                        data.results.forEach(item => {
-                            if (parsedBudget) {
-                                let numPrice = parseFloat((item.extracted_price || 0).toString().replace(/[^\d.-]/g, ''));
-                                if (numPrice > parsedBudget) return;
-                            }
-                            createProductCard(item);
-                        });
-                    }
-                }
-            } catch (e) {
-                console.error("Live fetch error", e);
-            }
-
-            btn.classList.remove('btn-loading');btn.innerHTML='ARA';
-
-            // Resmi marka mağazası kontrolü
+                // Resmi marka mağazası kontrolü
             let brandFound=null;
             for(let k in BRANDS){
                 if(BRANDS[k].k.some(x=>ql.includes(x))){
@@ -1425,32 +1402,6 @@
                     }
                 },150);
             }
-        }
-
-        function createProductCard(item) {
-            const g=document.getElementById('gridContainer'),c=document.createElement('a');c.href=item.link;c.target="_blank";c.rel="noopener noreferrer";
-            const cl="base-card link-card animate-fade-in col-span-1 no-underline group";
-            const u=item.link;
-            const isFaved=getFavs().some(f=>f.url===u);
-            const favHtml=`<button class="fav-btn${isFaved?' active':''}" onclick="event.preventDefault();event.stopPropagation();toggleFavByBtn(this)" data-url="${encodeURIComponent(u)}" data-name="${item.title.replace(/"/g,'&quot;')}" data-logo="${(item.thumbnail||'').replace(/"/g,'&quot;')}" title="${isFaved?'Favorilerden Çıkar':'Favorilere Ekle'}"><i class="fa-${isFaved?'solid':'regular'} fa-heart"></i></button>`;
-
-            const ht=`${favHtml}
-            <div class="flex flex-col h-full w-full pt-6">
-                <div class="flex-grow flex flex-col items-center justify-center mb-4">
-                    ${item.thumbnail ? `<img src="${item.thumbnail}" class="max-h-32 object-contain group-hover:scale-105 transition-transform" alt="Product Image">` : ''}
-                </div>
-                <div class="text-sm font-bold text-slate-800 dark:text-slate-200 line-clamp-2 leading-tight mb-2">${item.title}</div>
-                <div class="text-xs text-slate-500 mb-2 truncate">${item.source}</div>
-                <div class="mt-auto flex justify-between items-center">
-                    <div class="text-lg font-black text-blue-600 dark:text-blue-400">${item.price}</div>
-                    <div class="text-slate-300 group-hover:text-blue-600 transition-colors text-lg"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
-                </div>
-            </div>`;
-            c.className=cl;c.innerHTML=ht;
-            // Add custom border style for live products to distinguish
-            c.style.border = "2px solid #3b82f6";
-            // Append live prices
-            g.appendChild(c);
         }
 
         function createCard(n,l,u,t,i,td){
