@@ -1234,20 +1234,20 @@
                 const cat=detectCategory(ql);
 
                 // Resmi marka mağazası kontrolü
-                let brandFound=null;
-                for(let k in BRANDS){
-                    if(BRANDS[k].k.some(x=>ql.includes(x))){
-                        brandFound=BRANDS[k];
-                        break;
-                    }
+            let brandFound=null;
+            for(let k in BRANDS){
+                if(BRANDS[k].k.some(x=>ql.includes(x))){
+                    brandFound=BRANDS[k];
+                    break;
                 }
-                if(brandFound)createCard(brandFound.name,null,brandFound.u(q),"official",brandFound.i,null);
+            }
+            if(brandFound)createCard(brandFound.name,null,brandFound.u(q),"official",brandFound.i,null);
 
-                // Mağaza filtreleme - Kategori bazlı
-                MARKETS.forEach(m=>{
-                    let show=false, highlight=false;
+            // Mağaza filtreleme - Kategori bazlı
+            MARKETS.forEach(m=>{
+                let show=false, highlight=false;
 
-                    // ========== TEKNOLOJİ KATEGORİLERİ ==========
+                // ========== TEKNOLOJİ KATEGORİLERİ ==========
 
                     if(cat==="VR_GAMING"){
                         // VR & Gaming - Sadece teknoloji ve gaming mağazaları
@@ -1357,52 +1357,51 @@
                         show=false;
                     }
 
-                    if(show){
-                        let cardUrl=m.url+encodeURIComponent(q);
-                        let cardType=highlight?"highlight":"normal";
-                        if(m.name==="AMAZON"){
-                            const affUrl=getAffiliateUrl(q);
-                            cardUrl=affUrl||(m.url+encodeURIComponent(q));
-                            cardType="affiliate";
-                        }
-                        createCard(m.name,m.logo,cardUrl,cardType,null,m);
+                if(show){
+                    let cardUrl=m.url+encodeURIComponent(q);
+                    let cardType=highlight?"highlight":"normal";
+                    if(m.name==="AMAZON"){
+                        const affUrl=getAffiliateUrl(q);
+                        cardUrl=affUrl||(m.url+encodeURIComponent(q));
+                        cardType="affiliate";
                     }
-                });
-
-                // Sonuç sayısı
-                const cardCount=grid.querySelectorAll('.base-card').length;
-                const resultInfo=document.getElementById('resultInfo');
-                const resultCount=document.getElementById('resultCount');
-                const adsenseResultsArea=document.getElementById('adsenseResultsArea');
-                if(cardCount>0){
-                    resultCount.textContent=cardCount;
-                    resultInfo.classList.remove('hidden');
-                    if(adsenseResultsArea)adsenseResultsArea.classList.remove('hidden');
-                    updateUrl(q);
-                    showShareBar(q,cardCount);
-                    updatePriceBadge(q);
-                    if(parsedBudget){const pb=document.getElementById('priceBadge');if(pb)pb.innerHTML+='<span class="price-badge mid">💰 Bütçe: ₺'+parsedBudget.toLocaleString('tr-TR')+'</span>';}
-                }else{
-                    resultInfo.classList.add('hidden');
-                    if(adsenseResultsArea)adsenseResultsArea.classList.add('hidden');
-                    document.getElementById('shareBar').classList.add('hidden');
+                    createCard(m.name,m.logo,cardUrl,cardType,null,m);
                 }
+            });
 
-                // Sonuç bulunamadı
-                if(grid.innerHTML===""){
-                    const eq=encodeURIComponent(q);
-                    document.getElementById('errorText').innerHTML=`Bu arama için uygun sonuç bulunamadı.<br><span style="font-size:0.85rem;opacity:0.8;margin-top:0.5rem;display:block">Doğrudan aramayı deneyin:</span><div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.75rem;justify-content:center"><a href="https://www.amazon.com.tr/s?k=${eq}" target="_blank" rel="noopener" style="padding:6px 14px;border-radius:999px;background:#FF9900;color:#fff;font-weight:700;font-size:0.78rem;text-decoration:none">Amazon</a><a href="https://www.hepsiburada.com/ara?q=${eq}" target="_blank" rel="noopener" style="padding:6px 14px;border-radius:999px;background:#FF6000;color:#fff;font-weight:700;font-size:0.78rem;text-decoration:none">Hepsiburada</a><a href="https://www.trendyol.com/sr?q=${eq}" target="_blank" rel="noopener" style="padding:6px 14px;border-radius:999px;background:#f27a1a;color:#fff;font-weight:700;font-size:0.78rem;text-decoration:none">Trendyol</a></div>`;
-                    err.classList.remove('hidden');
-                }else{
-                    // Sonuçlara scroll
-                    setTimeout(()=>{
-                        const rect=grid.getBoundingClientRect();
-                        if(rect.top>window.innerHeight*0.4){
-                            window.scrollTo({top:window.scrollY+rect.top-100,behavior:'smooth'});
-                        }
-                    },150);
-                }
-            },300);
+            // Sonuç sayısı
+            const cardCount=grid.querySelectorAll('.base-card').length;
+            const resultInfo=document.getElementById('resultInfo');
+            const resultCount=document.getElementById('resultCount');
+            const adsenseResultsArea=document.getElementById('adsenseResultsArea');
+            if(cardCount>0){
+                resultCount.textContent=cardCount;
+                resultInfo.classList.remove('hidden');
+                if(adsenseResultsArea)adsenseResultsArea.classList.remove('hidden');
+                updateUrl(q);
+                showShareBar(q,cardCount);
+                updatePriceBadge(q);
+                if(parsedBudget){const pb=document.getElementById('priceBadge');if(pb)pb.innerHTML+='<span class="price-badge mid">💰 Bütçe: ₺'+parsedBudget.toLocaleString('tr-TR')+'</span>';}
+            }else{
+                resultInfo.classList.add('hidden');
+                if(adsenseResultsArea)adsenseResultsArea.classList.add('hidden');
+                document.getElementById('shareBar').classList.add('hidden');
+            }
+
+            // Sonuç bulunamadı
+            if(grid.innerHTML===""){
+                const eq=encodeURIComponent(q);
+                document.getElementById('errorText').innerHTML=`Bu arama için uygun sonuç bulunamadı.<br><span style="font-size:0.85rem;opacity:0.8;margin-top:0.5rem;display:block">Doğrudan aramayı deneyin:</span><div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.75rem;justify-content:center"><a href="https://www.amazon.com.tr/s?k=${eq}" target="_blank" rel="noopener" style="padding:6px 14px;border-radius:999px;background:#FF9900;color:#fff;font-weight:700;font-size:0.78rem;text-decoration:none">Amazon</a><a href="https://www.hepsiburada.com/ara?q=${eq}" target="_blank" rel="noopener" style="padding:6px 14px;border-radius:999px;background:#FF6000;color:#fff;font-weight:700;font-size:0.78rem;text-decoration:none">Hepsiburada</a><a href="https://www.trendyol.com/sr?q=${eq}" target="_blank" rel="noopener" style="padding:6px 14px;border-radius:999px;background:#f27a1a;color:#fff;font-weight:700;font-size:0.78rem;text-decoration:none">Trendyol</a></div>`;
+                err.classList.remove('hidden');
+            }else{
+                // Sonuçlara scroll
+                setTimeout(()=>{
+                    const rect=grid.getBoundingClientRect();
+                    if(rect.top>window.innerHeight*0.4){
+                        window.scrollTo({top:window.scrollY+rect.top-100,behavior:'smooth'});
+                    }
+                },150);
+            }
         }
 
         function createCard(n,l,u,t,i,td){
