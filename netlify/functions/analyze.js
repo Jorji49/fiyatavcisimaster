@@ -1,19 +1,17 @@
-/**
- * /.netlify/functions/analyze
- * E-ticaret Güvenlik & NLP Analisti
+﻿/**
+ * /.netlify/functions/analyze  (v3  2026-03)
+ * E-ticaret Güvenlik, Yorum Otomatik Çekme & NLP Analisti
  *
- * POST body: { url: string, reviews: string }
+ * POST body: { url: string }
  *
- * Görevler:
- *  1. URL Siber Güvenlik Analizi — phishing, typosquatting, şüpheli TLD
- *  2. Türkçe Duygu Analizi (Sentiment) — pozitif/negatif odak tespiti
- *  3. Kronik Sorun & Bot Yorum Tespiti
- *  4. Nihai Tavsiye Kararı (sonuc_karari)
- *
- * Çıktı: Sadece JSON (açıklama veya markdown yok)
+ * Özellikler:
+ *  1. URL Siber Güvenlik Analizi  phishing, typosquatting, HTTPS kontrolü
+ *  2. Otomatik Yorum Çekme      Trendyol, Hepsiburada, n11, generic JSON-LD
+ *  3. Türkçe Duygu Analizi      sentiment %, konu etiketleri, puan dağılımı
+ *  4. Bot Yorum Tespiti         yineleme, kısa yorum, kalıp bazlı
+ *  5. Nihai Tavsiye Kararı      güven skoru + yorum kalitesi birleşimi
  */
 
-// ─── Güvenilir Türk E-ticaret Domainleri ────────────────────────────────────
 const LEGIT_DOMAINS = [
   'amazon.com.tr','amazon.com','hepsiburada.com','trendyol.com','n11.com',
   'gittigidiyor.com','ciceksepeti.com','mediamarkt.com.tr','teknosa.com',
@@ -21,90 +19,78 @@ const LEGIT_DOMAINS = [
   'migros.com.tr','a101.com.tr','bim.com.tr','lcw.com','defacto.com.tr',
   'koton.com','watsons.com.tr','gratis.com.tr','rossmann.com.tr',
   'sephora.com.tr','idefix.com','kitapyurdu.com','bkmkitap.com','dr.com.tr',
-  'sinerji.gen.tr','itopya.com','incehesap.com','akakce.com','cimri.com',
-  'epey.com','superstep.com.tr','sportive.com.tr','intersport.com.tr',
+  'itopya.com','incehesap.com','akakce.com','cimri.com','epey.com',
+  'superstep.com.tr','sportive.com.tr','intersport.com.tr',
   'decathlon.com.tr','koctas.com.tr','bauhaus.com.tr','ikea.com.tr',
   'toyzzshop.com','peti.com.tr','shopier.com','etsy.com','ebay.com',
   'apple.com','samsung.com','xiaomi.com','nike.com','adidas.com',
   'monsternotebook.com.tr','lenovo.com','asus.com','msi.com','logitech.com',
-  'dyson.com.tr','philips.com.tr','troyestore.com','sneaksup.com',
-  'morhipo.com','vivense.com','toyzz.com'
+  'dyson.com.tr','philips.com.tr','morhipo.com','vivense.com','toyzz.com',
+  'banabi.com','getir.com','temu.com','shein.com','aliexpress.com',
+  'beymen.com','network.com.tr','flo.com.tr','puma.com','mango.com'
 ];
 
-// ─── Şüpheli TLD'ler ─────────────────────────────────────────────────────────
 const SUSPICIOUS_TLDS = [
   '.xyz','.info','.biz','.tk','.ml','.ga','.cf','.gq','.pw',
   '.cc','.top','.click','.link','.online','.site','.store','.shop'
 ];
 
-// ─── Bilinen Marka Phishing Kalıpları ────────────────────────────────────────
 const PHISHING_PATTERNS = [
-  {
-    legit: 'trendyol',
-    bad: ['trendy0l','trendyyol','trendyool','tr3ndyol','trendyol-indirim',
-          'indirimtrendyol','trendyol.net','trendyol.info','trendyol.biz']
-  },
-  {
-    legit: 'hepsiburada',
-    bad: ['hepsib0rada','hepsiburadaa','hepsi-burada','hepsiburade',
-          'hepsibur4da','hepsiburada.net','hepsiburada.info']
-  },
-  {
-    legit: 'amazon',
-    bad: ['arnazon','amazom','amazonn','arnaz0n','amaz0n','amazon-tr',
-          'amazonn.com','amazon.net','amazon-kampanya','amazon-fiyat']
-  },
-  {
-    legit: 'n11',
-    bad: ['nll.com','n-11.com','n11-indirim','n1l.com','nl1.com']
-  },
-  {
-    legit: 'gittigidiyor',
-    bad: ['gittigidiyorr','gittigidiy0r','gitti-gidiyor']
-  }
+  { legit:'trendyol', bad:['trendy0l','trendyyol','trendyool','tr3ndyol','trendyol-indirim','indirimtrendyol','trendyol.net','trendyol.info','trendyol.biz'] },
+  { legit:'hepsiburada', bad:['hepsib0rada','hepsiburadaa','hepsi-burada','hepsiburade','hepsibur4da','hepsiburada.net','hepsiburada.info'] },
+  { legit:'amazon', bad:['arnazon','amazom','amazonn','arnaz0n','amaz0n','amazon-tr','amazonn.com','amazon.net','amazon-kampanya','amazon-fiyat'] },
+  { legit:'n11', bad:['nll.com','n-11.com','n11-indirim','n1l.com','nl1.com'] },
+  { legit:'gittigidiyor', bad:['gittigidiyorr','gittigidiy0r','gitti-gidiyor'] }
 ];
 
-// ─── URL Kısaltıcılar ─────────────────────────────────────────────────────────
-const URL_SHORTENERS = [
-  'bit.ly','tinyurl.com','ow.ly','goo.gl','shorturl.at','cutt.ly','t.co','rb.gy'
-];
+const URL_SHORTENERS = ['bit.ly','tinyurl.com','ow.ly','goo.gl','shorturl.at','cutt.ly','t.co','rb.gy'];
 
-// ─── Türkçe Pozitif Anahtar Kelimeler (ağırlıklı) ────────────────────────────
 const POSITIVE_KEYWORDS = {
-  'orijinal':3,'orjinal':3,'gerçek ürün':4,'orjinal ürün':4,'orijinal ürün':4,
-  'harika':3,'mükemmel':3,'süper':2,'muhteşem':3,'olağanüstü':3,
-  'kaliteli':3,'kalite':2,'sağlam':2,'dayanıklı':2,
-  'hızlı kargo':3,'hızlı teslimat':3,'zamanında geldi':3,'dakik teslimat':3,
-  'fotoğraftaki gibi':4,'açıklamaya uygun':4,'aynen göründüğü gibi':3,
-  'memnun':2,'memnunum':3,'tavsiye ederim':3,'kesinlikle alın':3,
-  'güzel':2,'beğendim':2,'iyi':1,'fiyatına göre iyi':2,'paranın değeri':2,
+  'orijinal':4,'orjinal':3,'gerçek ürün':5,'orijinal ürün':5,'orjinal ürün':5,
+  'harika':3,'mükemmel':3,'süper':2,'muhteşem':3,'olağanüstü':3,'kusursuz':3,
+  'kaliteli':3,'kalite':2,'sağlam':3,'dayanıklı':3,'şık':2,'güzel':2,
+  'hızlı kargo':4,'hızlı teslimat':4,'zamanında geldi':4,'dakik teslimat':3,
+  'aynı gün':3,'ertesi gün':3,
+  'fotoğraftaki gibi':5,'açıklamaya uygun':5,'aynen göründüğü gibi':4,'birebir aynı':4,
+  'memnun':2,'memnunum':3,'tavsiye ederim':4,'kesinlikle alın':4,'pişman değilim':4,
+  'beğendim':2,'iyi':1,'fiyatına göre iyi':3,'paranın değeri':3,'fiyat performans':3,
   'uygun fiyat':2,'kullanışlı':2,'pratik':2,'kolay kurulum':2,
-  'çok iyi':3,'tam puan':3,'5 yıldız':3,'beş yıldız':3
+  'çok iyi':3,'tam puan':4,'5 yıldız':4,'beş yıldız':4,'5/5':4,
+  'satıcı ilgili':3,'hızlı çözüm':3,'iyi iletişim':3,'satıcı yardımcı':3,
+  'paketleme güzel':2,'özenli paketleme':3,'güvenli paket':2,
+  'tekrar alırım':4,'yeniden alacağım':4,'ikinci kez aldım':3,'her zaman alıyorum':3
 };
 
-// ─── Türkçe Negatif Anahtar Kelimeler (ağırlıklı) ────────────────────────────
 const NEGATIVE_KEYWORDS = {
-  'sahte':5,'çakma':5,'taklit':5,'replika':4,'kopya ürün':5,'fake':5,
-  'kırık geldi':4,'kırık':3,'hasar':3,'hasarlı':4,'çizik':3,
-  'bozuk':4,'arızalı':4,'çalışmıyor':4,
-  'iade ettim':4,'iade sorunu':4,'iade yapamadım':5,'iade reddedildi':5,
-  'iade':3,'para iadesi':3,
-  'geç kargo':3,'kargo problemi':4,'geç geldi':3,'gecikmeli':3,'kayboldu':4,
-  'dolandırıcı':5,'dolandırıldım':5,'dolandırma':5,
-  'berbat':4,'kötü':3,'rezalet':5,'korkunç':4,
-  'açıklama farklı':4,'fotoğraf farklı':4,'yanıltıcı':4,
-  'müşteri hizmetleri kötü':3,'çözüm yok':3,'ilgilenilmedi':3,
-  'parça eksik':4,'eksik geldi':4,'yanlış ürün':4
+  'sahte':6,'çakma':6,'taklit':6,'replika':5,'kopya ürün':6,'fake':6,'garanti yok':4,
+  'kırık geldi':5,'kırık':3,'hasar':3,'hasarlı':5,'çizik':3,'ezilmiş':4,
+  'bozuk':4,'arızalı':5,'çalışmıyor':5,'açılmıyor':4,
+  'iade ettim':5,'iade sorunu':5,'iade yapamadım':6,'iade reddedildi':6,'iade':3,
+  'geç kargo':4,'kargo problemi':5,'geç geldi':4,'gecikmeli':4,'kayboldu':5,'kargo kayıp':5,
+  'dolandırıcı':6,'dolandırıldım':6,'dolandırma':6,'vurgun':5,
+  'berbat':5,'kötü':3,'rezalet':6,'korkunç':5,
+  'açıklama farklı':5,'fotoğraf farklı':5,'yanıltıcı':5,'aldatıcı':5,
+  'müşteri hizmetleri kötü':4,'çözüm yok':4,'ilgilenilmedi':4,'cevap yok':3,
+  'parça eksik':5,'eksik geldi':5,'yanlış ürün':5,'farklı ürün geldi':5,
+  'para kayboldu':5,'gelmedi':4,'kullanılmış':4,'ikinci el':4,'sıfır değil':4
 };
 
-// ─── Kronik Sorun Tetikleyiciler ─────────────────────────────────────────────
+const TOPIC_KEYWORDS = {
+  'Kalite': ['kalite','kaliteli','sağlam','dayanıklı','bozuk','arızalı','kırık','sahte'],
+  'Kargo':  ['kargo','teslimat','geldi','gelmedi','geç','hızlı','paketleme','paket','kayboldu'],
+  'İade':   ['iade','para iadesi','iade sorunu','iade reddedildi'],
+  'Dolandırıcılık': ['sahte','çakma','dolandırıcı','dolandırıldım','taklit','fake','replika'],
+  'Satıcı': ['satıcı','müşteri hizmetleri','iletişim','cevap','çözüm'],
+  'Fiyat':  ['fiyat','ucuz','pahalı','uygun','değer','paranın'],
+  'Ürün Uyumu': ['fotoğraftaki gibi','açıklamaya uygun','farklı geldi','birebir','yanıltıcı']
+};
+
 const CHRONIC_TRIGGERS = [
   'iade','sahte','çakma','kırık','bozuk','dolandı','geç kargo',
-  'kargo problemi','hasarlı','fotoğraf farklı','açıklama farklı',
-  'sahte ürün','kopya','replika'
+  'kargo problemi','hasarlı','fotoğraf farklı','açıklama farklı','sahte ürün',
+  'kopya','replika','çalışmıyor','gelmedi','kayboldu'
 ];
 
-// ─── Bot Yorum Kalıpları ──────────────────────────────────────────────────────
 const BOT_PATTERNS = [
   /^(çok güzel|harika|teşekkürler?|mükemmel|süper)[.!]?$/i,
   /^(5 yıldız|beş yıldız|tam puan)[.!]?$/i,
@@ -113,7 +99,6 @@ const BOT_PATTERNS = [
   /^(aldım|geldi|güzel geldi)[.!]?$/i
 ];
 
-// ─── Yardımcı: Levenshtein Mesafesi ──────────────────────────────────────────
 function levenshtein(a, b) {
   const dp = Array.from({ length: b.length + 1 }, (_, i) => [i]);
   for (let j = 0; j <= a.length; j++) dp[0][j] = j;
@@ -127,152 +112,264 @@ function levenshtein(a, b) {
   return dp[b.length][a.length];
 }
 
-// ─── Yardımcı: Domain Çıkart ─────────────────────────────────────────────────
 function extractDomain(rawUrl) {
   try {
     const u = new URL(rawUrl.startsWith('http') ? rawUrl : 'https://' + rawUrl);
     return u.hostname.replace(/^www\./, '').toLowerCase();
   } catch {
-    return rawUrl.toLowerCase()
-      .replace(/^https?:\/\//,'').replace(/^www\./,'').split('/')[0].split('?')[0];
+    return rawUrl.toLowerCase().replace(/^https?:\/\//,'').replace(/^www\./,'').split('/')[0].split('?')[0];
   }
 }
 
-// ─── 1. URL Güvenlik Analizi ──────────────────────────────────────────────────
+function detectPlatform(domain) {
+  if (domain.includes('trendyol'))    return 'trendyol';
+  if (domain.includes('hepsiburada')) return 'hepsiburada';
+  if (domain.includes('n11'))         return 'n11';
+  if (domain.includes('amazon'))      return 'amazon';
+  if (domain.includes('gittigidiyor'))return 'gittigidiyor';
+  if (domain.includes('ciceksepeti')) return 'ciceksepeti';
+  if (domain.includes('teknosa'))     return 'teknosa';
+  return 'generic';
+}
+
+function platformLabel(key) {
+  const map = { trendyol:'Trendyol', hepsiburada:'Hepsiburada', n11:'n11', amazon:'Amazon TR', gittigidiyor:'GittiGidiyor', ciceksepeti:'ÇiçekSepeti', teknosa:'Teknosa', generic:'Web' };
+  return map[key] || 'Web';
+}
+
+//  Trendyol 
+async function fetchTrendyolReviews(url) {
+  let contentId = null;
+  const pm = url.match(/[-\/]p-(\d+)/i) || url.match(/[?&]contentId=(\d+)/i);
+  if (pm) contentId = pm[1];
+  if (!contentId) return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'Trendyol', fetchError:'Ürün ID bulunamadı' };
+
+  const apiUrl = `https://public-mdc.trendyol.com/discovery-web-socialgw-service/api/review/product/${contentId}?storefrontId=1&culture=tr-TR&page=0&pageSize=30`;
+  const res = await fetch(apiUrl, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+      'Accept': 'application/json, text/plain, */*',
+      'Referer': 'https://www.trendyol.com/',
+      'Origin': 'https://www.trendyol.com'
+    },
+    signal: AbortSignal.timeout(7000)
+  });
+  if (!res.ok) throw new Error(`Trendyol API ${res.status}`);
+  const data = await res.json();
+  const result    = data?.result || data;
+  const reviews   = result?.productReviews?.content || result?.reviews || result?.content || [];
+  const avgRating = result?.ratingScore?.averageRating ?? result?.averageRating ?? null;
+  const totalCount= result?.productReviews?.totalElements ?? result?.totalCount ?? reviews.length;
+  return {
+    reviewItems: reviews.slice(0,30).map(r => ({
+      text:    (r.comment || r.commentText || '').trim(),
+      rating:  r.rate ?? r.rating ?? null,
+      date:    r.createdDate || null,
+      helpful: r.helpful ?? 0
+    })).filter(r => r.text.length > 3),
+    count: reviews.length, totalCount, avgRating, platform:'Trendyol'
+  };
+}
+
+//  Hepsiburada 
+async function fetchHepsiburadaReviews(url) {
+  const skuMatch = url.match(/\b(HB[\w\d]+)\b/i);
+  if (!skuMatch) return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'Hepsiburada', fetchError:'SKU bulunamadı' };
+  const sku = skuMatch[1];
+  const apiUrl = `https://www.hepsiburada.com/product-reviews/sku/${sku}?size=25&page=0`;
+  const res = await fetch(apiUrl, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      'Accept': 'application/json',
+      'Referer': 'https://www.hepsiburada.com/'
+    },
+    signal: AbortSignal.timeout(7000)
+  });
+  if (!res.ok) throw new Error(`Hepsiburada API ${res.status}`);
+  const data = await res.json();
+  const reviews    = data?.reviews || data?.result || data?.data || [];
+  const avgRating  = data?.averageRating ?? null;
+  const totalCount = data?.totalCount ?? reviews.length;
+  return {
+    reviewItems: reviews.slice(0,30).map(r => ({
+      text:   (r.userText || r.text || r.comment || '').trim(),
+      rating: r.rating ?? r.rate ?? null,
+      date:   r.createdAt || null
+    })).filter(r => r.text.length > 3),
+    count: reviews.length, totalCount, avgRating, platform:'Hepsiburada'
+  };
+}
+
+//  Generic JSON-LD / HTML 
+async function fetchGenericReviews(url, platformName) {
+  const res = await fetch(url, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      'Accept': 'text/html,application/xhtml+xml,*/*;q=0.8'
+    },
+    signal: AbortSignal.timeout(8000)
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const html  = await res.text();
+  const items = [];
+  let avgRating = null;
+
+  const jsonLdRe = /<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
+  let m;
+  while ((m = jsonLdRe.exec(html)) !== null) {
+    try {
+      const d = JSON.parse(m[1]);
+      const arr = Array.isArray(d) ? d : [d];
+      for (const item of arr) {
+        if (item?.aggregateRating?.ratingValue) avgRating = parseFloat(item.aggregateRating.ratingValue);
+        const revs = item?.review || item?.reviews || [];
+        for (const r of (Array.isArray(revs)?revs:[revs])) {
+          const txt = (r?.reviewBody || r?.description || '').trim();
+          if (txt.length > 5) items.push({ text: txt, rating: parseFloat(r?.reviewRating?.ratingValue)||null, date: r?.datePublished||null });
+        }
+      }
+    } catch {}
+  }
+  return { reviewItems: items, count: items.length, totalCount: items.length, avgRating, platform: platformName };
+}
+
+//  Dispatcher 
+async function fetchReviewsFromURL(url) {
+  const domain = extractDomain(url);
+  const plat   = detectPlatform(domain);
+  const label  = platformLabel(plat);
+  try {
+    if (plat === 'trendyol')    return await fetchTrendyolReviews(url);
+    if (plat === 'hepsiburada') return await fetchHepsiburadaReviews(url);
+    return await fetchGenericReviews(url, label);
+  } catch (err) {
+    return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform:label, fetchError: err.message };
+  }
+}
+
+//  URL Güvenlik Analizi 
 function analyzeUrl(rawUrl) {
   const warnings = [];
   let score = 50;
 
   if (!rawUrl || rawUrl.trim().length < 4) {
-    return {
-      guven_skoru: 50,
-      risk_seviyesi: 'Orta',
-      guvenlik_uyarilari: ['URL girilmedi veya geçersiz, analiz tamamlanamadı.']
-    };
+    return { guven_skoru:50, risk_seviyesi:'Orta', guvenlik_uyarilari:['URL geçersiz.'], https:false };
   }
 
-  const domain   = extractDomain(rawUrl.trim());
-  const tldMatch = domain.match(/(\.[a-z]{2,6})+$/);
-  const tld      = tldMatch ? tldMatch[0] : '';
+  const normalized = rawUrl.startsWith('http') ? rawUrl : 'https://' + rawUrl;
+  const ssl        = /^https:\/\//i.test(normalized);
+  const domain     = extractDomain(normalized);
+  const tldMatch   = domain.match(/(\.[a-z]{2,6})+$/);
+  const tld        = tldMatch ? tldMatch[0] : '';
   const domainName = domain.replace(/(\.[a-z]{2,6})+$/, '');
 
-  // A) Whitelist kontrolü
-  const isWhitelisted = LEGIT_DOMAINS.includes(domain)
-    || LEGIT_DOMAINS.some(d => domain === d || domain.endsWith('.'+d));
+  if (!ssl) {
+    warnings.push('Bağlantı şifrelenmemiş (HTTP). Ödeme bilgilerini girerken dikkatli olun!');
+    score -= 20;
+  } else { score += 5; }
 
-  if (isWhitelisted) {
-    score += 40;
-  } else {
-    warnings.push(`"${domain}" adresi bilinen güvenilir Türk e-ticaret domainleri listesinde bulunamadı.`);
-    score -= 5;
-  }
+  const isWhitelisted = LEGIT_DOMAINS.some(d => domain === d || domain.endsWith('.'+d));
+  if (isWhitelisted) { score += 40; }
+  else { warnings.push(`"${domain}" bilinen güvenilir Türk e-ticaret sitelerinde bulunamadı.`); score -= 5; }
 
-  // B) Şüpheli TLD
   if (SUSPICIOUS_TLDS.some(st => tld.endsWith(st))) {
-    warnings.push(`Şüpheli alan adı uzantısı tespit edildi (${tld}). Bu uzantılar sıklıkla sahte sitelerde kullanılır.`);
+    warnings.push(`Şüpheli alan adı uzantısı tespit edildi (${tld}). Bu uzantılar sahte sitelerde sık kullanılır.`);
     score -= 30;
   }
 
-  // C) IP adresi
   if (/^\d{1,3}(\.\d{1,3}){3}/.test(domain)) {
-    warnings.push('Alan adı yerine IP adresi kullanılıyor. Bu ciddi bir oltalama (phishing) işaretidir!');
+    warnings.push('Alan adı yerine IP adresi kullanılıyor  ciddi phishing işareti!');
     score -= 40;
   }
 
-  // D) Phishing kalıp eşleşmesi
   for (const pp of PHISHING_PATTERNS) {
     if (pp.bad.some(p => domain.includes(p.split('.')[0]) && !domain.includes(pp.legit))) {
-      warnings.push(`"${pp.legit}" markasını taklit eden oltalama adresi tespit edildi: "${domain}"`);
-      score -= 50;
-      break;
+      warnings.push(`"${pp.legit}" markasını taklit eden oltalama adresi: "${domain}"`);
+      score -= 50; break;
     }
   }
 
-  // E) Typosquatting tespiti (Levenshtein)
   const knownBrands = ['amazon','hepsiburada','trendyol','n11','gittigidiyor','mediamarkt','teknosa'];
-  const domainBase = domainName.split('-')[0];
+  const domainBase  = domainName.split('-')[0];
   for (const brand of knownBrands) {
     const dist = levenshtein(domainBase.toLowerCase(), brand);
     if (dist > 0 && dist <= 2 && domainBase.length >= brand.length - 2) {
-      warnings.push(`"${brand}" markasına çok benzeyen şüpheli domain: "${domain}" (tipografik hata riski).`);
-      score -= 35;
-      break;
+      warnings.push(`"${brand}" markasına çok benzeyen şüpheli domain: "${domain}" (yazım hatası riski).`);
+      score -= 35; break;
     }
   }
 
-  // F) URL kısaltıcı
   if (URL_SHORTENERS.some(s => domain.includes(s))) {
-    warnings.push('Kısaltılmış URL tespit edildi. Gerçek hedef adresi görülemiyor, dikkatli olun!');
+    warnings.push('Kısaltılmış URL  gerçek hedef görülemiyor, dikkatli olun!');
     score -= 20;
   }
 
-  // G) Aşırı tire
-  const hyphens = (domainName.match(/-/g) || []).length;
-  if (hyphens >= 2) {
-    warnings.push(`Alan adında çok fazla tire (-) işareti var: "${domain}". Sahte sitelerde yaygın bir taktiktir.`);
+  if ((domainName.match(/-/g)||[]).length >= 2) {
+    warnings.push(`Alan adında çok fazla tire: "${domain}". Sahte sitelerde yaygın.`);
     score -= 15;
   }
 
-  // H) Kandırmaya yönelik kelimeler
-  const trapWords = ['indirim','kampanya','ucuz','bedava','satisonline','giveaway','ozel-teklif'];
+  const trapWords = ['indirim','kampanya','ucuz','bedava','satisonline','giveaway','ozel-teklif','anlik-firsat'];
   const foundTrap = trapWords.find(w => domainName.toLowerCase().includes(w));
   if (foundTrap) {
-    warnings.push(`Domain adında "${foundTrap}" kelimesi var. Meşru firmalar resmi URL'lerine bu kelimeleri eklemez.`);
+    warnings.push(`Domain adında "${foundTrap}" kelimesi var. Meşru firmalar resmi URL'lerine bu kelimeleri koymaz.`);
     score -= 15;
   }
 
   score = Math.max(0, Math.min(100, score));
-
-  let risk;
-  if      (score >= 75) risk = 'Düşük';
-  else if (score >= 50) risk = 'Orta';
-  else if (score >= 25) risk = 'Yüksek';
-  else                  risk = 'Kritik';
-
-  return { guven_skoru: score, risk_seviyesi: risk, guvenlik_uyarilari: warnings };
+  const risk = score >= 75 ? 'Düşük' : score >= 50 ? 'Orta' : score >= 25 ? 'Yüksek' : 'Kritik';
+  return { guven_skoru:score, risk_seviyesi:risk, guvenlik_uyarilari:warnings, https:ssl };
 }
 
-// ─── 2. Duygu & NLP Analizi ──────────────────────────────────────────────────
-function analyzeReviews(reviewsText) {
-  const empty = {
-    olumlu_odak: [],
-    olumsuz_odak: [],
-    kronik_sorun_var_mi: false,
-    bot_yorum_suphesi: false
-  };
+//  NLP Analizi 
+function analyzeReviews(reviewItems) {
+  if (!reviewItems || reviewItems.length === 0) {
+    return { olumlu_odak:[], olumsuz_odak:[], konular:[], pozitif_yuzde:0, negatif_yuzde:0, notr_yuzde:0, kronik_sorun_var_mi:false, bot_yorum_suphesi:false, ortalama_puan:null, puan_dagilimi:null, kalite_skoru:0, toplam_yorum:0 };
+  }
 
-  if (!reviewsText || reviewsText.trim().length < 10) return empty;
+  const lines = reviewItems.map(r => r.text).filter(t => t && t.trim().length > 2);
+  const allText = lines.join('\n').toLowerCase();
 
-  // Pozitif skor hesapla
-  const posScores = {};
+  const perReview = lines.map(line => {
+    const low = line.toLowerCase();
+    let ps = 0, ns = 0;
+    for (const [kw, w] of Object.entries(POSITIVE_KEYWORDS)) {
+      ps += (low.match(new RegExp(kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'))||[]).length * Number(w);
+    }
+    for (const [kw, w] of Object.entries(NEGATIVE_KEYWORDS)) {
+      ns += (low.match(new RegExp(kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'))||[]).length * Number(w);
+    }
+    return { posScore:ps, negScore:ns };
+  });
+
+  const total = perReview.length || 1;
+  const pozitif_yuzde = Math.round(perReview.filter(r => r.posScore > r.negScore && r.posScore > 0).length / total * 100);
+  const negatif_yuzde = Math.round(perReview.filter(r => r.negScore > r.posScore && r.negScore > 0).length / total * 100);
+  const notr_yuzde    = Math.max(0, 100 - pozitif_yuzde - negatif_yuzde);
+
+  const posScores = {}, negScores = {};
   for (const [kw, w] of Object.entries(POSITIVE_KEYWORDS)) {
-    const re = new RegExp(kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi');
-    const m = (reviewsText.match(re) || []).length;
-    if (m > 0) posScores[kw] = m * w;
+    const m = (allText.match(new RegExp(kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'))||[]).length;
+    if (m > 0) posScores[kw] = m * Number(w);
   }
-
-  // Negatif skor hesapla
-  const negScores = {};
   for (const [kw, w] of Object.entries(NEGATIVE_KEYWORDS)) {
-    const re = new RegExp(kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi');
-    const m = (reviewsText.match(re) || []).length;
-    if (m > 0) negScores[kw] = m * w;
+    const m = (allText.match(new RegExp(kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'))||[]).length;
+    if (m > 0) negScores[kw] = m * Number(w);
   }
+  const topPos = Object.entries(posScores).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([k])=>k);
+  const topNeg = Object.entries(negScores).sort((a,b)=>b[1]-a[1]).slice(0,4).map(([k])=>k);
 
-  const topPos = Object.entries(posScores).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k])=>k);
-  const topNeg = Object.entries(negScores).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k])=>k);
+  const konular = Object.entries(TOPIC_KEYWORDS)
+    .filter(([,kws]) => kws.some(kw => allText.includes(kw.toLowerCase())))
+    .map(([topic]) => topic);
 
-  // Kronik sorun tespiti
   let chronicCount = 0;
   for (const trigger of CHRONIC_TRIGGERS) {
-    const re = new RegExp(trigger.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi');
-    if ((reviewsText.match(re) || []).length >= 2) chronicCount++;
+    if ((allText.match(new RegExp(trigger.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'))||[]).length >= 2) chronicCount++;
   }
   const kronik = chronicCount >= 2;
 
-  // Bot tespiti
-  const lines = reviewsText.split('\n').filter(l => l.trim().length > 0);
-  let shortCount=0, botCount=0, duplicates=0;
+  let shortCount = 0, botCount = 0, duplicates = 0;
   const seen = new Set();
   for (const line of lines) {
     const t = line.trim();
@@ -282,117 +379,97 @@ function analyzeReviews(reviewsText) {
     if (seen.has(norm)) duplicates++;
     else seen.add(norm);
   }
-  const botSuspicion = lines.length > 0 && (
-    (shortCount / lines.length > 0.5) ||
-    (botCount / lines.length > 0.4)   ||
-    (duplicates >= 2)
+  const bot = lines.length > 0 && (
+    shortCount / lines.length > 0.5 ||
+    botCount   / lines.length > 0.4 ||
+    duplicates >= 2
   );
 
-  return {
-    olumlu_odak: topPos,
-    olumsuz_odak: topNeg,
-    kronik_sorun_var_mi: kronik,
-    bot_yorum_suphesi: botSuspicion
-  };
+  const puanlar = reviewItems.map(r => r.rating).filter(r => r !== null && r > 0);
+  let ortalama_puan = null, puan_dagilimi = null;
+  if (puanlar.length > 0) {
+    ortalama_puan = parseFloat((puanlar.reduce((a,b)=>a+b,0)/puanlar.length).toFixed(1));
+    puan_dagilimi = [5,4,3,2,1].map(s => ({ yildiz:s, sayi:puanlar.filter(p=>Math.round(p)===s).length }));
+  }
+
+  const avgLen     = lines.reduce((a,b)=>a+b.length,0) / (lines.length||1);
+  const kalite_skoru = Math.round((1 - duplicates/(lines.length||1)) * (1 - botCount/(lines.length||1)) * Math.min(avgLen/100,1) * 100);
+
+  return { olumlu_odak:topPos, olumsuz_odak:topNeg, konular, pozitif_yuzde, negatif_yuzde, notr_yuzde, kronik_sorun_var_mi:kronik, bot_yorum_suphesi:bot, ortalama_puan, puan_dagilimi, kalite_skoru, toplam_yorum:lines.length };
 }
 
-// ─── 3. Nihai Karar ───────────────────────────────────────────────────────────
-function buildVerdict(urlAnalysis, reviewAnalysis) {
-  const { guven_skoru: score, risk_seviyesi: risk, guvenlik_uyarilari: warnings } = urlAnalysis;
-  const { kronik_sorun_var_mi: kronik, bot_yorum_suphesi: bot } = reviewAnalysis;
+//  Verdict 
+function buildVerdict(urlR, revR) {
+  const { guven_skoru:score, risk_seviyesi:risk, guvenlik_uyarilari:warnings } = urlR;
+  const { kronik_sorun_var_mi:kronik, bot_yorum_suphesi:bot, negatif_yuzde, pozitif_yuzde } = revR;
+  const isPhishing = warnings.some(w => w.includes('oltalama') || w.includes('taklit'));
 
-  const isPhishing = warnings.some(w =>
-    w.toLowerCase().includes('oltalama') ||
-    w.toLowerCase().includes('phishing') ||
-    w.toLowerCase().includes('taklit')
-  );
-
-  if (isPhishing || score < 25) {
-    return 'Bu URL yüksek riskli oltalama (phishing) belirtileri taşıdığından ödeme bilgilerinizi KESİNLİKLE paylaşmayın ve bu kaynaktan satın ALMAYIN.';
-  }
-  if (risk === 'Kritik') {
-    return 'URL ve satıcı analizi kritik güvenlik riskleri gösteriyor; bu platform üzerinden alışveriş yapmanızı önermiyoruz.';
-  }
-  if (risk === 'Yüksek' && kronik) {
-    return 'Hem satıcı güvenilirliği hem de kronik müşteri şikayetleri yüksek risk işaret ediyor; bu satıcıdan alışveriş yapmamanızı öneriyoruz.';
-  }
-  if (risk === 'Yüksek') {
-    return 'Satıcı güvenilirliği düşük görünüyor; güvenilir ve tanınmış bir platformdan satın almayı değerlendirin.';
-  }
-  if (kronik && bot) {
-    return 'Kronik ürün sorunları ve sahte yorum şüphesi mevcut; başka satıcı ve platformları araştırmanızı kesinlikle tavsiye ederiz.';
-  }
-  if (kronik) {
-    return 'Müşteri yorumlarında kronik sorunlar (iade/sahtecilik/hasar) gözlemleniyor; alışveriş öncesi daha fazla kaynak araştırmanızı öneririz.';
-  }
-  if (bot) {
-    return 'Yorumların önemli bir kısmı bot/sahte görünüyor; yalnızca bu yorumlara güvenmeyerek başka platformlardaki değerlendirmeleri de inceleyin.';
-  }
-  if (score >= 75) {
-    return 'Satıcı ve URL güvenilir görünüyor, alışverişinizi güvenle tamamlayabilirsiniz.';
-  }
-  return 'Satıcı orta düzeyde güvenilir; resmi platformlarla fiyat karşılaştırması yaparak alışveriş yapmanızı öneririz.';
+  if (isPhishing || score < 25) return { mesaj:'Bu URL yüksek riskli oltalama (phishing) belirtileri taşıdığından ödeme bilgilerinizi KESİNLİKLE paylaşmayın ve bu kaynaktan satın ALMAYIN.', renk:'kritik' };
+  if (risk === 'Kritik')         return { mesaj:'URL ve satıcı analizi kritik güvenlik riskleri gösteriyor; bu platform üzerinden alışveriş yapmanızı önermiyoruz.', renk:'kritik' };
+  if (risk === 'Yüksek' && kronik) return { mesaj:'Hem satıcı güvenilirliği hem de kronik müşteri şikayetleri yüksek risk işaret ediyor; bu satıcıdan alışveriş yapmamanızı öneriyoruz.', renk:'yuksek' };
+  if (risk === 'Yüksek')          return { mesaj:'Satıcı güvenilirliği düşük görünüyor; tanınmış bir platformdan satın almayı değerlendirin.', renk:'yuksek' };
+  if (kronik && bot)              return { mesaj:'Kronik ürün sorunları ve sahte yorum şüphesi mevcut; başka satıcı ve platformları araştırmanızı kesinlikle tavsiye ederiz.', renk:'orta' };
+  if (kronik)                     return { mesaj:'Müşteri yorumlarında kronik sorunlar (iade/sahtecilik/hasar) gözlemleniyor; alışveriş öncesinde daha fazla kaynak araştırmanızı öneririz.', renk:'orta' };
+  if (bot)                        return { mesaj:'Yorumların önemli kısmı bot/sahte görünüyor; başka platformlardaki değerlendirmeleri de inceleyin.', renk:'orta' };
+  if (negatif_yuzde > 40)         return { mesaj:`Yorumların %${negatif_yuzde}\'i olumsuz içerik barındırıyor; ek araştırma yapmanızı öneririz.`, renk:'orta' };
+  if (score >= 75 && pozitif_yuzde >= 60) return { mesaj:`Satıcı ve URL güvenilir; yorumların %${pozitif_yuzde}'i olumlu. Alışverişinizi güvenle tamamlayabilirsiniz.`, renk:'dusuk' };
+  if (score >= 75) return { mesaj:'Satıcı ve URL güvenilir görünüyor. Alışverişinizi tamamlayabilirsiniz.', renk:'dusuk' };
+  return { mesaj:'Satıcı orta düzeyde güvenilir; resmi platformlarla karşılaştırma yaparak alışveriş yapmanızı öneririz.', renk:'orta' };
 }
 
-// ─── Rate Limiting (in-memory, per IP, 15 istek/dk) ─────────────────────────
+//  Rate Limit 
 const _rl = new Map();
 function checkRateLimit(ip) {
-  const now = Date.now();
-  const WINDOW = 60000;
-  const LIMIT = 15;
+  const now = Date.now(), WINDOW = 60000, LIMIT = 15;
   const rec = _rl.get(ip);
-  if (!rec || now > rec.reset) { _rl.set(ip, { count: 1, reset: now + WINDOW }); return true; }
+  if (!rec || now > rec.reset) { _rl.set(ip, { count:1, reset:now+WINDOW }); return true; }
   if (rec.count >= LIMIT) return false;
-  rec.count++;
-  return true;
+  rec.count++; return true;
 }
 
-// ─── Lambda Handler ───────────────────────────────────────────────────────────
+//  Handler 
 exports.handler = async (event) => {
-  const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Content-Type': 'application/json'
-  };
+  const cors = { 'Access-Control-Allow-Origin':'*', 'Content-Type':'application/json' };
+  if (event.httpMethod === 'OPTIONS') return { statusCode:204, headers:{...cors,'Access-Control-Allow-Methods':'POST,OPTIONS','Access-Control-Allow-Headers':'Content-Type'}, body:'' };
+  if (event.httpMethod !== 'POST') return { statusCode:405, headers:cors, body:JSON.stringify({error:'Method Not Allowed'}) };
 
-  if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 204,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type'
-      },
-      body: ''
-    };
-  }
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers: corsHeaders, body: JSON.stringify({ error: 'Method Not Allowed' }) };
-  }
-
-  const clientIp = ((event.headers['x-forwarded-for'] || '').split(',')[0].trim())
-                || event.headers['client-ip'] || 'unknown';
-  if (!checkRateLimit(clientIp)) {
-    return { statusCode: 429, headers: corsHeaders, body: JSON.stringify({ error: 'Çok fazla istek. Lütfen bir dakika bekleyin.' }) };
-  }
+  const ip = ((event.headers['x-forwarded-for']||'').split(',')[0].trim()) || 'unknown';
+  if (!checkRateLimit(ip)) return { statusCode:429, headers:cors, body:JSON.stringify({error:'Çok fazla istek. Lütfen bir dakika bekleyin.'}) };
 
   let body;
-  try {
-    body = JSON.parse(event.body || '{}');
-  } catch {
-    return { statusCode: 400, headers: corsHeaders, body: JSON.stringify({ error: 'Geçersiz JSON gövdesi.' }) };
-  }
+  try { body = JSON.parse(event.body||'{}'); }
+  catch { return { statusCode:400, headers:cors, body:JSON.stringify({error:'Geçersiz JSON.'}) }; }
 
-  const { url = '', reviews = '' } = body;
+  const { url = '' } = body;
+  if (!url || url.trim().length < 5) return { statusCode:400, headers:cors, body:JSON.stringify({error:'Geçerli bir URL giriniz.'}) };
 
-  const urlResult    = analyzeUrl(url);
-  const reviewResult = analyzeReviews(reviews);
+  const normalizedUrl = url.startsWith('http') ? url : 'https://' + url;
+
+  const [urlResult, reviewFetch] = await Promise.all([
+    Promise.resolve(analyzeUrl(normalizedUrl)),
+    fetchReviewsFromURL(normalizedUrl).catch(e => ({ reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'Web', fetchError:e.message }))
+  ]);
+
+  const reviewResult = analyzeReviews(reviewFetch.reviewItems || []);
   const verdict      = buildVerdict(urlResult, reviewResult);
 
   return {
     statusCode: 200,
-    headers: corsHeaders,
+    headers: cors,
     body: JSON.stringify({
       satici_analizi:       urlResult,
+      yorum_cekme: {
+        platform:    reviewFetch.platform,
+        sayi:        reviewFetch.count,
+        toplam_sayi: reviewFetch.totalCount,
+        ort_puan:    reviewFetch.avgRating,
+        hata:        reviewFetch.fetchError || null,
+        onizleme:    (reviewFetch.reviewItems||[]).slice(0,5).map(r => ({
+          text:   r.text.length > 160 ? r.text.slice(0,160)+'' : r.text,
+          rating: r.rating,
+          date:   r.date
+        }))
+      },
       urun_yorumlari_ozeti: reviewResult,
       sonuc_karari:         verdict
     })

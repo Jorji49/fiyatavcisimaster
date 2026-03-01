@@ -46,29 +46,44 @@
         .barcode-scan-btn{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border:none;background:transparent;cursor:pointer;color:var(--text-muted);transition:color 0.2s;flex-shrink:0;border-radius:0.5rem}
         .barcode-scan-btn:hover{color:#2563eb}
         .bc-overlay.hidden{display:none!important}
-        /* ─── Güvenlik Analiz Modalı ─── */
+        /* ─── Güvenlik & Yorum Analiz Modalı ─── */
         .analyze-overlay{position:fixed;inset:0;z-index:9100;display:flex;align-items:center;justify-content:center;padding:1rem;background:rgba(0,0,0,0.82);backdrop-filter:blur(4px)}
         .analyze-overlay.hidden{display:none!important}
-        .analyze-modal{background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:1.75rem;padding:1.75rem;width:100%;max-width:560px;max-height:90dvh;overflow-y:auto;animation:fadeIn 0.2s ease;display:flex;flex-direction:column;gap:1.1rem}
+        .analyze-modal{background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:1.75rem;padding:1.75rem;width:100%;max-width:600px;max-height:92dvh;overflow-y:auto;animation:fadeIn 0.2s ease;display:flex;flex-direction:column;gap:1rem}
         .analyze-modal h2{font-weight:900;font-size:1rem;color:var(--text-primary);display:flex;align-items:center;gap:0.6rem}
         .analyze-field label{display:block;font-size:0.72rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.4rem}
-        .analyze-field input,.analyze-field textarea{width:100%;border-radius:0.85rem;border:1.5px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);padding:0.65rem 0.9rem;font-size:0.85rem;font-family:inherit;outline:none;transition:border-color 0.2s;resize:vertical}
-        .analyze-field input:focus,.analyze-field textarea:focus{border-color:#2563eb}
+        .analyze-field input{width:100%;border-radius:0.85rem;border:1.5px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);padding:0.65rem 0.9rem;font-size:0.85rem;font-family:inherit;outline:none;transition:border-color 0.2s}
+        .analyze-field input:focus{border-color:#2563eb}
+        .analyze-url-row{display:flex;gap:0.5rem;align-items:center}
+        .analyze-url-row input{flex:1}
+        .analyze-platform-badge{display:inline-flex;align-items:center;gap:0.3rem;font-size:0.65rem;font-weight:800;padding:4px 10px;border-radius:999px;white-space:nowrap;background:var(--bg-tertiary);border:1px solid var(--border-color);color:var(--text-muted)}
+        .analyze-platform-badge.active{background:#eff6ff;color:#2563eb;border-color:#bfdbfe}.dark .analyze-platform-badge.active{background:#1e3a8a;color:#93c5fd;border-color:#1d4ed8}
         .analyze-run-btn{width:100%;padding:0.75rem;border-radius:999px;background:linear-gradient(135deg,#2563eb,#4f46e5);color:#fff;font-weight:900;font-size:0.9rem;cursor:pointer;border:none;transition:all 0.2s;font-family:inherit}
         .analyze-run-btn:hover{transform:translateY(-1px);box-shadow:0 10px 24px -6px rgba(37,99,235,0.5)}
         .analyze-run-btn:disabled{opacity:0.6;pointer-events:none}
-        .analyze-result{background:var(--bg-tertiary);border:1px solid var(--border-color);border-radius:1rem;padding:1rem;font-size:0.8rem;display:flex;flex-direction:column;gap:0.8rem}
-        .analyze-score-ring{display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:50%;font-size:1.3rem;font-weight:900;border:4px solid}
+        .analyze-result{background:var(--bg-tertiary);border:1px solid var(--border-color);border-radius:1rem;padding:1rem;font-size:0.8rem;display:flex;flex-direction:column;gap:0.85rem}
+        .analyze-score-ring{display:inline-flex;align-items:center;justify-content:center;width:60px;height:60px;border-radius:50%;font-size:1.4rem;font-weight:900;border:4px solid;flex-shrink:0}
         .risk-dusuk{border-color:#22c55e;color:#22c55e;background:#f0fdf4}.dark .risk-dusuk{background:#14532d}
         .risk-orta{border-color:#f59e0b;color:#d97706;background:#fefce8}.dark .risk-orta{background:#422006}
         .risk-yuksek{border-color:#f97316;color:#ea580c;background:#fff7ed}.dark .risk-yuksek{background:#431407}
         .risk-kritik{border-color:#ef4444;color:#dc2626;background:#fef2f2}.dark .risk-kritik{background:#450a0a}
-        .analyze-section-title{font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);margin-bottom:0.3rem}
+        .analyze-section-title{font-size:0.65rem;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted);margin-bottom:0.4rem;display:flex;align-items:center;gap:0.3rem}
         .analyze-tag{display:inline-flex;align-items:center;gap:0.3rem;font-size:0.7rem;font-weight:700;padding:3px 9px;border-radius:999px;margin:2px}
         .analyze-tag.pos{background:#dcfce7;color:#15803d}.dark .analyze-tag.pos{background:#14532d;color:#4ade80}
         .analyze-tag.neg{background:#fee2e2;color:#b91c1c}.dark .analyze-tag.neg{background:#450a0a;color:#f87171}
         .analyze-tag.warn{background:#fef9c3;color:#92400e}.dark .analyze-tag.warn{background:#422006;color:#fbbf24}
-        .analyze-verdict{font-weight:800;font-size:0.82rem;line-height:1.5;padding:0.75rem 1rem;border-radius:0.75rem;border:1.5px solid var(--border-color);color:var(--text-primary)}
+        .analyze-tag.topic{background:var(--bg-secondary);color:var(--text-secondary);border:1px solid var(--border-color)}
+        .analyze-verdict{font-weight:800;font-size:0.82rem;line-height:1.6;padding:0.85rem 1rem;border-radius:0.75rem;border:1.5px solid var(--border-color);color:var(--text-primary)}
+        .analyze-bar-track{height:8px;border-radius:999px;background:var(--border-color);overflow:hidden;flex:1}
+        .analyze-bar-fill{height:100%;border-radius:999px;transition:width 0.6s cubic-bezier(0.25,0.8,0.25,1)}
+        .analyze-review-card{background:var(--bg-secondary);border:1px solid var(--border-color);border-radius:0.75rem;padding:0.65rem 0.85rem;font-size:0.76rem;color:var(--text-secondary);line-height:1.5}
+        .analyze-ssl-badge{display:inline-flex;align-items:center;gap:0.3rem;font-size:0.65rem;font-weight:800;padding:3px 10px;border-radius:999px}
+        .analyze-ssl-ok{background:#dcfce7;color:#15803d}.dark .analyze-ssl-ok{background:#14532d;color:#4ade80}
+        .analyze-ssl-bad{background:#fee2e2;color:#b91c1c}.dark .analyze-ssl-bad{background:#450a0a;color:#f87171}
+        .analyze-hist-item{display:flex;align-items:center;gap:0.6rem;padding:0.5rem 0.75rem;border-radius:0.75rem;background:var(--bg-secondary);border:1px solid var(--border-color);cursor:pointer;transition:all 0.15s;font-size:0.75rem;font-weight:700;color:var(--text-secondary);overflow:hidden}
+        .analyze-hist-item:hover{border-color:#2563eb;color:#2563eb}
+        .analyze-fetch-status{display:flex;align-items:center;gap:0.5rem;font-size:0.72rem;font-weight:700;padding:0.5rem 0.75rem;border-radius:0.75rem;background:var(--bg-secondary);border:1px solid var(--border-color);color:var(--text-muted)}
+        .stars-render{color:#f59e0b;font-size:0.7rem;letter-spacing:0.05em}
         </style>
         <!-- JSON-LD Structured Data -->
         <script type="application/ld+json">
@@ -1535,7 +1550,7 @@
                 RATES.gbp=(1/d.usd.gbp)*d.usd.try;
                 RATES.t=now;
                 localStorage.setItem('fx_rates',JSON.stringify(RATES));
-            }catch(e){RATES.usd=38.5;RATES.eur=41.8;RATES.gbp=49.2;}
+            }catch(e){RATES.usd=38.5;RATES.eur=41.2;RATES.gbp=49.0;}
             updateKurBar();
         }
         function updateKurBar(){
@@ -1754,90 +1769,241 @@
         }
 
         // ==================== GÜVENLİK & YORUM ANALİZİ ====================
+        // Analiz geçmişi (son 5)
+        function loadAnalyzeHistory(){ try{ return JSON.parse(localStorage.getItem('analyzeHistory')||'[]'); }catch{ return []; } }
+        function saveAnalyzeHistory(url, data){
+            const h = loadAnalyzeHistory();
+            h.unshift({ url, score: data.satici_analizi?.guven_skoru??50, risk: data.satici_analizi?.risk_seviyesi||'Orta', platform: data.yorum_cekme?.platform||'Web', date: Date.now() });
+            localStorage.setItem('analyzeHistory', JSON.stringify(h.slice(0,5)));
+            renderAnalyzeHistory();
+        }
+        function renderAnalyzeHistory(){
+            const h = loadAnalyzeHistory();
+            const cont = document.getElementById('analyzeHistList');
+            if(!cont) return;
+            if(h.length===0){ cont.innerHTML='<div style="font-size:0.72rem;color:var(--text-muted);text-align:center;padding:0.5rem">Henüz analiz yapılmadı.</div>'; return; }
+            cont.innerHTML = h.map(item=>{
+                const riskColor = {Düşük:'#22c55e',Orta:'#f59e0b',Yüksek:'#f97316',Kritik:'#ef4444'}[item.risk]||'#94a3b8';
+                const shortUrl = item.url.replace(/^https?:\/\/(www\.)?/,'').slice(0,38) + (item.url.length>48?'…':'');
+                return `<div class="analyze-hist-item" onclick="rerunAnalyze('${item.url.replace(/'/g,'\\&apos;')}')" title="${item.url}">
+                    <span style="width:8px;height:8px;border-radius:50%;background:${riskColor};flex-shrink:0"></span>
+                    <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${shortUrl}</span>
+                    <span style="font-size:0.6rem;font-weight:900;color:${riskColor};white-space:nowrap">${item.score}/100</span>
+                    <span style="font-size:0.6rem;color:var(--text-muted);white-space:nowrap">${item.platform}</span>
+                </div>`;
+            }).join('');
+        }
+        function rerunAnalyze(url){
+            document.getElementById('analyzeUrl').value = url;
+            detectAnalyzePlatform();
+            runAnalyze();
+        }
+        function detectAnalyzePlatform(){
+            const url = document.getElementById('analyzeUrl').value.toLowerCase();
+            const badge = document.getElementById('analyzePlatformBadge');
+            if(!badge) return;
+            const plats = [{k:'trendyol',n:'Trendyol',c:'#FF6000'},{k:'hepsiburada',n:'Hepsiburada',c:'#FF6000'},{k:'n11',n:'n11',c:'#6D08A0'},{k:'amazon',n:'Amazon',c:'#FF9900'},{k:'gittigidiyor',n:'GittiGidiyor',c:'#EE7300'},{k:'ciceksepeti',n:'ÇiçekSepeti',c:'#E91E8C'},{k:'teknosa',n:'Teknosa',c:'#E31E24'}];
+            const found = url ? plats.find(p=>url.includes(p.k)) : null;
+            if(found){ badge.textContent=found.n; badge.className='analyze-platform-badge active'; badge.style.borderColor=found.c+'44'; badge.style.color=found.c; badge.style.background=found.c+'15'; }
+            else{ badge.textContent='Platform'; badge.className='analyze-platform-badge'; badge.style=''; }
+        }
         function openAnalyzeModal(){
             document.getElementById('analyzeOverlay').classList.remove('hidden');
             document.getElementById('analyzeResult').classList.add('hidden');
+            renderAnalyzeHistory();
+            detectAnalyzePlatform();
         }
         function closeAnalyzeModal(){
             document.getElementById('analyzeOverlay').classList.add('hidden');
         }
         async function runAnalyze(){
             const url=document.getElementById('analyzeUrl').value.trim();
-            const reviews=document.getElementById('analyzeReviews').value.trim();
-            if(!url&&!reviews){
-                alert('Lütfen en az bir URL veya kullanıcı yorumu girin.');
-                return;
-            }
+            if(!url){ alert('Lütfen analiz etmek istediğiniz ürün URL\'sini girin.'); return; }
             const btn=document.getElementById('analyzeRunBtn');
             const resultBox=document.getElementById('analyzeResult');
+            const fetchStatus=document.getElementById('analyzeFetchStatus');
             btn.disabled=true;
             btn.innerHTML='<i class="fa-solid fa-spinner fa-spin mr-2"></i>Analiz Ediliyor...';
             resultBox.classList.add('hidden');
+            if(fetchStatus){ fetchStatus.classList.remove('hidden'); fetchStatus.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i><span>URL güvenliği kontrol ediliyor ve yorumlar çekiliyor...</span>'; }
             try{
                 const res=await fetch('/.netlify/functions/analyze',{
                     method:'POST',
                     headers:{'Content-Type':'application/json'},
-                    body:JSON.stringify({url,reviews})
+                    body:JSON.stringify({url})
                 });
-                if(!res.ok)throw new Error('Sunucu hatası: '+res.status);
+                if(!res.ok){ const e=await res.json().catch(()=>({})); throw new Error(e.error||'Sunucu hatası: '+res.status); }
                 const data=await res.json();
+                if(fetchStatus) fetchStatus.classList.add('hidden');
+                saveAnalyzeHistory(url, data);
                 renderAnalyzeResult(data);
             }catch(e){
+                if(fetchStatus) fetchStatus.classList.add('hidden');
                 resultBox.classList.remove('hidden');
-                resultBox.innerHTML=`<div style="color:#dc2626;font-weight:700"><i class="fa-solid fa-circle-exclamation mr-2"></i>Analiz sırasında bir hata oluştu: ${e.message}</div>`;
+                resultBox.innerHTML=`<div style="color:#dc2626;font-weight:700;display:flex;align-items:center;gap:0.5rem"><i class="fa-solid fa-circle-exclamation"></i>Hata: ${e.message}</div>`;
             } finally{
                 btn.disabled=false;
                 btn.innerHTML='<i class="fa-solid fa-magnifying-glass-chart mr-2"></i>Analizi Başlat';
             }
         }
+        function starsHtml(rating){
+            if(rating===null||rating===undefined) return '';
+            const full=Math.round(rating);
+            let s='';
+            for(let i=1;i<=5;i++) s+=`<i class="fa-${i<=full?'solid':'regular'} fa-star" style="color:#f59e0b;font-size:0.65rem"></i>`;
+            return s + ` <span style="font-weight:800;color:var(--text-primary)">${Number(rating).toFixed(1)}</span>`;
+        }
+        function copyAnalyzeResult(){
+            const box=document.getElementById('analyzeResult');
+            if(!box) return;
+            const text = box.innerText||box.textContent||'';
+            navigator.clipboard.writeText(text).then(()=>{
+                const btn=document.getElementById('analyzeCopyBtn');
+                if(btn){ btn.innerHTML='<i class="fa-solid fa-check"></i> Kopyalandı!'; setTimeout(()=>{ btn.innerHTML='<i class="fa-solid fa-copy"></i> Kopyala'; },2000); }
+            });
+        }
         function renderAnalyzeResult(d){
             const box=document.getElementById('analyzeResult');
             const sa=d.satici_analizi||{};
+            const yc=d.yorum_cekme||{};
             const uy=d.urun_yorumlari_ozeti||{};
-            const verdict=d.sonuc_karari||'';
+            const verdict=d.sonuc_karari||{};
+            const verdictMesaj = typeof verdict==='string' ? verdict : (verdict.mesaj||'');
+            const verdictRenk  = typeof verdict==='string' ? '' : (verdict.renk||'orta');
             const score=sa.guven_skoru??50;
-            const risk=(sa.risk_seviyesi||'Orta').toLowerCase().replace('ü','u').replace('ş','s').replace('ı','i');
-            const riskClass={
-                'dusuk':'risk-dusuk','orta':'risk-orta','yuksek':'risk-yuksek','kritik':'risk-kritik'
-            }[risk]||'risk-orta';
-            const riskIcon={
-                'dusuk':'fa-shield-check','orta':'fa-shield','yuksek':'fa-shield-exclamation','kritik':'fa-skull-crossbones'
-            }[risk]||'fa-shield';
+            const riskKey=(sa.risk_seviyesi||'Orta').toLowerCase().replace(/ü/g,'u').replace(/ş/g,'s').replace(/ı/g,'i');
+            const riskClass={'dusuk':'risk-dusuk','orta':'risk-orta','yuksek':'risk-yuksek','kritik':'risk-kritik'}[riskKey]||'risk-orta';
+            const riskIcon={'dusuk':'fa-shield-check','orta':'fa-shield','yuksek':'fa-shield-exclamation','kritik':'fa-skull-crossbones'}[riskKey]||'fa-shield';
             const warnings=(sa.guvenlik_uyarilari||[]).filter(w=>w.trim());
             const posItems=(uy.olumlu_odak||[]);
             const negItems=(uy.olumsuz_odak||[]);
+            const konular=(uy.konular||[]);
             const kronik=uy.kronik_sorun_var_mi;
             const bot=uy.bot_yorum_suphesi;
-            const verdictBg=score>=75?'#f0fdf4':score>=50?'#fefce8':score>=25?'#fff7ed':'#fef2f2';
-            const verdictBorder=score>=75?'#22c55e':score>=50?'#f59e0b':score>=25?'#f97316':'#ef4444';
+            const pozYuzde=uy.pozitif_yuzde||0;
+            const negYuzde=uy.negatif_yuzde||0;
+            const notrYuzde=uy.notr_yuzde||0;
+            const totalYorum=uy.toplam_yorum||0;
+            const kaliteSkoru=uy.kalite_skoru||0;
+            const verdictColors={'dusuk':['#22c55e','#f0fdf4'],'orta':['#f59e0b','#fefce8'],'yuksek':['#f97316','#fff7ed'],'kritik':['#ef4444','#fef2f2'],'':['#6b7280','var(--bg-tertiary)']};
+            const [vBorder,vBg]=verdictColors[verdictRenk]||verdictColors[''];
+            const sslBadge=sa.https
+                ? `<span class="analyze-ssl-badge analyze-ssl-ok"><i class="fa-solid fa-lock"></i>HTTPS Güvenli</span>`
+                : `<span class="analyze-ssl-badge analyze-ssl-bad"><i class="fa-solid fa-lock-open"></i>HTTP — Şifresiz</span>`;
+            // Yorum çekme ozeti
+            const hasReviews = yc.sayi > 0;
+            const fetchInfo = hasReviews
+                ? `<span style="font-size:0.72rem;color:var(--text-muted);font-weight:700"><i class="fa-solid fa-comment-dots mr-1" style="color:#2563eb"></i><strong style="color:var(--text-primary)">${yc.sayi}</strong> yorum çekildi${yc.toplam_sayi&&yc.toplam_sayi>yc.sayi?` (toplam ~${yc.toplam_sayi})`:''} · Kaynak: <em>${yc.platform||'Web'}</em>${yc.ort_puan?` · ${starsHtml(yc.ort_puan)}`:''}</span>`
+                : yc.hata
+                    ? `<span style="font-size:0.72rem;color:var(--text-muted);font-weight:700"><i class="fa-solid fa-circle-info mr-1"></i>Yorum otomatik çekilemedi (${yc.hata}). Analiz URL güvenliğine göre yapıldı.</span>`
+                    : `<span style="font-size:0.72rem;color:var(--text-muted);font-weight:700"><i class="fa-solid fa-circle-info mr-1"></i>Bu platform için yorum çekme desteklenmiyor; analiz URL güvenliğine göre yapıldı.</span>`;
+            // Puan dağılımı
+            const puanDagilimi = (uy.puan_dagilimi&&uy.puan_dagilimi.length>0)
+                ? `<div style="margin-top:0.5rem">
+                    ${uy.puan_dagilimi.map(p=>{
+                        const pct=totalYorum>0?Math.round(p.sayi/totalYorum*100):0;
+                        return `<div style="display:flex;align-items:center;gap:0.4rem;margin-bottom:3px">
+                            <span style="font-size:0.62rem;font-weight:800;color:var(--text-muted);width:12px;text-align:right">${p.yildiz}</span>
+                            <i class="fa-solid fa-star" style="color:#f59e0b;font-size:0.55rem"></i>
+                            <div class="analyze-bar-track"><div class="analyze-bar-fill" style="width:${pct}%;background:#f59e0b"></div></div>
+                            <span style="font-size:0.62rem;font-weight:700;color:var(--text-muted);width:28px">${p.sayi>0?p.sayi+' adet':''}</span>
+                        </div>`;
+                    }).join('')}
+                </div>` : '';
+            // Önizleme yorumlar
+            const previewHtml = (yc.onizleme&&yc.onizleme.length>0)
+                ? `<details style="font-size:0.75rem">
+                    <summary style="cursor:pointer;font-size:0.65rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.4rem;user-select:none"><i class="fa-solid fa-chevron-right mr-1" style="transition:transform 0.2s"></i>Yorum Önizlemeleri (${yc.onizleme.length})</summary>
+                    <div style="display:flex;flex-direction:column;gap:0.4rem;margin-top:0.4rem">
+                        ${yc.onizleme.map(r=>`<div class="analyze-review-card">
+                            ${r.rating!==null?`<div style="margin-bottom:0.2rem">${starsHtml(r.rating)}</div>`:''}
+                            "${r.text}"
+                        </div>`).join('')}
+                    </div>
+                </details>` : '';
             box.innerHTML=`
+                <!-- Skor + SSL -->
                 <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
                     <div class="analyze-score-ring ${riskClass}"><i class="fa-solid ${riskIcon}"></i></div>
-                    <div>
-                        <div style="font-size:0.7rem;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted)">Güven Skoru</div>
-                        <div style="font-size:1.6rem;font-weight:900;color:var(--text-primary);line-height:1">${score}<span style="font-size:0.75rem;font-weight:700;opacity:0.5">/100</span></div>
-                        <div style="font-size:0.72rem;font-weight:800;color:var(--text-muted)">Risk: <strong style="color:var(--text-primary)">${sa.risk_seviyesi||'Orta'}</strong></div>
+                    <div style="flex:1;min-width:0">
+                        <div style="font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted)">Güven Skoru</div>
+                        <div style="font-size:1.8rem;font-weight:900;color:var(--text-primary);line-height:1.1">${score}<span style="font-size:0.75rem;font-weight:700;opacity:0.5">/100</span></div>
+                        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;margin-top:0.3rem">
+                            <span style="font-size:0.7rem;font-weight:800;color:${ {'Düşük':'#22c55e','Orta':'#f59e0b','Yüksek':'#f97316','Kritik':'#ef4444'}[sa.risk_seviyesi]||'#6b7280' }">${sa.risk_seviyesi||'Orta'} Risk</span>
+                            ${sslBadge}
+                        </div>
                     </div>
                 </div>
+                <!-- Yorum Çekme Bilgisi -->
+                <div style="padding:0.5rem 0.75rem;background:var(--bg-secondary);border-radius:0.75rem;border:1px solid var(--border-color)">${fetchInfo}</div>
+                <!-- Güvenlik Uyarıları -->
                 ${warnings.length>0?`
                 <div>
-                    <div class="analyze-section-title"><i class="fa-solid fa-triangle-exclamation text-amber-500 mr-1"></i>Güvenlik Uyarıları</div>
-                    ${warnings.map(w=>`<div class="analyze-tag warn" style="display:flex;border-radius:0.5rem;padding:5px 9px;width:100%;margin:3px 0"><i class="fa-solid fa-circle-exclamation mr-2 mt-0.5 shrink-0"></i>${w}</div>`).join('')}
+                    <div class="analyze-section-title"><i class="fa-solid fa-triangle-exclamation" style="color:#f59e0b"></i>Güvenlik Uyarıları</div>
+                    ${warnings.map(w=>`<div class="analyze-tag warn" style="display:flex;border-radius:0.5rem;padding:5px 9px;width:100%;margin:3px 0;box-sizing:border-box"><i class="fa-solid fa-circle-exclamation" style="margin-right:6px;margin-top:1px;flex-shrink:0"></i>${w}</div>`).join('')}
                 </div>`:''}
+                <!-- Duygu Analizi -->
+                ${hasReviews?`
+                <div>
+                    <div class="analyze-section-title"><i class="fa-solid fa-chart-pie" style="color:#2563eb"></i>Duygu Analizi · ${totalYorum} yorum</div>
+                    <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:0.6rem">
+                        <div style="display:flex;align-items:center;gap:0.5rem">
+                            <span style="font-size:0.65rem;font-weight:800;color:#22c55e;width:38px">+${pozYuzde}%</span>
+                            <div class="analyze-bar-track"><div class="analyze-bar-fill" style="width:${pozYuzde}%;background:#22c55e"></div></div>
+                            <span style="font-size:0.6rem;color:var(--text-muted);width:36px">Olumlu</span>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:0.5rem">
+                            <span style="font-size:0.65rem;font-weight:800;color:#ef4444;width:38px">−${negYuzde}%</span>
+                            <div class="analyze-bar-track"><div class="analyze-bar-fill" style="width:${negYuzde}%;background:#ef4444"></div></div>
+                            <span style="font-size:0.6rem;color:var(--text-muted);width:36px">Olumsuz</span>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:0.5rem">
+                            <span style="font-size:0.65rem;font-weight:800;color:#94a3b8;width:38px">${notrYuzde}%</span>
+                            <div class="analyze-bar-track"><div class="analyze-bar-fill" style="width:${notrYuzde}%;background:#94a3b8"></div></div>
+                            <span style="font-size:0.6rem;color:var(--text-muted);width:36px">Nötr</span>
+                        </div>
+                    </div>
+                    ${uy.ortalama_puan!==null&&uy.ortalama_puan!==undefined?`<div style="margin-bottom:0.4rem">${starsHtml(uy.ortalama_puan)} <span style="font-size:0.65rem;color:var(--text-muted)">ortalama</span></div>`:''}
+                    ${puanDagilimi}
+                </div>`:''}
+                <!-- Anahtar kelimeler -->
                 ${posItems.length>0||negItems.length>0?`
                 <div>
-                    <div class="analyze-section-title"><i class="fa-solid fa-comments mr-1"></i>Yorum Analizi</div>
+                    <div class="analyze-section-title"><i class="fa-solid fa-comments" style="color:#2563eb"></i>Öne Çıkan Konular</div>
                     <div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-bottom:0.4rem">
                         ${posItems.map(p=>`<span class="analyze-tag pos"><i class="fa-solid fa-thumbs-up"></i>${p}</span>`).join('')}
                         ${negItems.map(n=>`<span class="analyze-tag neg"><i class="fa-solid fa-thumbs-down"></i>${n}</span>`).join('')}
                     </div>
-                    <div style="display:flex;gap:1rem;flex-wrap:wrap;font-size:0.72rem;font-weight:700;color:var(--text-muted)">
-                        <span><i class="fa-solid fa-${kronik?'circle-xmark text-red-500':'circle-check text-green-500'} mr-1"></i>Kronik sorun: <strong>${kronik?'Var':'Yok'}</strong></span>
-                        <span><i class="fa-solid fa-${bot?'robot text-amber-500':'robot text-green-500'} mr-1"></i>Bot yorum şüphesi: <strong>${bot?'Var':'Yok'}</strong></span>
+                    ${konular.length>0?`<div style="margin-top:0.3rem">${konular.map(k=>`<span class="analyze-tag topic">${k}</span>`).join('')}</div>`:''}
+                </div>`:''}
+                <!-- Bot & Kronik -->
+                ${hasReviews?`
+                <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+                    <div style="flex:1;min-width:120px;padding:0.6rem;border-radius:0.75rem;border:1px solid var(--border-color);background:var(--bg-secondary);text-align:center">
+                        <i class="fa-solid fa-${kronik?'circle-xmark':'circle-check'}" style="color:${kronik?'#ef4444':'#22c55e'};font-size:1.2rem"></i>
+                        <div style="font-size:0.62rem;font-weight:800;margin-top:0.3rem;color:var(--text-muted)">Kronik Sorun</div>
+                        <div style="font-size:0.75rem;font-weight:900;color:${kronik?'#ef4444':'#22c55e'}">${kronik?'Var':'Yok'}</div>
                     </div>
-                </div>`:'<div style="font-size:0.75rem;color:var(--text-muted);text-align:center">Yorum girilmedi.</div>'}
-                <div class="analyze-verdict" style="border-color:${verdictBorder};background:${verdictBg}">
-                    <i class="fa-solid fa-gavel mr-2" style="color:${verdictBorder}"></i>${verdict}
+                    <div style="flex:1;min-width:120px;padding:0.6rem;border-radius:0.75rem;border:1px solid var(--border-color);background:var(--bg-secondary);text-align:center">
+                        <i class="fa-solid fa-robot" style="color:${bot?'#f59e0b':'#22c55e'};font-size:1.2rem"></i>
+                        <div style="font-size:0.62rem;font-weight:800;margin-top:0.3rem;color:var(--text-muted)">Bot Yorum</div>
+                        <div style="font-size:0.75rem;font-weight:900;color:${bot?'#f59e0b':'#22c55e'}">${bot?'Şüpheli':'Güvenilir'}</div>
+                    </div>
+                    <div style="flex:1;min-width:120px;padding:0.6rem;border-radius:0.75rem;border:1px solid var(--border-color);background:var(--bg-secondary);text-align:center">
+                        <i class="fa-solid fa-chart-bar" style="color:#2563eb;font-size:1.2rem"></i>
+                        <div style="font-size:0.62rem;font-weight:800;margin-top:0.3rem;color:var(--text-muted)">Yorum Kalitesi</div>
+                        <div style="font-size:0.75rem;font-weight:900;color:#2563eb">${kaliteSkoru}%</div>
+                    </div>
+                </div>`:''}
+                <!-- Yorum önizleme -->
+                ${previewHtml}
+                <!-- Nihai Karar -->
+                <div class="analyze-verdict" style="border-color:${vBorder};background:${vBg}">
+                    <i class="fa-solid fa-gavel mr-2" style="color:${vBorder}"></i>${verdictMesaj}
+                </div>
+                <!-- Eylemler -->
+                <div style="display:flex;gap:0.5rem;justify-content:flex-end">
+                    <button id="analyzeCopyBtn" onclick="copyAnalyzeResult()" style="display:inline-flex;align-items:center;gap:0.3rem;font-size:0.7rem;font-weight:700;padding:5px 14px;border-radius:999px;border:1.5px solid var(--border-color);background:var(--bg-secondary);color:var(--text-secondary);cursor:pointer;font-family:inherit"><i class="fa-solid fa-copy"></i> Kopyala</button>
                 </div>
             `;
             box.classList.remove('hidden');
@@ -1853,22 +2019,36 @@
     <!-- Güvenlik & Yorum Analiz Modalı -->
     <div id="analyzeOverlay" class="analyze-overlay hidden" onclick="if(event.target===this)closeAnalyzeModal()">
         <div class="analyze-modal">
-            <div class="flex items-center justify-between">
-                <h2><i class="fa-solid fa-shield-halved text-blue-500"></i>Güvenlik &amp; Yorum Analizi</h2>
-                <button onclick="closeAnalyzeModal()" style="width:32px;height:32px;border-radius:50%;border:1.5px solid var(--border-color);background:transparent;color:var(--text-muted);cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-xmark"></i></button>
+            <!-- Başlık -->
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:0.5rem">
+                <h2><i class="fa-solid fa-shield-halved" style="color:#2563eb"></i>Güvenlik &amp; Yorum Analizi</h2>
+                <button onclick="closeAnalyzeModal()" style="width:32px;height:32px;border-radius:50%;border:1.5px solid var(--border-color);background:transparent;color:var(--text-muted);cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="fa-solid fa-xmark"></i></button>
             </div>
+            <!-- URL Alanı -->
             <div class="analyze-field">
-                <label><i class="fa-solid fa-link mr-1"></i>Ürün / Satıcı URL'si</label>
-                <input type="url" id="analyzeUrl" placeholder="https://www.ornek.com/urun/..." autocomplete="off">
+                <label><i class="fa-solid fa-link mr-1"></i>Ürün / Satıcı URL'si <span style="font-weight:400;text-transform:none;font-size:0.65rem">(yorumlar otomatik çekilir)</span></label>
+                <div class="analyze-url-row">
+                    <input type="url" id="analyzeUrl" placeholder="https://www.trendyol.com/..." autocomplete="off" oninput="detectAnalyzePlatform()" onkeydown="if(event.key==='Enter')runAnalyze()">
+                    <span id="analyzePlatformBadge" class="analyze-platform-badge">Platform</span>
+                </div>
             </div>
-            <div class="analyze-field">
-                <label><i class="fa-solid fa-comment-dots mr-1"></i>Kullanıcı Yorumları <span style="font-weight:400;font-size:0.65rem">(her yorum ayrı satırda)</span></label>
-                <textarea id="analyzeReviews" rows="6" placeholder="1. yorum: Çok güzel, hızlı geldi.&#10;2. yorum: Sahte ürün, kırık geldi.&#10;3. yorum: Harika, tavsiye ederim."></textarea>
-            </div>
+            <!-- Çekme Durumu -->
+            <div id="analyzeFetchStatus" class="analyze-fetch-status hidden"></div>
+            <!-- Analiz Butonu -->
             <button class="analyze-run-btn" id="analyzeRunBtn" onclick="runAnalyze()">
                 <i class="fa-solid fa-magnifying-glass-chart mr-2"></i>Analizi Başlat
             </button>
+            <!-- Desteklenen Platformlar -->
+            <div style="font-size:0.66rem;font-weight:700;color:var(--text-muted);text-align:center">
+                <i class="fa-solid fa-circle-info mr-1"></i>Otomatik yorum çekme: <strong>Trendyol</strong> · <strong>Hepsiburada</strong> · JSON-LD destekli siteler
+            </div>
+            <!-- Sonuç -->
             <div id="analyzeResult" class="analyze-result hidden"></div>
+            <!-- Analiz Geçmişi -->
+            <details style="margin-top:0.2rem">
+                <summary style="cursor:pointer;font-size:0.65rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;user-select:none"><i class="fa-solid fa-clock-rotate-left mr-1"></i>Son Analizler</summary>
+                <div id="analyzeHistList" style="display:flex;flex-direction:column;gap:0.35rem;margin-top:0.5rem"></div>
+            </details>
         </div>
     </div>
     <!-- Barkod Tarayıcı Modalı -->
