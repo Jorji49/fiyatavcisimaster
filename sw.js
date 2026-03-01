@@ -30,9 +30,8 @@ self.addEventListener('activate', event => {
 
 // Fetch — network-first strategy, fall back to cache
 self.addEventListener('fetch', event => {
-  // Only handle same-origin + http(s) requests
-  if (!event.request.url.startsWith(self.location.origin) &&
-      !event.request.url.startsWith('https://')) return;
+  // Only handle same-origin requests; skip cross-origin CDN/API calls
+  if (!event.request.url.startsWith(self.location.origin)) return;
 
   // Skip non-GET requests
   if (event.request.method !== 'GET') return;

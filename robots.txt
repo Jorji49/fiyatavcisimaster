@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Netlify fonksiyonları taranmasın
+Disallow: /.netlify/
+
+Sitemap: https://www.fiyatavcisi.com.tr/sitemap.xml

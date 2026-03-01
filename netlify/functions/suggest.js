@@ -10,7 +10,7 @@ const https = require('https');
 
 function httpsGet(url) {
   return new Promise((resolve, reject) => {
-    https.get(url, {
+    const req = https.get(url, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (compatible; FiyatAvcisi/1.0)',
         'Accept-Language': 'tr-TR,tr;q=0.9',
@@ -20,6 +20,7 @@ function httpsGet(url) {
       res.on('data', (c) => (data += c));
       res.on('end', () => resolve(data));
     }).on('error', reject);
+    req.setTimeout(4000, () => { req.destroy(); reject(new Error('timeout')); });
   });
 }
 

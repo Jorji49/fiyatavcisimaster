@@ -12,7 +12,7 @@ const https = require('https');
 const SOURCE =
   'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json';
 
-const FALLBACK = { usd_try: 38.5, eur_try: 41.8, gbp_try: 49.2 };
+const FALLBACK = { usd_try: 37.2, eur_try: 39.8, gbp_try: 47.1 };
 
 function httpsGet(url) {
   return new Promise((resolve, reject) => {
