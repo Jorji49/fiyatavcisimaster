@@ -27,8 +27,18 @@ const LEGIT_DOMAINS = [
   'monsternotebook.com.tr','lenovo.com','asus.com','msi.com','logitech.com',
   'dyson.com.tr','philips.com.tr','morhipo.com','vivense.com','toyzz.com',
   'banabi.com','getir.com','temu.com','shein.com','aliexpress.com',
-  'beymen.com','network.com.tr','flo.com.tr','puma.com','mango.com'
+  'beymen.com','network.com.tr','flo.com.tr','puma.com','mango.com',
+  // Resmi kısaltma servisleri
+  'ty.gl','amzn.to','amzn.eu','hb.com.tr'
 ];
+
+// Resmi marka kısaltma linkleri — şüpheli değil, yönlendirme takip edilmeli
+const OFFICIAL_SHORTENERS = {
+  'ty.gl':     'trendyol',
+  'amzn.to':   'amazon',
+  'amzn.eu':   'amazon',
+  'hb.com.tr': 'hepsiburada'
+};
 
 const SUSPICIOUS_TLDS = [
   '.xyz','.info','.biz','.tk','.ml','.ga','.cf','.gq','.pw',
@@ -43,6 +53,7 @@ const PHISHING_PATTERNS = [
   { legit:'gittigidiyor', bad:['gittigidiyorr','gittigidiy0r','gitti-gidiyor'] }
 ];
 
+// Yalnızca üçüncü taraf, hedefi gizleyen kısaltıcılar — resmi marka kısaltıcıları değil
 const URL_SHORTENERS = ['bit.ly','tinyurl.com','ow.ly','goo.gl','shorturl.at','cutt.ly','t.co','rb.gy'];
 
 const POSITIVE_KEYWORDS = {
@@ -99,6 +110,35 @@ const BOT_PATTERNS = [
   /^(aldım|geldi|güzel geldi)[.!]?$/i
 ];
 
+// ─── Resmi kısa URL'leri takip ederek çöz ────────────────────────────────────
+async function resolveUrl(url) {
+  try {
+    const controller = new AbortController();
+    const res = await fetch(url, {
+      method: 'HEAD',
+      redirect: 'follow',
+      signal: AbortSignal.timeout(5000),
+      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
+    });
+    const finalUrl = res.url;
+    if (finalUrl && finalUrl !== url) return finalUrl;
+
+    // HEAD bazı sunucularda çalışmaz, GET ile tekrar dene
+    const res2 = await fetch(url, {
+      redirect: 'follow',
+      signal: AbortSignal.timeout(5000),
+      headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
+    });
+    return res2.url || url;
+  } catch {
+    return url;
+  }
+}
+
+function isOfficialShortener(domain) {
+  return Object.keys(OFFICIAL_SHORTENERS).some(s => domain === s || domain.endsWith('.' + s));
+}
+
 function levenshtein(a, b) {
   const dp = Array.from({ length: b.length + 1 }, (_, i) => [i]);
   for (let j = 0; j <= a.length; j++) dp[0][j] = j;
@@ -122,6 +162,9 @@ function extractDomain(rawUrl) {
 }
 
 function detectPlatform(domain) {
+  if (domain === 'ty.gl' || domain.endsWith('.ty.gl'))                  return 'trendyol';
+  if (domain === 'hb.com.tr' || domain.endsWith('.hb.com.tr'))          return 'hepsiburada';
+  if (domain === 'amzn.to' || domain === 'amzn.eu')                     return 'amazon';
   if (domain.includes('trendyol'))    return 'trendyol';
   if (domain.includes('hepsiburada')) return 'hepsiburada';
   if (domain.includes('n11'))         return 'n11';
@@ -202,14 +245,20 @@ async function fetchHepsiburadaReviews(url) {
 
 //  Generic JSON-LD / HTML 
 async function fetchGenericReviews(url, platformName) {
-  const res = await fetch(url, {
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-      'Accept': 'text/html,application/xhtml+xml,*/*;q=0.8'
-    },
-    signal: AbortSignal.timeout(8000)
-  });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  let res;
+  try {
+    res = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Accept': 'text/html,application/xhtml+xml,*/*;q=0.8'
+      },
+      signal: AbortSignal.timeout(9000)
+    });
+  } catch {
+    return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform: platformName };
+  }
+  // 4xx/5xx → sessizce boş döndür
+  if (!res.ok) return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform: platformName };
   const html  = await res.text();
   const items = [];
   let avgRating = null;
@@ -236,19 +285,25 @@ async function fetchGenericReviews(url, platformName) {
 //  Dispatcher 
 async function fetchReviewsFromURL(url) {
   const domain = extractDomain(url);
-  const plat   = detectPlatform(domain);
+  // Resmi kısa URL ise önce çöz, sonra gerçek platforma göre dağıt
+  let workUrl = url;
+  if (isOfficialShortener(domain)) {
+    workUrl = await resolveUrl(url);
+  }
+  const finalDomain = extractDomain(workUrl);
+  const plat   = detectPlatform(finalDomain);
   const label  = platformLabel(plat);
   try {
-    if (plat === 'trendyol')    return await fetchTrendyolReviews(url);
-    if (plat === 'hepsiburada') return await fetchHepsiburadaReviews(url);
-    return await fetchGenericReviews(url, label);
+    if (plat === 'trendyol')    return await fetchTrendyolReviews(workUrl);
+    if (plat === 'hepsiburada') return await fetchHepsiburadaReviews(workUrl);
+    return await fetchGenericReviews(workUrl, label);
   } catch (err) {
-    return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform:label, fetchError: err.message };
+    return { reviewItems:[], count:0, totalCount:0, avgRating:null, platform:label };
   }
 }
 
 //  URL Güvenlik Analizi 
-function analyzeUrl(rawUrl) {
+function analyzeUrl(rawUrl, resolvedFrom) {
   const warnings = [];
   let score = 50;
 
@@ -267,6 +322,11 @@ function analyzeUrl(rawUrl) {
     warnings.push('Bağlantı şifrelenmemiş (HTTP). Ödeme bilgilerini girerken dikkatli olun!');
     score -= 20;
   } else { score += 5; }
+
+  // Resmi kısa bağlantıdan geldiyse not ekle, penalize etme
+  if (resolvedFrom) {
+    warnings.push(`"${resolvedFrom}" resmi kısa link servisi — yönlendirme takip edilerek analiz tamamlandı: ${domain}`);
+  }
 
   const isWhitelisted = LEGIT_DOMAINS.some(d => domain === d || domain.endsWith('.'+d));
   if (isWhitelisted) { score += 40; }
@@ -444,10 +504,22 @@ exports.handler = async (event) => {
   if (!url || url.trim().length < 5) return { statusCode:400, headers:cors, body:JSON.stringify({error:'Geçerli bir URL giriniz.'}) };
 
   const normalizedUrl = url.startsWith('http') ? url : 'https://' + url;
+  const inputDomain   = extractDomain(normalizedUrl);
+
+  // Resmi kısa URL ise önce çöz, güvenlik analizini çözülmüş URL üzerinde yap
+  let analysisUrl = normalizedUrl;
+  let resolvedFrom = null;
+  if (isOfficialShortener(inputDomain)) {
+    const resolved = await resolveUrl(normalizedUrl);
+    if (resolved !== normalizedUrl) {
+      analysisUrl  = resolved;
+      resolvedFrom = inputDomain;
+    }
+  }
 
   const [urlResult, reviewFetch] = await Promise.all([
-    Promise.resolve(analyzeUrl(normalizedUrl)),
-    fetchReviewsFromURL(normalizedUrl).catch(e => ({ reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'Web', fetchError:e.message }))
+    Promise.resolve(analyzeUrl(analysisUrl, resolvedFrom)),
+    fetchReviewsFromURL(normalizedUrl).catch(() => ({ reviewItems:[], count:0, totalCount:0, avgRating:null, platform:'Web' }))
   ]);
 
   const reviewResult = analyzeReviews(reviewFetch.reviewItems || []);

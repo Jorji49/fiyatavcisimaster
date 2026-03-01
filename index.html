@@ -1802,7 +1802,19 @@
             const url = document.getElementById('analyzeUrl').value.toLowerCase();
             const badge = document.getElementById('analyzePlatformBadge');
             if(!badge) return;
-            const plats = [{k:'trendyol',n:'Trendyol',c:'#FF6000'},{k:'hepsiburada',n:'Hepsiburada',c:'#FF6000'},{k:'n11',n:'n11',c:'#6D08A0'},{k:'amazon',n:'Amazon',c:'#FF9900'},{k:'gittigidiyor',n:'GittiGidiyor',c:'#EE7300'},{k:'ciceksepeti',n:'ÇiçekSepeti',c:'#E91E8C'},{k:'teknosa',n:'Teknosa',c:'#E31E24'}];
+            const plats = [
+                {k:'ty.gl',n:'Trendyol (ty.gl)',c:'#FF6000'},
+                {k:'trendyol',n:'Trendyol',c:'#FF6000'},
+                {k:'hb.com.tr',n:'Hepsiburada (hb.com.tr)',c:'#FF6000'},
+                {k:'hepsiburada',n:'Hepsiburada',c:'#FF6000'},
+                {k:'amzn.to',n:'Amazon',c:'#FF9900'},
+                {k:'amzn.eu',n:'Amazon',c:'#FF9900'},
+                {k:'amazon',n:'Amazon',c:'#FF9900'},
+                {k:'n11',n:'n11',c:'#6D08A0'},
+                {k:'gittigidiyor',n:'GittiGidiyor',c:'#EE7300'},
+                {k:'ciceksepeti',n:'ÇiçekSepeti',c:'#E91E8C'},
+                {k:'teknosa',n:'Teknosa',c:'#E31E24'}
+            ];
             const found = url ? plats.find(p=>url.includes(p.k)) : null;
             if(found){ badge.textContent=found.n; badge.className='analyze-platform-badge active'; badge.style.borderColor=found.c+'44'; badge.style.color=found.c; badge.style.background=found.c+'15'; }
             else{ badge.textContent='Platform'; badge.className='analyze-platform-badge'; badge.style=''; }
@@ -1892,11 +1904,20 @@
                 : `<span class="analyze-ssl-badge analyze-ssl-bad"><i class="fa-solid fa-lock-open"></i>HTTP — Şifresiz</span>`;
             // Yorum çekme ozeti
             const hasReviews = yc.sayi > 0;
+            // Yorum çekme durum mesajını kullanıcı dostu yap
+            function friendlyFetchMsg(hata, platform){
+                if(!hata) return `<i class="fa-solid fa-circle-info mr-1"></i>${platform||'Bu platform'} için yorum API'si henüz eklenmemiş; analiz URL güvenliğine göre yapıldı.`;
+                if(/40[34]|429|captcha|bot|blocked|forbidden/i.test(hata))
+                    return `<i class="fa-solid fa-shield-halved mr-1"></i>${platform||'Platform'} bot engeli veya oturum açma gerektirdiği için yorumlar otomatik çekilemedi; güvenlik analizi URL üzerinden tamamlandı.`;
+                if(/timeout|ETIMEDOUT|ECONNRESET|network|abort/i.test(hata))
+                    return `<i class="fa-solid fa-clock mr-1"></i>Platform bağlantısı zaman aşımına uğradı; analiz URL üzerinden tamamlandı.`;
+                if(/ID bulunamadı|SKU bulunamadı|not found/i.test(hata))
+                    return `<i class="fa-solid fa-circle-question mr-1"></i>Ürün sayfası tanımlanamadı; lütfen doğrudan ürün URL'sini girin.`;
+                return `<i class="fa-solid fa-circle-info mr-1"></i>Yorumlar çekilemedi; analiz URL güvenliğine göre yapıldı.`;
+            }
             const fetchInfo = hasReviews
                 ? `<span style="font-size:0.72rem;color:var(--text-muted);font-weight:700"><i class="fa-solid fa-comment-dots mr-1" style="color:#2563eb"></i><strong style="color:var(--text-primary)">${yc.sayi}</strong> yorum çekildi${yc.toplam_sayi&&yc.toplam_sayi>yc.sayi?` (toplam ~${yc.toplam_sayi})`:''} · Kaynak: <em>${yc.platform||'Web'}</em>${yc.ort_puan?` · ${starsHtml(yc.ort_puan)}`:''}</span>`
-                : yc.hata
-                    ? `<span style="font-size:0.72rem;color:var(--text-muted);font-weight:700"><i class="fa-solid fa-circle-info mr-1"></i>Yorum otomatik çekilemedi (${yc.hata}). Analiz URL güvenliğine göre yapıldı.</span>`
-                    : `<span style="font-size:0.72rem;color:var(--text-muted);font-weight:700"><i class="fa-solid fa-circle-info mr-1"></i>Bu platform için yorum çekme desteklenmiyor; analiz URL güvenliğine göre yapıldı.</span>`;
+                : `<span style="font-size:0.72rem;color:var(--text-muted);font-weight:700">${friendlyFetchMsg(yc.hata, yc.platform)}</span>`;
             // Puan dağılımı
             const puanDagilimi = (uy.puan_dagilimi&&uy.puan_dagilimi.length>0)
                 ? `<div style="margin-top:0.5rem">
