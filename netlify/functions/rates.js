@@ -1,6 +1,6 @@
 /**
  * /.netlify/functions/rates
- * Döviz kuru proxy — fawazahmed0 API'den çeker, Netlify CDN'de 1 saat önbellekte tutar.
+ * Döviz kuru proxy — fawazahmed0 API'den çeker, Netlify CDN'de kısa süre önbellekte tutar.
  * Frontend'in tarayıcıdan direkt çağırması yerine bu uç noktayı kullanması daha güvenilir:
  *  - CORS sorunu yok
  *  - Netlify CDN edge'de önbelleğe alınır → çok daha hızlı
@@ -40,6 +40,8 @@ exports.handler = async (event) => {
       usd_try: parseFloat(d.usd.try.toFixed(4)),
       eur_try: parseFloat(((1 / d.usd.eur) * d.usd.try).toFixed(4)),
       gbp_try: parseFloat(((1 / d.usd.gbp) * d.usd.try).toFixed(4)),
+      source_date: d.date || null,
+      fetched_at: new Date().toISOString(),
     };
 
     return {
@@ -47,21 +49,22 @@ exports.handler = async (event) => {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
-        // Netlify CDN'de 1 saat önbellekle, 24 saat stale-while-revalidate
-        'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
+        // Anlık kura daha yakın olmak icin kisa CDN onbellek
+        'Cache-Control': 'public, max-age=60, stale-while-revalidate=300',
       },
       body: JSON.stringify(rates),
     };
   } catch (err) {
     // API çökerse sabit fallback döndür
+    const now = new Date().toISOString();
     return {
       statusCode: 200,
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
-        'Cache-Control': 'public, max-age=300',
+        'Cache-Control': 'public, max-age=60',
       },
-      body: JSON.stringify(FALLBACK),
+      body: JSON.stringify({ ...FALLBACK, source_date: null, fetched_at: now, fallback: true }),
     };
   }
 };

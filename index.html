@@ -1239,6 +1239,159 @@
         function toggleClearBtn(){const i=document.getElementById('queryInput'),b=document.getElementById('clearBtn');if(i.value.length>0)b.classList.add('visible');else b.classList.remove('visible')}
         function clearSearch(){document.getElementById('queryInput').value='';document.getElementById('gridContainer').innerHTML='';document.getElementById('adsenseResultsArea').classList.add('hidden');const pb=document.getElementById('priceBadge');if(pb)pb.innerHTML='';document.getElementById('resultInfo').classList.add('hidden');document.getElementById('shareBar').classList.add('hidden');document.getElementById('errorPanel').classList.add('hidden');document.getElementById('initialContent').classList.remove('hidden');updateUrl('');toggleClearBtn();hideSuggest();document.getElementById('queryInput').focus()}
 
+        // ==================== FİYAT ÇEKME ====================
+        const _priceCache={};
+        async function fetchAndDisplayPrices(q){
+            const key=q.toLowerCase().trim();
+            if(_priceCache[key]){applyPricesToCards(_priceCache[key],q);return;}
+            // Hangi mağazalar kartlarda var?
+            const storeSet=new Set();
+            document.querySelectorAll('#gridContainer [data-store]').forEach(c=>storeSet.add(c.dataset.store));
+            if(!storeSet.size)return;
+            // Desteklenen mağazalar (Python scraper'da var olanlar)
+            const supported=new Set(['TRENDYOL','HEPSIBURADA','AMAZON','N11','TEKNOSA','VATAN']);
+            const stores=[...storeSet].filter(s=>supported.has(s));
+            if(!stores.length)return;
+            // Her mağaza için ayrı istek at (paralel) — progressive loading
+            _priceCache[key]=_priceCache[key]||{};
+            const promises=stores.map(store=>
+                fetch(`/.netlify/functions/prices?q=${encodeURIComponent(q)}&stores=${store}`)
+                .then(r=>r.ok?r.json():null)
+                .then(data=>{
+                    if(data&&!data._error){
+                        Object.assign(_priceCache[key],data);
+                        applyPricesToCards(_priceCache[key],q);
+                    }
+                })
+                .catch(()=>{})
+            );
+            // Tüm istekler bitince kalan "aranıyor" yazılarını temizle
+            Promise.allSettled(promises).then(()=>{
+                document.querySelectorAll('.store-price.animate-pulse').forEach(el=>{
+                    el.textContent='Fiyatı Gör';
+                    el.classList.remove('animate-pulse');
+                });
+            });
+        }
+
+        // Akıllı metin normalizer — sorgu ve başlık aynı şekilde standartlaştırılır
+        function _normProd(s){
+            let t=s.toLowerCase().replace(/[ıİ]/g,'i').replace(/[öÖ]/g,'o').replace(/[üÜ]/g,'u').replace(/[şŞ]/g,'s').replace(/[çÇ]/g,'c').replace(/[ğĞ]/g,'g');
+            t=t.replace(/\+/g,' plus ');
+            t=t.replace(/\bpro\s*max\b/g,'promax');
+            t=t.replace(/\blight\b/g,'lite');
+            t=t.replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();
+            return t;
+        }
+        const _stopWords=new Set(['ile','icin','veya','ve','en','iyi','ucuz','fiyat']);
+
+        // Arama sorgusu ile ürün başlığı arasında eşleşme kontrolü
+        function _priceMatchScore(query,title){
+            if(!query||!title)return 0;
+            const qNorm=_normProd(query);
+            const tNorm=_normProd(title);
+            const qWords=qNorm.split(/\s+/).filter(w=>(w.length>=2||/^\d+$/.test(w))&&!_stopWords.has(w));
+            if(!qWords.length)return 1;
+            let matched=0;
+            for(const w of qWords){
+                const hasDigit=/\d/.test(w);
+                if(hasDigit){
+                    // Kritik kelime (model no): zorunlu eşleşme
+                    if(/^\d+$/.test(w)){
+                        // Salt sayı → kelime sınırı (17 ≠ 17e, 170)
+                        if(!new RegExp('\\b'+w+'\\b').test(tNorm))return 0;
+                    }else{
+                        // Karışık alfanumerik (s24, m4) → alt-dize
+                        if(!tNorm.includes(w))return 0;
+                    }
+                    matched++;
+                }else{
+                    if(tNorm.includes(w))matched++;
+                }
+            }
+            return matched/qWords.length;
+        }
+
+        function applyPricesToCards(data,searchQuery){
+            const q=searchQuery||'';
+            document.querySelectorAll('#gridContainer [data-store]').forEach(card=>{
+                const store=card.dataset.store;
+                const priceEl=card.querySelector('.store-price');
+                if(!priceEl)return;
+                priceEl.classList.remove('animate-pulse');
+                const storeKey=store;
+                if(data[storeKey]&&data[storeKey].min){
+                    const storeData=data[storeKey];
+                    const p=storeData.min;
+                    const formatted=p.toLocaleString('tr-TR',{minimumFractionDigits:p%1===0?0:2,maximumFractionDigits:2});
+                    // En ucuz ürünün başlığını bul
+                    const cheapest=storeData.products&&storeData.products.length?storeData.products[0]:null;
+                    const cheapTitle=cheapest?cheapest.title:'';
+                    const matchScore=_priceMatchScore(q,cheapTitle);
+                    const isExact=matchScore>=0.8; // %80+ eşleşme = tam
+
+                    // Kısaltılmış ürün adı (max 40 karakter)
+                    const shortTitle=cheapTitle.length>40?cheapTitle.slice(0,37)+'…':cheapTitle;
+
+                    if(card.classList.contains('amazon-aff-card')){
+                        if(!isExact&&cheapTitle){
+                            priceEl.innerHTML=`₺${formatted}'dan <span style="display:block;font-size:0.6rem;font-weight:500;opacity:0.85;margin-top:2px">⚠ ${shortTitle}</span>`;
+                        }else{
+                            priceEl.innerHTML=`₺${formatted}'dan`;
+                        }
+                    }else if(card.classList.contains('recommended-card')){
+                        if(!isExact&&cheapTitle){
+                            priceEl.innerHTML=`₺${formatted}'dan`;
+                            priceEl.style.color='';
+                            // Uyarı notu ekle
+                            let note=card.querySelector('.price-mismatch-note');
+                            if(!note){
+                                note=document.createElement('div');
+                                note.className='price-mismatch-note';
+                                note.style.cssText='font-size:0.6rem;font-weight:500;color:#d97706;padding:0 4px;text-align:right;margin-top:1px;line-height:1.2';
+                                priceEl.parentElement.insertBefore(note,priceEl);
+                            }
+                            note.innerHTML=`<i class="fa-solid fa-triangle-exclamation" style="font-size:0.5rem"></i> ${shortTitle}`;
+                        }else{
+                            priceEl.innerHTML=`₺${formatted}'dan`;
+                            priceEl.style.color='';
+                            const oldNote=card.querySelector('.price-mismatch-note');
+                            if(oldNote)oldNote.remove();
+                        }
+                    }else{
+                        // Normal link-card
+                        if(!isExact&&cheapTitle){
+                            priceEl.innerHTML=`₺${formatted}'dan`;
+                            priceEl.style.color='#d97706'; // amber renk — uyarı
+                            let note=card.querySelector('.price-mismatch-note');
+                            if(!note){
+                                note=document.createElement('div');
+                                note.className='price-mismatch-note';
+                                note.style.cssText='font-size:0.55rem;font-weight:500;color:#d97706;position:absolute;bottom:14px;left:12px;right:40px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1';
+                                card.appendChild(note);
+                            }
+                            note.innerHTML=`<i class="fa-solid fa-triangle-exclamation" style="font-size:0.45rem"></i> ${shortTitle}`;
+                            priceEl.style.cssText='color:#d97706;font-size:0.65rem;font-weight:700;position:absolute;bottom:24px;left:12px';
+                        }else{
+                            priceEl.innerHTML=`₺${formatted}'dan`;
+                            priceEl.style.color='#059669';
+                            const oldNote=card.querySelector('.price-mismatch-note');
+                            if(oldNote)oldNote.remove();
+                        }
+                    }
+                }else{
+                    // Fiyat bulunamazsa
+                    if(card.classList.contains('amazon-aff-card')){
+                        priceEl.textContent='En İyi Fiyatı Gör';
+                    }else if(card.classList.contains('recommended-card')){
+                        priceEl.textContent='Fiyatı Gör';
+                    }else{
+                        priceEl.textContent='';
+                    }
+                }
+            });
+        }
+
         // ==================== ARAMA MOTORU ====================
 
         function runEngine(){
@@ -1427,6 +1580,7 @@
                     showShareBar(q,cardCount);
                     updatePriceBadge(q);
                     if(parsedBudget){const pb=document.getElementById('priceBadge');if(pb)pb.innerHTML+='<span class="price-badge mid">💰 Bütçe: ₺'+parsedBudget.toLocaleString('tr-TR')+'</span>';}
+                    fetchAndDisplayPrices(q);
                 }else{
                     resultInfo.classList.add('hidden');
                     if(adsenseResultsArea)adsenseResultsArea.classList.add('hidden');
@@ -1451,7 +1605,7 @@
         }
 
         function createCard(n,l,u,t,i,td){
-            const g=document.getElementById('gridContainer'),c=document.createElement('a');c.href=u;c.target="_blank";c.rel="noopener noreferrer";
+            const g=document.getElementById('gridContainer'),c=document.createElement('a');c.href=u;c.target="_blank";c.rel="noopener noreferrer";c.dataset.store=n;
             let cl="base-card animate-fade-in col-span-1 no-underline group ",ht="";
             const needsInvert=td&&td.darkInvert;
             const imgClass=needsInvert?"logo-img dark-invert":"logo-img";
@@ -1465,7 +1619,7 @@
                     </div>
                     <div class="flex-grow">
                         <div class="text-[10px] font-bold uppercase tracking-widest opacity-75 mb-0.5">Amazon Affiliate &middot; Reklam</div>
-                        <div class="text-xl md:text-2xl font-black tracking-tight leading-tight">Amazon'da En İyi Fiyatı Gör</div>
+                        <div class="text-xl md:text-2xl font-black tracking-tight leading-tight">Amazon'da <span class="store-price" style="display:inline">En İyi Fiyatı Gör</span></div>
                         <div class="flex items-center gap-2 mt-1.5 flex-wrap">
                             <span class="text-xs font-bold opacity-80">Hızlı Teslimat &bull; Prime &bull; Güvenli Alışveriş</span>
                         </div>
@@ -1483,10 +1637,10 @@
                 ht=`<div class="badge bg-white/20 backdrop-blur-sm shadow-sm"><i class="fa-solid fa-certificate"></i> RESMİ MAĞAZA</div><div class="flex items-center gap-4 md:gap-5 w-full pl-1 md:pl-2"><div class="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/10 flex items-center justify-center text-2xl md:text-3xl text-white shrink-0"><i class="${i}"></i></div><div class="flex-grow"><div class="text-xl md:text-2xl font-black tracking-tight leading-none mb-1">${n}</div><div class="text-[10px] md:text-xs font-bold opacity-70 tracking-widest uppercase">ARACISIZ SATIŞ</div></div><div class="text-white/80 text-2xl md:text-3xl group-hover:translate-x-2 transition-transform shrink-0 pr-1 md:pr-2"><i class="fa-solid fa-arrow-right"></i></div></div>`;
             } else if(t==="highlight"){
                 cl+="recommended-card";c.style.setProperty('--theme-color',td.c);
-                ht=`${favHtml}<div class="badge shadow-sm"><i class="fa-solid fa-check-circle mr-1"></i> ÖNERİLEN</div><div class="logo-wrapper mb-auto mt-2 pl-1"><img src="${l}" class="${imgClass}" alt="${n}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="fallback-text text-slate-800" style="color:${td.c}">${n}</span></div><div class="text-green-700 font-extrabold text-sm flex items-center justify-end gap-2 group-hover:gap-3 transition-all pr-1 mt-3">Fiyatı Gör <i class="fa-solid fa-chevron-right text-xs"></i></div>`;
+                ht=`${favHtml}<div class="badge shadow-sm"><i class="fa-solid fa-check-circle mr-1"></i> ÖNERİLEN</div><div class="logo-wrapper mb-auto mt-2 pl-1"><img src="${l}" class="${imgClass}" alt="${n}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="fallback-text text-slate-800" style="color:${td.c}">${n}</span></div><div class="text-green-700 dark:text-green-400 font-extrabold text-sm flex items-center justify-end gap-2 group-hover:gap-3 transition-all pr-1 mt-3"><span class="store-price animate-pulse">Fiyat aranıyor…</span> <i class="fa-solid fa-chevron-right text-xs"></i></div>`;
             } else {
                 cl+="link-card";c.style.setProperty('--theme-color',td.c);c.style.setProperty('--theme-shadow',td.s);
-                ht=`${favHtml}<div class="logo-wrapper my-auto pl-1"><img src="${l}" class="${imgClass}" alt="${n}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="fallback-text text-slate-700" style="color:${td.c}">${n}</span></div><div class="absolute bottom-4 right-4 text-slate-300 group-hover:text-[color:var(--theme-color)] transition-colors text-lg"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>`;
+                ht=`${favHtml}<div class="logo-wrapper my-auto pl-1"><img src="${l}" class="${imgClass}" alt="${n}" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="fallback-text text-slate-700" style="color:${td.c}">${n}</span></div><div class="absolute bottom-3 right-3 left-3 flex items-center justify-between"><span class="store-price text-xs font-bold" style="color:var(--text-muted)"></span><span class="text-slate-300 group-hover:text-[color:var(--theme-color)] transition-colors text-lg"><i class="fa-solid fa-arrow-up-right-from-square"></i></span></div>`;
             }
             c.className=cl;c.innerHTML=ht;g.appendChild(c);
         }
