@@ -10,15 +10,27 @@
 
 const { execFile } = require('child_process');
 const path = require('path');
+const fs = require('fs');
 
 // ─── Python yolu + Scraper yolu ───────────────────────
 // Lokal: .venv\Scripts\python.exe   |  Prod: python3
 function getPythonCmd() {
   const venvPy = path.join(__dirname, '..', '..', '.venv', 'Scripts', 'python.exe');
-  try { require('fs').accessSync(venvPy); return venvPy; } catch { /* */ }
+  try { fs.accessSync(venvPy); return venvPy; } catch { /* */ }
   const venvPyUnix = path.join(__dirname, '..', '..', '.venv', 'bin', 'python');
-  try { require('fs').accessSync(venvPyUnix); return venvPyUnix; } catch { /* */ }
-  return 'python3';
+  try { fs.accessSync(venvPyUnix); return venvPyUnix; } catch { /* */ }
+  // Netlify Linux runtime fallback sırası
+  return process.env.PYTHON_BIN || 'python3';
+}
+
+function getPythonPath() {
+  const depsDir = path.join(__dirname, '..', '..', 'python_deps');
+  try {
+    fs.accessSync(depsDir);
+    return depsDir;
+  } catch {
+    return '';
+  }
 }
 
 const SCRAPER_PATH = path.join(__dirname, '..', '..', 'scraper', 'fiyat_cek.py');
@@ -43,7 +55,11 @@ function runScraper(query, sites, timeoutMs = 25000) {
       timeout: timeoutMs,
       maxBuffer: 5 * 1024 * 1024,  // 5MB
       encoding: 'utf8',
-      env: { ...process.env, PYTHONIOENCODING: 'utf-8' },
+      env: {
+        ...process.env,
+        PYTHONIOENCODING: 'utf-8',
+        PYTHONPATH: [getPythonPath(), process.env.PYTHONPATH || ''].filter(Boolean).join(path.delimiter),
+      },
     }, (err, stdout, stderr) => {
       // stdout'da JSON varsa başarılı say (stderr'de log olabilir)
       if (stdout) {

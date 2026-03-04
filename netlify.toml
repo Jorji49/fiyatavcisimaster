@@ -1,4 +1,5 @@
 [build]
+  command = "python3 -m pip install -r requirements.txt -t ./python_deps && npm run build"
   publish = "."
   functions = "netlify/functions"
 

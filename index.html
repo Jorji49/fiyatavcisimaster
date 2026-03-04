@@ -1241,9 +1241,11 @@
 
         // ==================== FİYAT ÇEKME ====================
         const _priceCache={};
+        const _priceInflight={};
         async function fetchAndDisplayPrices(q){
             const key=q.toLowerCase().trim();
-            if(_priceCache[key]){applyPricesToCards(_priceCache[key],q);return;}
+            if(_priceCache[key]&&Object.keys(_priceCache[key]).length){applyPricesToCards(_priceCache[key],q);return;}
+            if(_priceInflight[key])return;
             // Hangi mağazalar kartlarda var?
             const storeSet=new Set();
             document.querySelectorAll('#gridContainer [data-store]').forEach(c=>storeSet.add(c.dataset.store));
@@ -1254,12 +1256,15 @@
             if(!stores.length)return;
             // Her mağaza için ayrı istek at (paralel) — progressive loading
             _priceCache[key]=_priceCache[key]||{};
+            _priceInflight[key]=true;
+            let successfulLoads=0;
             const promises=stores.map(store=>
                 fetch(`/.netlify/functions/prices?q=${encodeURIComponent(q)}&stores=${store}`)
                 .then(r=>r.ok?r.json():null)
                 .then(data=>{
                     if(data&&!data._error){
                         Object.assign(_priceCache[key],data);
+                        successfulLoads++;
                         applyPricesToCards(_priceCache[key],q);
                     }
                 })
@@ -1267,6 +1272,14 @@
             );
             // Tüm istekler bitince kalan "aranıyor" yazılarını temizle
             Promise.allSettled(promises).then(()=>{
+                delete _priceInflight[key];
+                if(successfulLoads===0){
+                    document.querySelectorAll('.store-price.animate-pulse').forEach(el=>{
+                        el.textContent='Fiyat yok';
+                        el.classList.remove('animate-pulse');
+                    });
+                    return;
+                }
                 document.querySelectorAll('.store-price.animate-pulse').forEach(el=>{
                     el.textContent='Fiyatı Gör';
                     el.classList.remove('animate-pulse');
